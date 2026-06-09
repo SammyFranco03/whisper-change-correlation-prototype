@@ -433,22 +433,16 @@
           </tbody>
         </table>
         <table class="action-table">
-          <thead><tr><th colspan="2">Resolution</th></tr></thead>
+          <thead><tr><th colspan="2">Resolution <span style="font-weight:400;font-size:11px;opacity:.75;">— rollback not available for this change</span></th></tr></thead>
           <tbody>
             <tr>
-              <td class="step-num warning">Step 1<br>No rollback</td>
-              <td class="step-content">
-                <div class="step-desc">Manual rule revert requires Akamai support. Proceed to remediation in parallel.</div>
-                <div class="step-links"><a href="#">View CHG0364905</a></div>
-              </td>
-            </tr>
-            <tr>
-              <td class="step-num">Step 2<br>Remediation</td>
+              <td class="step-num primary">Remediation</td>
               <td class="step-content">
                 <table class="nested-table">
                   <thead><tr><th>Action</th><th>Similar incident</th><th>Confidence</th></tr></thead>
                   <tbody>
                     <tr><td>Review Akamai WAF rule changes and temporarily disable aggressive IP reputation rules affecting VPN ranges.</td><td><a href="#">Review INC3886569</a></td><td><span class="conf-label med">56%</span><br><a href="#">View reasoning</a></td></tr>
+                    <tr><td>Coordinate with Akamai support to revert WAF v2 rule set to previous policy baseline.</td><td><a href="#">Review INC3886569</a></td><td><span class="conf-label low">41%</span><br><a href="#">View reasoning</a></td></tr>
                   </tbody>
                 </table>
               </td>
