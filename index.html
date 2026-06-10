@@ -287,10 +287,10 @@
             <tr><td class="key">Implementation plan</td><td class="val">Apply config via Ansible playbook; validate resolution via nslookup post-deploy; rollback via revert script if resolution fails</td></tr>
           </tbody>
         </table>
-        <div class="detail-reasoning">Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1. <a href="#">View CHG0364897 in ServiceNow ↗</a></div>
         <table class="action-table">
           <thead><tr><th colspan="2">Resolution</th></tr></thead>
           <tbody>
+            <tr><td colspan="2" style="font-size:12px;color:#374151;line-height:1.6;background:#fafafa;border-bottom:1px solid #e5e7eb;">Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1.</td></tr>
             <tr>
               <td class="step-num primary">Step 1<br>Rollback</td>
               <td class="step-content">
@@ -349,10 +349,10 @@
             <tr><td class="key">Implementation plan</td><td class="val">Deploy via Jenkins pipeline to auth-svc-prod; smoke test login flow; monitor 403 rate for 15 min post-deploy; rollback to v4.11.9 if error rate exceeds 5%</td></tr>
           </tbody>
         </table>
-        <div class="detail-reasoning">Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1. <a href="#">View CHG0364650 in ServiceNow ↗</a></div>
         <table class="action-table">
           <thead><tr><th colspan="2">Resolution</th></tr></thead>
           <tbody>
+            <tr><td colspan="2" style="font-size:12px;color:#374151;line-height:1.6;background:#fafafa;border-bottom:1px solid #e5e7eb;">Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1.</td></tr>
             <tr>
               <td class="step-num primary">Step 1<br>Rollback</td>
               <td class="step-content">
@@ -411,10 +411,10 @@
             <tr><td class="key">Implementation plan</td><td class="val">Replace cert via StorageOps tooling; validate connector handshake; no automated rollback — manual revert requires StorageOps TAC approval</td></tr>
           </tbody>
         </table>
-        <div class="detail-reasoning">No automated rollback is available for this change. Engage the assignment group directly to initiate a manual revert, then attempt the ranked remediation options below in parallel if the incident remains active. <a href="#">View CHG0364803 in ServiceNow ↗</a></div>
         <table class="action-table">
           <thead><tr><th colspan="2">Resolution</th></tr></thead>
           <tbody>
+            <tr><td colspan="2" style="font-size:12px;color:#374151;line-height:1.6;background:#fafafa;border-bottom:1px solid #e5e7eb;">No automated rollback is available for this change. Engage the assignment group directly to initiate a manual revert, then attempt the ranked remediation options below in parallel if the incident remains active.</td></tr>
             <tr>
               <td class="step-num warning">Step 1<br>No rollback</td>
               <td class="step-content">
@@ -473,10 +473,10 @@
             <tr><td class="key">Implementation plan</td><td class="val">Deploy rule update via Akamai portal; validate traffic pass-through for VPN IP ranges; no rollback script available — manual rule revert via Akamai support</td></tr>
           </tbody>
         </table>
-        <div class="detail-reasoning">No automated rollback is available for this change. The options below are ranked by recommended attempt order based on similar past incidents. Coordinate with Akamai support for any rule revert. <a href="#">View CHG0364901 in ServiceNow ↗</a></div>
         <table class="action-table">
           <thead><tr><th colspan="2">Resolution</th></tr></thead>
           <tbody>
+            <tr><td colspan="2" style="font-size:12px;color:#374151;line-height:1.6;background:#fafafa;border-bottom:1px solid #e5e7eb;">No automated rollback is available for this change. The options below are ranked by recommended attempt order based on similar past incidents. Coordinate with Akamai support for any rule revert.</td></tr>
             <tr>
               <td class="step-num primary">Remediation</td>
               <td class="step-content">
