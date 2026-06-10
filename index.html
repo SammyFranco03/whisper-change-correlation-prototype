@@ -155,9 +155,12 @@
   /* Nested remediation table inside action table */
   .nested-table { width:100%; border-collapse:collapse; margin-top:6px; border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; }
   .nested-table th { font-size:11px; font-weight:600; color:#6b7280; background:#f3f4f6; padding:6px 10px; text-align:left; border-bottom:1px solid #e5e7eb; }
-  .nested-table td { font-size:12px; padding:7px 10px; border-bottom:1px solid #f9fafb; vertical-align:middle; color:#374151; }
+  .nested-table td { font-size:12px; padding:7px 10px; border-bottom:1px solid #f9fafb; vertical-align:top; color:#374151; }
   .nested-table tr:last-child td { border-bottom:none; }
   .nested-table a { color:#0057b8; }
+  .reasoning-preview { color:#374151; }
+  .reasoning-full { color:#374151; }
+  .reasoning-toggle { display:inline; font-size:11px; color:#0057b8; margin-left:3px; white-space:nowrap; cursor:pointer; background:none; border:none; padding:0; font-family:inherit; }
 
   /* Resolution rank badge — mirrors RCA rank style */
   .res-rank { width:22px; height:22px; border-radius:50%; background:#0057b8; color:#fff; font-size:11px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -302,17 +305,19 @@
               <td class="step-num">Step 2<br>If unresolved</td>
               <td class="step-content">
                 <table class="nested-table">
-                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th></tr></thead>
+                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th><th>Reasoning</th></tr></thead>
                   <tbody>
                     <tr>
                       <td class="res-rank-cell"><span class="res-rank">1</span></td>
                       <td>Disable recursive configurations on external-facing DNS devices and recycle DNS services.</td>
-                      <td><a href="#">Review INC2939989</a><br><a href="#">View reasoning</a></td>
+                      <td><a href="#">Review INC2939989</a></td>
+                      <td><span class="reasoning-preview">Recursive configs on external DNS caused identical resolution failures in INC2939989.</span><span class="reasoning-full hidden"> Disabling recursive forwarding and recycling the DNS service restored resolution within 8 minutes. Pattern match: same CI type, same error rate profile.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
                     </tr>
                     <tr>
                       <td class="res-rank-cell"><span class="res-rank two">2</span></td>
                       <td>Perform targeted recycles of DNS services and messaging gateways after configuration changes.</td>
-                      <td><a href="#">Review INC3495745</a><br><a href="#">View reasoning</a></td>
+                      <td><a href="#">Review INC3495745</a></td>
+                      <td><span class="reasoning-preview">Stale DNS cache entries persisted post-config-change in INC3495745, causing continued failures.</span><span class="reasoning-full hidden"> Recycling DNS services and messaging gateways cleared the stale cache and restored normal operation within 12 minutes. Lower confidence due to partial topology overlap.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -364,17 +369,19 @@
               <td class="step-num">Step 2<br>If unresolved</td>
               <td class="step-content">
                 <table class="nested-table">
-                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th></tr></thead>
+                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th><th>Reasoning</th></tr></thead>
                   <tbody>
                     <tr>
                       <td class="res-rank-cell"><span class="res-rank">1</span></td>
                       <td>Implement Round Robin load balancing for zOSConnect and increase application timeout configurations.</td>
-                      <td><a href="#">Review INC5415745</a><br><a href="#">View reasoning</a></td>
+                      <td><a href="#">Review INC5415745</a></td>
+                      <td><span class="reasoning-preview">Round Robin load balancing in INC5415745 distributed auth requests when a single endpoint was degraded.</span><span class="reasoning-full hidden"> Timeout increases prevented cascading failures during recovery. Combined approach reduced MTTR by ~40% compared to restart-only remediation in similar incidents.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
                     </tr>
                     <tr>
                       <td class="res-rank-cell"><span class="res-rank two">2</span></td>
                       <td>Perform targeted restarts of messaging gateways, zOS connectors, and associated servers to clear exhausted resources.</td>
-                      <td><a href="#">Review INC5415745</a><br><a href="#">View reasoning</a></td>
+                      <td><a href="#">Review INC5415745</a></td>
+                      <td><span class="reasoning-preview">Targeted restarts in INC5415745 cleared connection pool exhaustion caused by the misconfigured deploy.</span><span class="reasoning-full hidden"> Recovery time was ~12 minutes post-restart. Lower ranking due to service disruption risk during restart sequence in high-traffic windows.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -426,17 +433,19 @@
               <td class="step-num">Step 2<br>Remediation</td>
               <td class="step-content">
                 <table class="nested-table">
-                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th></tr></thead>
+                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th><th>Reasoning</th></tr></thead>
                   <tbody>
                     <tr>
                       <td class="res-rank-cell"><span class="res-rank">1</span></td>
                       <td>Validate multipathing configuration on all ESXi hosts connected to the SAN to ensure I/O path redundancy.</td>
-                      <td><a href="#">Review INC8100050</a><br><a href="#">View reasoning</a></td>
+                      <td><a href="#">Review INC8100050</a></td>
+                      <td><span class="reasoning-preview">Multipath misconfiguration in INC8100050 caused intermittent I/O failures matching current symptoms.</span><span class="reasoning-full hidden"> Validating and correcting path redundancy resolved the issue within 15 minutes. High confidence match: same SAN topology, same connector type, similar failure window duration.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
                     </tr>
                     <tr>
                       <td class="res-rank-cell"><span class="res-rank two">2</span></td>
                       <td>Monitor SAN fabric switch ports for incrementing errors and disable any ports showing 'slow drain' behavior.</td>
-                      <td><a href="#">Review INC8100050</a><br><a href="#">View reasoning</a></td>
+                      <td><a href="#">Review INC8100050</a></td>
+                      <td><span class="reasoning-preview">Slow drain behavior on SAN ports in INC8100050 was a secondary contributor to connection timeouts.</span><span class="reasoning-full hidden"> Disabling affected ports eliminated the bottleneck within 5 minutes. Ranked second as slow drain is less likely given the certificate rotation timing in this incident.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -481,17 +490,19 @@
               <td class="step-num primary">Remediation</td>
               <td class="step-content">
                 <table class="nested-table">
-                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th></tr></thead>
+                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th><th>Reasoning</th></tr></thead>
                   <tbody>
                     <tr>
                       <td class="res-rank-cell"><span class="res-rank">1</span></td>
                       <td>Review Akamai WAF rule changes and temporarily disable aggressive IP reputation rules affecting VPN ranges.</td>
-                      <td><a href="#">Review INC3886569</a><br><a href="#">View reasoning</a></td>
+                      <td><a href="#">Review INC3886569</a></td>
+                      <td><span class="reasoning-preview">Overly aggressive IP reputation thresholds in INC3886569 caused false-positive DDoS flagging for VPN traffic.</span><span class="reasoning-full hidden"> Temporarily disabling the affected rules restored normal traffic flow within 10 minutes while a permanent fix was prepared. Same WAF policy version involved.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
                     </tr>
                     <tr>
                       <td class="res-rank-cell"><span class="res-rank two">2</span></td>
                       <td>Coordinate with Akamai support to revert WAF v2 rule set to previous policy baseline.</td>
-                      <td><a href="#">Review INC3886569</a><br><a href="#">View reasoning</a></td>
+                      <td><a href="#">Review INC3886569</a></td>
+                      <td><span class="reasoning-preview">Full policy revert in INC3886569 was required when targeted rule disabling was insufficient.</span><span class="reasoning-full hidden"> Akamai support completed the revert in ~25 minutes. Ranked second due to longer resolution time and dependency on external vendor support availability.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -558,6 +569,13 @@
 <div class="toast" id="toast"></div>
 
 <script>
+function toggleReasoning(btn) {
+  const full = btn.previousElementSibling;
+  const isHidden = full.classList.contains('hidden');
+  full.classList.toggle('hidden', !isHidden);
+  btn.textContent = isHidden ? 'Show less' : 'Show more';
+}
+
 function toggleDetail(detailId, chevId) {
   const d = document.getElementById(detailId);
   const c = document.getElementById(chevId);
