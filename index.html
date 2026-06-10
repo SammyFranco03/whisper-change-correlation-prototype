@@ -62,17 +62,6 @@
   .rank.three { background:#9ca3af; }
   .rank.low { background:#d1d5db; }
 
-  .conf-bar-wrap { display:flex; flex-direction:column; align-items:center; gap:3px; flex-shrink:0; width:40px; }
-  .conf-pct { font-size:13px; font-weight:700; }
-  .conf-pct.high { color:#16a34a; }
-  .conf-pct.med { color:#ca8a04; }
-  .conf-pct.low { color:#dc2626; }
-  .conf-bar { width:40px; height:4px; border-radius:2px; background:#e5e7eb; overflow:hidden; }
-  .conf-bar .fill { height:100%; border-radius:2px; }
-  .fill-high { background:#22c55e; }
-  .fill-med { background:#f59e0b; }
-  .fill-low { background:#ef4444; }
-
   .suspect-info { flex:1; min-width:0; }
   .suspect-name { font-size:14px; font-weight:600; color:#1a1a1a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .suspect-meta { font-size:12px; color:#888; margin-top:2px; display:flex; gap:8px; flex-wrap:wrap; }
@@ -144,23 +133,28 @@
   .action-table > thead > tr > th { text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#fff; background:#374151; padding:8px 12px; }
   .action-table > tbody > tr > td { padding:10px 12px; border-bottom:1px solid #f0f0f0; vertical-align:top; }
   .action-table > tbody > tr:last-child > td { border-bottom:none; }
-  .action-table .step-num { font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.4px; white-space:nowrap; width:110px; background:#f9fafb; border-right:1px solid #e5e7eb; }
+  .action-table .step-num { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; white-space:nowrap; width:110px; background:#f9fafb; border-right:1px solid #e5e7eb; }
   .action-table .step-num.primary { color:#15803d; background:#f0fdf4; }
   .action-table .step-num.warning { color:#92400e; background:#fff7ed; }
   .action-table .step-content { vertical-align:top; }
   .step-desc { font-size:12px; color:#374151; margin-bottom:6px; }
   .step-links { font-size:12px; } .step-links a { color:#0057b8; font-weight:600; margin-right:12px; }
 
+  /* Resolution explainer text */
+  .resolution-explainer { font-size:12px; color:#6b7280; line-height:1.5; margin-bottom:8px; padding:8px 10px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; }
+  .resolution-explainer strong { color:#374151; }
+
   /* Nested remediation table inside action table */
   .nested-table { width:100%; border-collapse:collapse; margin-top:6px; border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; }
   .nested-table th { font-size:11px; font-weight:600; color:#6b7280; background:#f3f4f6; padding:6px 10px; text-align:left; border-bottom:1px solid #e5e7eb; }
-  .nested-table td { font-size:12px; padding:7px 10px; border-bottom:1px solid #f9fafb; vertical-align:top; color:#374151; }
+  .nested-table td { font-size:12px; padding:7px 10px; border-bottom:1px solid #f9fafb; vertical-align:middle; color:#374151; }
   .nested-table tr:last-child td { border-bottom:none; }
   .nested-table a { color:#0057b8; }
-  .conf-label { font-size:11px; font-weight:600; }
-  .conf-label.high { color:#16a34a; }
-  .conf-label.med  { color:#ca8a04; }
-  .conf-label.low  { color:#dc2626; }
+
+  /* Resolution rank badge — mirrors RCA rank style */
+  .res-rank { width:22px; height:22px; border-radius:50%; background:#0057b8; color:#fff; font-size:11px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .res-rank.two { background:#6b7280; }
+  .nested-table td.res-rank-cell { text-align:center; width:36px; vertical-align:middle; padding:7px 6px; }
 
   /* Next-step panel */
   .next-step-panel { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:14px; margin-top:14px; }
@@ -277,11 +271,16 @@
           <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
           <tbody>
             <tr><td class="key">Target CI(s)</td><td class="val">dns-recursive-1 — direct dependency of affected CI</td></tr>
-            <tr><td class="key">Planned window</td><td class="val">Jun 9, 2026 11:00 PM – Jun 10, 2026 1:00 AM</td></tr>
+            <tr><td class="key">Start time</td><td class="val">Jun 9, 2026 11:00 PM</td></tr>
+            <tr><td class="key">End time</td><td class="val">Jun 10, 2026 1:00 AM</td></tr>
+            <tr><td class="key">Assignment group</td><td class="val">Network Engineering</td></tr>
             <tr><td class="key">Description</td><td class="val">Push updated recursive resolver config to dns-recursive-1 to enforce internal forwarding rules</td></tr>
             <tr><td class="key">Implementation plan</td><td class="val">Apply config via Ansible playbook; validate resolution via nslookup post-deploy; rollback via revert script if resolution fails</td></tr>
           </tbody>
         </table>
+        <div class="resolution-explainer">
+          <strong>Resolution guidance:</strong> Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1.
+        </div>
         <table class="action-table">
           <thead><tr><th colspan="2">Resolution</th></tr></thead>
           <tbody>
@@ -296,10 +295,18 @@
               <td class="step-num">Step 2<br>If unresolved</td>
               <td class="step-content">
                 <table class="nested-table">
-                  <thead><tr><th>Action</th><th>Similar incident</th><th>Confidence</th></tr></thead>
+                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th></tr></thead>
                   <tbody>
-                    <tr><td>Disable recursive configurations on external-facing DNS devices and recycle DNS services.</td><td><a href="#">Review INC2939989</a></td><td><span class="conf-label high">70%</span><br><a href="#">View reasoning</a></td></tr>
-                    <tr><td>Perform targeted recycles of DNS services and messaging gateways after configuration changes.</td><td><a href="#">Review INC3495745</a></td><td><span class="conf-label med">48%</span><br><a href="#">View reasoning</a></td></tr>
+                    <tr>
+                      <td class="res-rank-cell"><span class="res-rank">1</span></td>
+                      <td>Disable recursive configurations on external-facing DNS devices and recycle DNS services.</td>
+                      <td><a href="#">Review INC2939989</a><br><a href="#">View reasoning</a></td>
+                    </tr>
+                    <tr>
+                      <td class="res-rank-cell"><span class="res-rank two">2</span></td>
+                      <td>Perform targeted recycles of DNS services and messaging gateways after configuration changes.</td>
+                      <td><a href="#">Review INC3495745</a><br><a href="#">View reasoning</a></td>
+                    </tr>
                   </tbody>
                 </table>
               </td>
@@ -327,11 +334,16 @@
           <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
           <tbody>
             <tr><td class="key">Target CI(s)</td><td class="val">auth-svc-prod — direct dependency of affected CI</td></tr>
-            <tr><td class="key">Planned window</td><td class="val">Jun 9, 2026 11:30 PM – Jun 10, 2026 12:30 AM</td></tr>
+            <tr><td class="key">Start time</td><td class="val">Jun 9, 2026 11:30 PM</td></tr>
+            <tr><td class="key">End time</td><td class="val">Jun 10, 2026 12:30 AM</td></tr>
+            <tr><td class="key">Assignment group</td><td class="val">Platform Engineering</td></tr>
             <tr><td class="key">Description</td><td class="val">Emergency deploy of backend-auth v4.12.1 to address session timeout regression introduced in v4.11.9</td></tr>
             <tr><td class="key">Implementation plan</td><td class="val">Deploy via Jenkins pipeline to auth-svc-prod; smoke test login flow; monitor 403 rate for 15 min post-deploy; rollback to v4.11.9 if error rate exceeds 5%</td></tr>
           </tbody>
         </table>
+        <div class="resolution-explainer">
+          <strong>Resolution guidance:</strong> Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1.
+        </div>
         <table class="action-table">
           <thead><tr><th colspan="2">Resolution</th></tr></thead>
           <tbody>
@@ -346,10 +358,18 @@
               <td class="step-num">Step 2<br>If unresolved</td>
               <td class="step-content">
                 <table class="nested-table">
-                  <thead><tr><th>Action</th><th>Similar incident</th><th>Confidence</th></tr></thead>
+                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th></tr></thead>
                   <tbody>
-                    <tr><td>Implement Round Robin load balancing for zOSConnect and increase application timeout configurations.</td><td><a href="#">Review INC5415745</a></td><td><span class="conf-label high">68%</span><br><a href="#">View reasoning</a></td></tr>
-                    <tr><td>Perform targeted restarts of messaging gateways, zOS connectors, and associated servers to clear exhausted resources.</td><td><a href="#">Review INC5415745</a></td><td><span class="conf-label low">43%</span><br><a href="#">View reasoning</a></td></tr>
+                    <tr>
+                      <td class="res-rank-cell"><span class="res-rank">1</span></td>
+                      <td>Implement Round Robin load balancing for zOSConnect and increase application timeout configurations.</td>
+                      <td><a href="#">Review INC5415745</a><br><a href="#">View reasoning</a></td>
+                    </tr>
+                    <tr>
+                      <td class="res-rank-cell"><span class="res-rank two">2</span></td>
+                      <td>Perform targeted restarts of messaging gateways, zOS connectors, and associated servers to clear exhausted resources.</td>
+                      <td><a href="#">Review INC5415745</a><br><a href="#">View reasoning</a></td>
+                    </tr>
                   </tbody>
                 </table>
               </td>
@@ -377,11 +397,16 @@
           <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
           <tbody>
             <tr><td class="key">Target CI(s)</td><td class="val">zos-connector-prod — indirect dependency via messaging topology</td></tr>
-            <tr><td class="key">Planned window</td><td class="val">Jun 9, 2026 10:00 PM – Jun 9, 2026 11:30 PM</td></tr>
+            <tr><td class="key">Start time</td><td class="val">Jun 9, 2026 10:00 PM</td></tr>
+            <tr><td class="key">End time</td><td class="val">Jun 9, 2026 11:30 PM</td></tr>
+            <tr><td class="key">Assignment group</td><td class="val">Storage Operations</td></tr>
             <tr><td class="key">Description</td><td class="val">Rotate expiring TLS certificates on zOS connector to maintain secure messaging channel</td></tr>
             <tr><td class="key">Implementation plan</td><td class="val">Replace cert via StorageOps tooling; validate connector handshake; no automated rollback — manual revert requires StorageOps TAC approval</td></tr>
           </tbody>
         </table>
+        <div class="resolution-explainer">
+          <strong>Resolution guidance:</strong> No automated rollback is available for this change. Engage the assignment group directly to initiate a manual revert, then attempt the ranked remediation options below in parallel if the incident remains active.
+        </div>
         <table class="action-table">
           <thead><tr><th colspan="2">Resolution</th></tr></thead>
           <tbody>
@@ -396,10 +421,18 @@
               <td class="step-num">Step 2<br>Remediation</td>
               <td class="step-content">
                 <table class="nested-table">
-                  <thead><tr><th>Action</th><th>Similar incident</th><th>Confidence</th></tr></thead>
+                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th></tr></thead>
                   <tbody>
-                    <tr><td>Validate multipathing configuration on all ESXi hosts connected to the SAN to ensure I/O path redundancy.</td><td><a href="#">Review INC8100050</a></td><td><span class="conf-label high">69%</span><br><a href="#">View reasoning</a></td></tr>
-                    <tr><td>Monitor SAN fabric switch ports for incrementing errors and disable any ports showing 'slow drain' behavior.</td><td><a href="#">Review INC8100050</a></td><td><span class="conf-label med">52%</span><br><a href="#">View reasoning</a></td></tr>
+                    <tr>
+                      <td class="res-rank-cell"><span class="res-rank">1</span></td>
+                      <td>Validate multipathing configuration on all ESXi hosts connected to the SAN to ensure I/O path redundancy.</td>
+                      <td><a href="#">Review INC8100050</a><br><a href="#">View reasoning</a></td>
+                    </tr>
+                    <tr>
+                      <td class="res-rank-cell"><span class="res-rank two">2</span></td>
+                      <td>Monitor SAN fabric switch ports for incrementing errors and disable any ports showing 'slow drain' behavior.</td>
+                      <td><a href="#">Review INC8100050</a><br><a href="#">View reasoning</a></td>
+                    </tr>
                   </tbody>
                 </table>
               </td>
@@ -427,11 +460,16 @@
           <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
           <tbody>
             <tr><td class="key">Target CI(s)</td><td class="val">akamai-waf-prod — indirect dependency via edge network topology</td></tr>
-            <tr><td class="key">Planned window</td><td class="val">Jun 9, 2026 10:30 PM – Jun 9, 2026 11:00 PM</td></tr>
+            <tr><td class="key">Start time</td><td class="val">Jun 9, 2026 10:30 PM</td></tr>
+            <tr><td class="key">End time</td><td class="val">Jun 9, 2026 11:00 PM</td></tr>
+            <tr><td class="key">Assignment group</td><td class="val">Network Security</td></tr>
             <tr><td class="key">Description</td><td class="val">Update Akamai WAF edge rules to WAF v2 policy — tighten IP reputation thresholds for DDoS detection</td></tr>
             <tr><td class="key">Implementation plan</td><td class="val">Deploy rule update via Akamai portal; validate traffic pass-through for VPN IP ranges; no rollback script available — manual rule revert via Akamai support</td></tr>
           </tbody>
         </table>
+        <div class="resolution-explainer">
+          <strong>Resolution guidance:</strong> No automated rollback is available for this change. The options below are ranked by recommended attempt order based on similar past incidents. Coordinate with Akamai support for any rule revert.
+        </div>
         <table class="action-table">
           <thead><tr><th colspan="2">Resolution <span style="font-weight:400;font-size:11px;opacity:.75;">— rollback not available for this change</span></th></tr></thead>
           <tbody>
@@ -439,10 +477,18 @@
               <td class="step-num primary">Remediation</td>
               <td class="step-content">
                 <table class="nested-table">
-                  <thead><tr><th>Action</th><th>Similar incident</th><th>Confidence</th></tr></thead>
+                  <thead><tr><th>#</th><th>Action</th><th>Similar incident</th></tr></thead>
                   <tbody>
-                    <tr><td>Review Akamai WAF rule changes and temporarily disable aggressive IP reputation rules affecting VPN ranges.</td><td><a href="#">Review INC3886569</a></td><td><span class="conf-label med">56%</span><br><a href="#">View reasoning</a></td></tr>
-                    <tr><td>Coordinate with Akamai support to revert WAF v2 rule set to previous policy baseline.</td><td><a href="#">Review INC3886569</a></td><td><span class="conf-label low">41%</span><br><a href="#">View reasoning</a></td></tr>
+                    <tr>
+                      <td class="res-rank-cell"><span class="res-rank">1</span></td>
+                      <td>Review Akamai WAF rule changes and temporarily disable aggressive IP reputation rules affecting VPN ranges.</td>
+                      <td><a href="#">Review INC3886569</a><br><a href="#">View reasoning</a></td>
+                    </tr>
+                    <tr>
+                      <td class="res-rank-cell"><span class="res-rank two">2</span></td>
+                      <td>Coordinate with Akamai support to revert WAF v2 rule set to previous policy baseline.</td>
+                      <td><a href="#">Review INC3886569</a><br><a href="#">View reasoning</a></td>
+                    </tr>
                   </tbody>
                 </table>
               </td>
@@ -460,10 +506,6 @@
       <div class="suspect-card">
         <div class="suspect-main">
           <div class="rank low">5</div>
-          <div class="conf-bar-wrap">
-            <span class="conf-pct low">39%</span>
-            <div class="conf-bar"><div class="fill fill-low" style="width:39%"></div></div>
-          </div>
           <div class="suspect-info">
             <div class="suspect-name">messaging-gw infra scale-out</div>
             <div class="suspect-meta"><span>CHG0364807</span><span>·</span><span class="ci">msg-gateway-prod</span><span>·</span><span>4h before incident</span></div>
