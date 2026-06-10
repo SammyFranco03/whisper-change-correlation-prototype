@@ -226,6 +226,7 @@
   .logo-opt:hover { border-color:#93c5fd; background:#eff6ff; }
   .logo-opt.active { border-color:#0057b8; background:#eff6ff; }
   .logo-opt svg { display:block; }
+  .logo-opt img { width:100%; height:110px; object-fit:contain; border-radius:4px; }
   .logo-opt-label { font-size:11px; font-weight:600; color:#374151; text-align:center; line-height:1.3; }
   .logo-opt-sub { font-size:10px; color:#9ca3af; text-align:center; margin-top:-4px; }
   .logo-opt.active .logo-opt-label { color:#0057b8; }
@@ -236,7 +237,7 @@
 <!-- Nav -->
 <nav class="topnav" style="position:relative;">
   <div class="logo" id="nav-logo">
-    <img src="logo-owl.png" width="32" height="32" style="object-fit:contain;" alt="Whisper logo"/>
+    <img src="logo-owl-icon.png" height="40" style="object-fit:contain;max-width:120px;" alt="Whisper logo" id="nav-logo-img"/>
   </div>
   <button class="logo-pick-trigger" onclick="toggleLogoPicker(this)" title="Switch logo concept">
     <span>Logo options</span><span class="arrow" id="logo-pick-arrow">▾</span>
@@ -254,28 +255,28 @@
 
     <!-- 01 Owl with Lantern -->
     <div class="logo-opt active" id="logo-opt-1" onclick="selectLogo(1)" title="01 Owl with Lantern">
-      <img src="logo-owl.png" width="72" height="72" style="object-fit:contain;" alt="Owl with Lantern"/>
+      <img src="logo-owl.png" alt="Owl with Lantern"/>
       <div class="logo-opt-label">01 Owl with Lantern</div>
       <div class="logo-opt-sub">Investigator</div>
     </div>
 
     <!-- 02 Lighthouse -->
     <div class="logo-opt" id="logo-opt-2" onclick="selectLogo(2)" title="02 Lighthouse">
-      <img src="logo-lighthouse.png" width="72" height="72" style="object-fit:contain;" alt="Lighthouse"/>
+      <img src="logo-lighthouse.png" alt="Lighthouse"/>
       <div class="logo-opt-label">02 Lighthouse</div>
       <div class="logo-opt-sub">Signal / Beacon</div>
     </div>
 
     <!-- 03 Order from Chaos -->
     <div class="logo-opt" id="logo-opt-3" onclick="selectLogo(3)" title="03 Order from Chaos">
-      <img src="logo-chaos.png" width="72" height="72" style="object-fit:contain;" alt="Order from Chaos"/>
+      <img src="logo-chaos.png" alt="Order from Chaos"/>
       <div class="logo-opt-label">03 Order from Chaos</div>
       <div class="logo-opt-sub">Transformation</div>
     </div>
 
     <!-- 04 W Soundwave Wordmark -->
     <div class="logo-opt" id="logo-opt-4" onclick="selectLogo(4)" title="04 W Soundwave Wordmark">
-      <img src="logo-w.png" width="72" height="72" style="object-fit:contain;" alt="W Soundwave"/>
+      <img src="logo-w.png" alt="W Soundwave"/>
       <div class="logo-opt-label">04 W Soundwave</div>
       <div class="logo-opt-sub">Signal / Listening</div>
     </div>
@@ -765,10 +766,10 @@ function switchTab(tab) {
 
 // ── Logo picker ──
 const LOGOS = {
-  1: { img: 'logo-owl.png',        alt: 'Owl with Lantern' },
-  2: { img: 'logo-lighthouse.png', alt: 'Lighthouse' },
-  3: { img: 'logo-chaos.png',      alt: 'Order from Chaos' },
-  4: { img: 'logo-w.png',          alt: 'W Soundwave' }
+  1: { nav: 'logo-owl-icon.png',   picker: 'logo-owl.png',        alt: 'Owl with Lantern' },
+  2: { nav: 'logo-lighthouse.png', picker: 'logo-lighthouse.png', alt: 'Lighthouse' },
+  3: { nav: 'logo-chaos.png',      picker: 'logo-chaos.png',      alt: 'Order from Chaos' },
+  4: { nav: 'logo-w.png',          picker: 'logo-w.png',          alt: 'W Soundwave' }
 };
 
 let activeLogoId = 1;
@@ -783,8 +784,8 @@ function toggleLogoPicker(btn) {
 function selectLogo(id) {
   activeLogoId = id;
   const logo = LOGOS[id];
-  const navImg = document.querySelector('#nav-logo img');
-  navImg.src = logo.img;
+  const navImg = document.getElementById('nav-logo-img');
+  navImg.src = logo.nav;
   navImg.alt = logo.alt;
   [1,2,3,4].forEach(n => {
     document.getElementById('logo-opt-' + n).classList.toggle('active', n === id);
