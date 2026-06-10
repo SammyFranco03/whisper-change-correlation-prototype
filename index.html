@@ -255,31 +255,23 @@
   <div class="logo-grid">
 
     <!-- 01 Owl with Lantern -->
-    <div class="logo-opt active" id="logo-opt-1" onclick="selectLogo(1)" title="01 Owl with Lantern">
-      <img src="logo-owl.png" alt="Owl with Lantern"/>
-      <div class="logo-opt-label">01 Owl with Lantern</div>
-      <div class="logo-opt-sub">Investigator</div>
+    <div class="logo-opt active" id="logo-opt-1" onclick="selectLogo(1)" title="Owl with Lantern">
+      <img src="logo-owl-icon.png" alt="Owl with Lantern"/>
     </div>
 
     <!-- 02 Lighthouse -->
-    <div class="logo-opt" id="logo-opt-2" onclick="selectLogo(2)" title="02 Lighthouse">
-      <img src="logo-lighthouse.png" alt="Lighthouse"/>
-      <div class="logo-opt-label">02 Lighthouse</div>
-      <div class="logo-opt-sub">Signal / Beacon</div>
+    <div class="logo-opt" id="logo-opt-2" onclick="selectLogo(2)" title="Lighthouse">
+      <img src="logo-lighthouse-icon.png" alt="Lighthouse"/>
     </div>
 
     <!-- 03 Order from Chaos -->
-    <div class="logo-opt" id="logo-opt-3" onclick="selectLogo(3)" title="03 Order from Chaos">
-      <img src="logo-chaos.png" alt="Order from Chaos"/>
-      <div class="logo-opt-label">03 Order from Chaos</div>
-      <div class="logo-opt-sub">Transformation</div>
+    <div class="logo-opt" id="logo-opt-3" onclick="selectLogo(3)" title="Order from Chaos">
+      <img src="logo-chaos-icon.png" alt="Order from Chaos"/>
     </div>
 
-    <!-- 04 W Soundwave Wordmark -->
-    <div class="logo-opt" id="logo-opt-4" onclick="selectLogo(4)" title="04 W Soundwave Wordmark">
+    <!-- 04 W Soundwave -->
+    <div class="logo-opt" id="logo-opt-4" onclick="selectLogo(4)" title="W Soundwave">
       <img src="logo-w.png" alt="W Soundwave"/>
-      <div class="logo-opt-label">04 W Soundwave</div>
-      <div class="logo-opt-sub">Signal / Listening</div>
     </div>
 
   </div>
@@ -767,10 +759,10 @@ function switchTab(tab) {
 
 // ── Logo picker ──
 const LOGOS = {
-  1: { nav: 'logo-owl-icon.png',   picker: 'logo-owl.png',        alt: 'Owl with Lantern' },
-  2: { nav: 'logo-lighthouse.png', picker: 'logo-lighthouse.png', alt: 'Lighthouse' },
-  3: { nav: 'logo-chaos.png',      picker: 'logo-chaos.png',      alt: 'Order from Chaos' },
-  4: { nav: 'logo-w.png',          picker: 'logo-w.png',          alt: 'W Soundwave' }
+  1: { nav: 'logo-owl-icon.png',        alt: 'Owl with Lantern' },
+  2: { nav: 'logo-lighthouse-icon.png', alt: 'Lighthouse' },
+  3: { nav: 'logo-chaos-icon.png',      alt: 'Order from Chaos' },
+  4: { nav: 'logo-w.png',              alt: 'W Soundwave' }
 };
 
 let activeLogoId = 1;
@@ -787,6 +779,7 @@ function selectLogo(id) {
   const logo = LOGOS[id];
   const navImg = document.getElementById('nav-logo-img');
   navImg.src = logo.nav;
+
   navImg.alt = logo.alt;
   [1,2,3,4].forEach(n => {
     document.getElementById('logo-opt-' + n).classList.toggle('active', n === id);
