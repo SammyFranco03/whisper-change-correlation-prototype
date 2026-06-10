@@ -127,6 +127,14 @@
   .detail-table td.key { font-weight:600; color:#374151; white-space:nowrap; width:140px; background:#f9fafb; border-right:1px solid #e5e7eb; }
   .detail-table td.val { color:#1a1a1a; }
   .detail-table a { color:#0057b8; }
+  .time-compare { display:flex; flex-direction:column; gap:2px; }
+  .time-planned { font-size:12px; color:#1a1a1a; }
+  .time-actual { font-size:11px; color:#6b7280; }
+  .time-actual .actual-label { font-weight:600; color:#374151; margin-right:4px; }
+  .time-diff { display:inline-block; font-size:10px; font-weight:600; padding:1px 5px; border-radius:4px; margin-left:6px; }
+  .time-diff.late { background:#fef3c7; color:#92400e; }
+  .time-diff.early { background:#dcfce7; color:#15803d; }
+  .time-diff.ontime { background:#f3f4f6; color:#6b7280; }
 
   /* Nested action table */
   .action-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:12px; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; }
@@ -270,10 +278,8 @@
           <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
           <tbody>
             <tr><td class="key">Target CI(s)</td><td class="val">dns-recursive-1 — direct dependency of affected CI</td></tr>
-            <tr><td class="key">Planned start</td><td class="val">Jun 9, 2026 11:00 PM</td></tr>
-            <tr><td class="key">Planned end</td><td class="val">Jun 10, 2026 1:00 AM</td></tr>
-            <tr><td class="key">Actual start</td><td class="val">Jun 9, 2026 11:04 PM</td></tr>
-            <tr><td class="key">Actual end</td><td class="val">Jun 10, 2026 12:47 AM</td></tr>
+            <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:04 PM<span class="time-diff late">+4 min</span></span></div></td></tr>
+            <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 10, 2026 1:00 AM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 10, 2026 12:47 AM<span class="time-diff early">−13 min</span></span></div></td></tr>
             <tr><td class="key">Assignment group</td><td class="val">Network Engineering</td></tr>
             <tr><td class="key">Description</td><td class="val">Push updated recursive resolver config to dns-recursive-1 to enforce internal forwarding rules</td></tr>
             <tr><td class="key">Implementation plan</td><td class="val">Apply config via Ansible playbook; validate resolution via nslookup post-deploy; rollback via revert script if resolution fails</td></tr>
@@ -332,10 +338,8 @@
           <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
           <tbody>
             <tr><td class="key">Target CI(s)</td><td class="val">auth-svc-prod — direct dependency of affected CI</td></tr>
-            <tr><td class="key">Planned start</td><td class="val">Jun 9, 2026 11:30 PM</td></tr>
-            <tr><td class="key">Planned end</td><td class="val">Jun 10, 2026 12:30 AM</td></tr>
-            <tr><td class="key">Actual start</td><td class="val">Jun 9, 2026 11:33 PM</td></tr>
-            <tr><td class="key">Actual end</td><td class="val">Jun 10, 2026 12:21 AM</td></tr>
+            <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:33 PM<span class="time-diff late">+3 min</span></span></div></td></tr>
+            <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 10, 2026 12:30 AM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 10, 2026 12:21 AM<span class="time-diff early">−9 min</span></span></div></td></tr>
             <tr><td class="key">Assignment group</td><td class="val">Platform Engineering</td></tr>
             <tr><td class="key">Description</td><td class="val">Emergency deploy of backend-auth v4.12.1 to address session timeout regression introduced in v4.11.9</td></tr>
             <tr><td class="key">Implementation plan</td><td class="val">Deploy via Jenkins pipeline to auth-svc-prod; smoke test login flow; monitor 403 rate for 15 min post-deploy; rollback to v4.11.9 if error rate exceeds 5%</td></tr>
@@ -394,10 +398,8 @@
           <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
           <tbody>
             <tr><td class="key">Target CI(s)</td><td class="val">zos-connector-prod — indirect dependency via messaging topology</td></tr>
-            <tr><td class="key">Planned start</td><td class="val">Jun 9, 2026 10:00 PM</td></tr>
-            <tr><td class="key">Planned end</td><td class="val">Jun 9, 2026 11:30 PM</td></tr>
-            <tr><td class="key">Actual start</td><td class="val">Jun 9, 2026 10:08 PM</td></tr>
-            <tr><td class="key">Actual end</td><td class="val">Jun 9, 2026 11:52 PM</td></tr>
+            <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 10:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:08 PM<span class="time-diff late">+8 min</span></span></div></td></tr>
+            <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:52 PM<span class="time-diff late">+22 min</span></span></div></td></tr>
             <tr><td class="key">Assignment group</td><td class="val">Storage Operations</td></tr>
             <tr><td class="key">Description</td><td class="val">Rotate expiring TLS certificates on zOS connector to maintain secure messaging channel</td></tr>
             <tr><td class="key">Implementation plan</td><td class="val">Replace cert via StorageOps tooling; validate connector handshake; no automated rollback — manual revert requires StorageOps TAC approval</td></tr>
@@ -456,10 +458,8 @@
           <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
           <tbody>
             <tr><td class="key">Target CI(s)</td><td class="val">akamai-waf-prod — indirect dependency via edge network topology</td></tr>
-            <tr><td class="key">Planned start</td><td class="val">Jun 9, 2026 10:30 PM</td></tr>
-            <tr><td class="key">Planned end</td><td class="val">Jun 9, 2026 11:00 PM</td></tr>
-            <tr><td class="key">Actual start</td><td class="val">Jun 9, 2026 10:31 PM</td></tr>
-            <tr><td class="key">Actual end</td><td class="val">Jun 9, 2026 10:58 PM</td></tr>
+            <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 10:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:31 PM<span class="time-diff ontime">+1 min</span></span></div></td></tr>
+            <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:58 PM<span class="time-diff early">−2 min</span></span></div></td></tr>
             <tr><td class="key">Assignment group</td><td class="val">Network Security</td></tr>
             <tr><td class="key">Description</td><td class="val">Update Akamai WAF edge rules to WAF v2 policy — tighten IP reputation thresholds for DDoS detection</td></tr>
             <tr><td class="key">Implementation plan</td><td class="val">Deploy rule update via Akamai portal; validate traffic pass-through for VPN IP ranges; no rollback script available — manual rule revert via Akamai support</td></tr>
