@@ -140,9 +140,8 @@
   .step-desc { font-size:12px; color:#374151; margin-bottom:6px; }
   .step-links { font-size:12px; } .step-links a { color:#0057b8; font-weight:600; margin-right:12px; }
 
-  /* Resolution explainer text */
-  .resolution-explainer { font-size:12px; color:#6b7280; line-height:1.5; margin-bottom:8px; padding:8px 10px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; }
-  .resolution-explainer strong { color:#374151; }
+  /* Resolution explainer subtitle inside table header */
+  .res-explainer-sub { display:block; font-size:11px; font-weight:400; text-transform:none; letter-spacing:0; opacity:.85; margin-top:4px; line-height:1.5; }
 
   /* Nested remediation table inside action table */
   .nested-table { width:100%; border-collapse:collapse; margin-top:6px; border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; }
@@ -280,11 +279,8 @@
             <tr><td class="key">Implementation plan</td><td class="val">Apply config via Ansible playbook; validate resolution via nslookup post-deploy; rollback via revert script if resolution fails</td></tr>
           </tbody>
         </table>
-        <div class="resolution-explainer">
-          <strong>Resolution guidance:</strong> Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1.
-        </div>
         <table class="action-table">
-          <thead><tr><th colspan="2">Resolution</th></tr></thead>
+          <thead><tr><th colspan="2">Resolution<span class="res-explainer-sub">Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1.</span></th></tr></thead>
           <tbody>
             <tr>
               <td class="step-num primary">Step 1<br>Rollback</td>
@@ -345,11 +341,8 @@
             <tr><td class="key">Implementation plan</td><td class="val">Deploy via Jenkins pipeline to auth-svc-prod; smoke test login flow; monitor 403 rate for 15 min post-deploy; rollback to v4.11.9 if error rate exceeds 5%</td></tr>
           </tbody>
         </table>
-        <div class="resolution-explainer">
-          <strong>Resolution guidance:</strong> Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1.
-        </div>
         <table class="action-table">
-          <thead><tr><th colspan="2">Resolution</th></tr></thead>
+          <thead><tr><th colspan="2">Resolution<span class="res-explainer-sub">Options below are ranked by recommended order of attempt. Start with Step 1 — if the rollback resolves the incident, no further action is needed. If the issue persists or escalates, proceed to the ranked remediation options in Step 2, starting from option 1.</span></th></tr></thead>
           <tbody>
             <tr>
               <td class="step-num primary">Step 1<br>Rollback</td>
@@ -410,11 +403,8 @@
             <tr><td class="key">Implementation plan</td><td class="val">Replace cert via StorageOps tooling; validate connector handshake; no automated rollback — manual revert requires StorageOps TAC approval</td></tr>
           </tbody>
         </table>
-        <div class="resolution-explainer">
-          <strong>Resolution guidance:</strong> No automated rollback is available for this change. Engage the assignment group directly to initiate a manual revert, then attempt the ranked remediation options below in parallel if the incident remains active.
-        </div>
         <table class="action-table">
-          <thead><tr><th colspan="2">Resolution</th></tr></thead>
+          <thead><tr><th colspan="2">Resolution<span class="res-explainer-sub">No automated rollback is available for this change. Engage the assignment group directly to initiate a manual revert, then attempt the ranked remediation options below in parallel if the incident remains active.</span></th></tr></thead>
           <tbody>
             <tr>
               <td class="step-num warning">Step 1<br>No rollback</td>
@@ -475,11 +465,8 @@
             <tr><td class="key">Implementation plan</td><td class="val">Deploy rule update via Akamai portal; validate traffic pass-through for VPN IP ranges; no rollback script available — manual rule revert via Akamai support</td></tr>
           </tbody>
         </table>
-        <div class="resolution-explainer">
-          <strong>Resolution guidance:</strong> No automated rollback is available for this change. The options below are ranked by recommended attempt order based on similar past incidents. Coordinate with Akamai support for any rule revert.
-        </div>
         <table class="action-table">
-          <thead><tr><th colspan="2">Resolution <span style="font-weight:400;font-size:11px;opacity:.75;">— rollback not available for this change</span></th></tr></thead>
+          <thead><tr><th colspan="2">Resolution<span class="res-explainer-sub">No automated rollback is available for this change. The options below are ranked by recommended attempt order based on similar past incidents. Coordinate with Akamai support for any rule revert.</span></th></tr></thead>
           <tbody>
             <tr>
               <td class="step-num primary">Remediation</td>
