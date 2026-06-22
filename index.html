@@ -410,7 +410,7 @@
           The DNS recursive resolver config push aligns with the incident start time and affects the same CI topology. A misconfiguration of the resolver introduced incorrect forwarding rules, consistent with the observed DNS resolution failures (62% error rate at incident time). Similar pattern to INC2939989. <a href="#">View full reasoning ↗</a>
         </div>
         <table class="detail-table">
-          <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
+          <thead><tr><th colspan="2">Change</th></tr></thead>
           <tbody>
             <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364897 in ServiceNow ↗</a></td></tr>
             <tr><td class="key">Target CI(s)</td><td class="val">dns-recursive-1 — direct dependency of affected CI</td></tr>
@@ -474,7 +474,7 @@
           Emergency deploy of v4.12.1 introduced a certificate misconfiguration causing connection refusals on the auth-svc-prod CI. This correlates with the 403 error spike (69% at incident time) and is consistent with INC3849405. <a href="#">View full reasoning ↗</a>
         </div>
         <table class="detail-table">
-          <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
+          <thead><tr><th colspan="2">Change</th></tr></thead>
           <tbody>
             <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364650 in ServiceNow ↗</a></td></tr>
             <tr><td class="key">Target CI(s)</td><td class="val">auth-svc-prod — direct dependency of affected CI</td></tr>
@@ -528,7 +528,6 @@
       <div class="suspect-main" onclick="toggleDetail('d3','c3')">
         <div class="rank three">3</div>
         <div class="suspect-info">
-          <div class="cc-eyebrow">Change Correlation</div>
           <div class="suspect-name">zOS connector certificate rotation</div>
         </div>
         <span class="chevron" id="c3">▾</span>
@@ -538,7 +537,7 @@
           Certificate rotation on zos-connector-prod may have caused a brief trust chain break, contributing to connection timeouts (44% at incident time). Lower confidence — temporal overlap may be coincidental. <a href="#">View full reasoning ↗</a>
         </div>
         <table class="detail-table">
-          <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
+          <thead><tr><th colspan="2">Change</th></tr></thead>
           <tbody>
             <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364803 in ServiceNow ↗</a></td></tr>
             <tr><td class="key">Target CI(s)</td><td class="val">zos-connector-prod — indirect dependency via messaging topology</td></tr>
@@ -592,7 +591,6 @@
       <div class="suspect-main" onclick="toggleDetail('d4','c4')">
         <div class="rank low">4</div>
         <div class="suspect-info">
-          <div class="cc-eyebrow">Change Correlation</div>
           <div class="suspect-name">Akamai edge rule update — WAF v2</div>
         </div>
         <span class="chevron" id="c4">▾</span>
@@ -602,7 +600,7 @@
           WAF rule update may have contributed to misidentification of VPN traffic as DDoS, causing connection drops. Lower confidence — time delta of 51 minutes weakens the correlation. No rollback available. <a href="#">View full reasoning ↗</a>
         </div>
         <table class="detail-table">
-          <thead><tr><th colspan="2">Change Correlation</th></tr></thead>
+          <thead><tr><th colspan="2">Change</th></tr></thead>
           <tbody>
             <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364901 in ServiceNow ↗</a></td></tr>
             <tr><td class="key">Target CI(s)</td><td class="val">akamai-waf-prod — indirect dependency via edge network topology</td></tr>
