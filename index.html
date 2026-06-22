@@ -206,7 +206,10 @@
   .cc-summary-table .rca-row { cursor:pointer; }
   .cc-summary-table .rca-row td:last-child { text-align:center; width:32px; padding:9px 8px; }
   .rca-detail-row > td { padding:0 !important; background:#fafafa; border-bottom:1px solid #e5e7eb; }
-  .rca-detail-inner { padding:14px 16px; }
+  .rca-detail-inner { padding:14px 16px; text-align:left; }
+  .rca-detail-inner .detail-reasoning { text-align:left; }
+  .rca-detail-inner .detail-table td.val { text-align:left; }
+  .rca-detail-inner .nested-table td { text-align:left; }
 
   /* Option comparison labels */
   .option-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#fff; background:#6b7280; display:inline-block; padding:2px 8px; border-radius:4px; margin-bottom:6px; }
@@ -344,45 +347,107 @@
             <tr>
               <th>#</th>
               <th>Change</th>
-              <th>Change #</th>
-              <th>Target CI</th>
-              <th>Assignment Group</th>
-              <th>Start Time</th>
+              <th style="width:32px;"></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+
+            <tr class="rca-row" onclick="toggleCCDetail('cc-d1','cc-c1')">
               <td><div class="rank" style="margin:0 auto;">1</div></td>
               <td><div class="cc-change-name">DNS recursive resolver config push</div></td>
-              <td><a href="#" class="cc-chg-link">CHG0364897</a></td>
-              <td><span class="cc-ci">dns-recursive-1</span></td>
-              <td><span class="cc-group">Network Engineering</span></td>
-              <td><span class="cc-time">Jun 9, 2026 11:04 PM</span></td>
+              <td><span class="chevron" id="cc-c1">▾</span></td>
             </tr>
-            <tr>
+            <tr class="rca-detail-row hidden" id="cc-d1">
+              <td colspan="3">
+                <div class="rca-detail-inner">
+                  <table class="detail-table">
+                    <thead><tr><th colspan="2">Change</th></tr></thead>
+                    <tbody>
+                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364897 in ServiceNow ↗</a></td></tr>
+                      <tr><td class="key">Target CI(s)</td><td class="val">dns-recursive-1 — direct dependency of affected CI</td></tr>
+                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:04 PM<span class="time-diff late">+4 min</span></span></div></td></tr>
+                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 10, 2026 1:00 AM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 10, 2026 12:47 AM<span class="time-diff early">−13 min</span></span></div></td></tr>
+                      <tr><td class="key">Assignment group</td><td class="val">Network Engineering</td></tr>
+                      <tr><td class="key">Description</td><td class="val">Push updated recursive resolver config to dns-recursive-1 to enforce internal forwarding rules</td></tr>
+                      <tr><td class="key">Implementation plan</td><td class="val">Apply config via Ansible playbook; validate resolution via nslookup post-deploy</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="rca-row" onclick="toggleCCDetail('cc-d2','cc-c2')">
               <td><div class="rank two" style="margin:0 auto;">2</div></td>
               <td><div class="cc-change-name">backend-auth svc deploy v4.12.1</div></td>
-              <td><a href="#" class="cc-chg-link">CHG0364650</a></td>
-              <td><span class="cc-ci">auth-svc-prod</span></td>
-              <td><span class="cc-group">Platform Engineering</span></td>
-              <td><span class="cc-time">Jun 9, 2026 11:33 PM</span></td>
+              <td><span class="chevron" id="cc-c2">▾</span></td>
             </tr>
-            <tr>
+            <tr class="rca-detail-row hidden" id="cc-d2">
+              <td colspan="3">
+                <div class="rca-detail-inner">
+                  <table class="detail-table">
+                    <thead><tr><th colspan="2">Change</th></tr></thead>
+                    <tbody>
+                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364650 in ServiceNow ↗</a></td></tr>
+                      <tr><td class="key">Target CI(s)</td><td class="val">auth-svc-prod — direct dependency of affected CI</td></tr>
+                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:33 PM<span class="time-diff late">+3 min</span></span></div></td></tr>
+                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 10, 2026 12:30 AM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 10, 2026 12:21 AM<span class="time-diff early">−9 min</span></span></div></td></tr>
+                      <tr><td class="key">Assignment group</td><td class="val">Platform Engineering</td></tr>
+                      <tr><td class="key">Description</td><td class="val">Emergency deploy of backend-auth v4.12.1 to address session timeout regression introduced in v4.11.9</td></tr>
+                      <tr><td class="key">Implementation plan</td><td class="val">Deploy via Jenkins pipeline to auth-svc-prod; smoke test login flow; monitor 403 rate for 15 min post-deploy</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="rca-row" onclick="toggleCCDetail('cc-d3','cc-c3')">
               <td><div class="rank three" style="margin:0 auto;">3</div></td>
               <td><div class="cc-change-name">zOS connector certificate rotation</div></td>
-              <td><a href="#" class="cc-chg-link">CHG0364803</a></td>
-              <td><span class="cc-ci">zos-connector-prod</span></td>
-              <td><span class="cc-group">Storage Operations</span></td>
-              <td><span class="cc-time">Jun 9, 2026 10:08 PM</span></td>
+              <td><span class="chevron" id="cc-c3">▾</span></td>
             </tr>
-            <tr>
+            <tr class="rca-detail-row hidden" id="cc-d3">
+              <td colspan="3">
+                <div class="rca-detail-inner">
+                  <table class="detail-table">
+                    <thead><tr><th colspan="2">Change</th></tr></thead>
+                    <tbody>
+                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364803 in ServiceNow ↗</a></td></tr>
+                      <tr><td class="key">Target CI(s)</td><td class="val">zos-connector-prod — indirect dependency via messaging topology</td></tr>
+                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 10:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:08 PM<span class="time-diff late">+8 min</span></span></div></td></tr>
+                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:52 PM<span class="time-diff late">+22 min</span></span></div></td></tr>
+                      <tr><td class="key">Assignment group</td><td class="val">Storage Operations</td></tr>
+                      <tr><td class="key">Description</td><td class="val">Rotate expiring TLS certificates on zOS connector to maintain secure messaging channel</td></tr>
+                      <tr><td class="key">Implementation plan</td><td class="val">Replace cert via StorageOps tooling; validate connector handshake</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="rca-row" onclick="toggleCCDetail('cc-d4','cc-c4')">
               <td><div class="rank low" style="margin:0 auto;">4</div></td>
               <td><div class="cc-change-name">Akamai edge rule update — WAF v2</div></td>
-              <td><a href="#" class="cc-chg-link">CHG0364901</a></td>
-              <td><span class="cc-ci">akamai-waf-prod</span></td>
-              <td><span class="cc-group">Network Security</span></td>
-              <td><span class="cc-time">Jun 9, 2026 10:31 PM</span></td>
+              <td><span class="chevron" id="cc-c4">▾</span></td>
             </tr>
+            <tr class="rca-detail-row hidden" id="cc-d4">
+              <td colspan="3">
+                <div class="rca-detail-inner">
+                  <table class="detail-table">
+                    <thead><tr><th colspan="2">Change</th></tr></thead>
+                    <tbody>
+                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364901 in ServiceNow ↗</a></td></tr>
+                      <tr><td class="key">Target CI(s)</td><td class="val">akamai-waf-prod — indirect dependency via edge network topology</td></tr>
+                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 10:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:31 PM<span class="time-diff ontime">+1 min</span></span></div></td></tr>
+                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:58 PM<span class="time-diff early">−2 min</span></span></div></td></tr>
+                      <tr><td class="key">Assignment group</td><td class="val">Network Security</td></tr>
+                      <tr><td class="key">Description</td><td class="val">Update Akamai WAF edge rules to WAF v2 policy — tighten IP reputation thresholds for DDoS detection</td></tr>
+                      <tr><td class="key">Implementation plan</td><td class="val">Deploy rule update via Akamai portal; validate traffic pass-through for VPN IP ranges</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+
           </tbody>
         </table>
       </div>
@@ -402,10 +467,6 @@
             <tr>
               <th>#</th>
               <th>Insight</th>
-              <th>Change #</th>
-              <th>Target CI</th>
-              <th>Assignment Group</th>
-              <th>Start Time</th>
               <th style="width:32px;"></th>
             </tr>
           </thead>
@@ -418,14 +479,10 @@
                 <div class="cc-eyebrow">Change Correlation</div>
                 <div class="cc-change-name">DNS recursive resolver config push</div>
               </td>
-              <td><a href="#" class="cc-chg-link" onclick="event.stopPropagation()">CHG0364897</a></td>
-              <td><span class="cc-ci">dns-recursive-1</span></td>
-              <td><span class="cc-group">Network Engineering</span></td>
-              <td><span class="cc-time">Jun 9, 2026 11:04 PM</span></td>
               <td><span class="chevron" id="rca-c1">▾</span></td>
             </tr>
             <tr class="rca-detail-row hidden" id="rca-d1">
-              <td colspan="7">
+              <td colspan="3">
                 <div class="rca-detail-inner">
                   <div class="detail-reasoning">The DNS recursive resolver config push aligns with the incident start time and affects the same CI topology. A misconfiguration of the resolver introduced incorrect forwarding rules, consistent with the observed DNS resolution failures (62% error rate at incident time). Similar pattern to INC2939989. <a href="#">View full reasoning ↗</a></div>
                   <table class="detail-table">
@@ -473,14 +530,10 @@
                 <div class="cc-eyebrow">Change Correlation</div>
                 <div class="cc-change-name">backend-auth svc deploy v4.12.1</div>
               </td>
-              <td><a href="#" class="cc-chg-link" onclick="event.stopPropagation()">CHG0364650</a></td>
-              <td><span class="cc-ci">auth-svc-prod</span></td>
-              <td><span class="cc-group">Platform Engineering</span></td>
-              <td><span class="cc-time">Jun 9, 2026 11:33 PM</span></td>
               <td><span class="chevron" id="rca-c2">▾</span></td>
             </tr>
             <tr class="rca-detail-row hidden" id="rca-d2">
-              <td colspan="7">
+              <td colspan="3">
                 <div class="rca-detail-inner">
                   <div class="detail-reasoning">Emergency deploy of v4.12.1 introduced a certificate misconfiguration causing connection refusals on the auth-svc-prod CI. This correlates with the 403 error spike (69% at incident time) and is consistent with INC3849405. <a href="#">View full reasoning ↗</a></div>
                   <table class="detail-table">
@@ -525,14 +578,10 @@
             <tr class="rca-row" onclick="toggleRCADetail('rca-d3','rca-c3')">
               <td><div class="rank three" style="margin:0 auto;">3</div></td>
               <td><div class="cc-change-name">zOS connector certificate rotation</div></td>
-              <td><a href="#" class="cc-chg-link" onclick="event.stopPropagation()">CHG0364803</a></td>
-              <td><span class="cc-ci">zos-connector-prod</span></td>
-              <td><span class="cc-group">Storage Operations</span></td>
-              <td><span class="cc-time">Jun 9, 2026 10:08 PM</span></td>
               <td><span class="chevron" id="rca-c3">▾</span></td>
             </tr>
             <tr class="rca-detail-row hidden" id="rca-d3">
-              <td colspan="7">
+              <td colspan="3">
                 <div class="rca-detail-inner">
                   <div class="detail-reasoning">Certificate rotation on zos-connector-prod may have caused a brief trust chain break, contributing to connection timeouts (44% at incident time). Lower confidence — temporal overlap may be coincidental. <a href="#">View full reasoning ↗</a></div>
                   <table class="detail-table">
@@ -577,14 +626,10 @@
             <tr class="rca-row" onclick="toggleRCADetail('rca-d4','rca-c4')">
               <td><div class="rank low" style="margin:0 auto;">4</div></td>
               <td><div class="cc-change-name">Akamai edge rule update — WAF v2</div></td>
-              <td><a href="#" class="cc-chg-link" onclick="event.stopPropagation()">CHG0364901</a></td>
-              <td><span class="cc-ci">akamai-waf-prod</span></td>
-              <td><span class="cc-group">Network Security</span></td>
-              <td><span class="cc-time">Jun 9, 2026 10:31 PM</span></td>
               <td><span class="chevron" id="rca-c4">▾</span></td>
             </tr>
             <tr class="rca-detail-row hidden" id="rca-d4">
-              <td colspan="7">
+              <td colspan="3">
                 <div class="rca-detail-inner">
                   <div class="detail-reasoning">WAF rule update may have contributed to misidentification of VPN traffic as DDoS, causing connection drops. Lower confidence — time delta of 51 minutes weakens the correlation. <a href="#">View full reasoning ↗</a></div>
                   <table class="detail-table">
@@ -867,6 +912,13 @@ document.addEventListener('click', function(e) {
     logoPickerOpen = false;
   }
 });
+
+function toggleCCDetail(detailId, chevId) {
+  const d = document.getElementById(detailId);
+  const c = document.getElementById(chevId);
+  d.classList.toggle('hidden');
+  c.classList.toggle('open');
+}
 
 function toggleRCADetail(detailId, chevId) {
   const d = document.getElementById(detailId);
