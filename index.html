@@ -184,6 +184,26 @@
   .cc-pill { font-size:11px; font-weight:600; color:#1e40af; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:3px 9px; white-space:nowrap; flex-shrink:0; }
   .cc-eyebrow { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#1e40af; margin-bottom:2px; }
 
+  /* Change Correlations summary table */
+  .cc-section-header { cursor:pointer; user-select:none; display:flex; align-items:center; margin-bottom:10px; }
+  .cc-section-header .cc-chevron { margin-left:auto; color:#bbb; font-size:14px; transition:transform .2s; }
+  .cc-section-header .cc-chevron.open { transform:rotate(180deg); }
+  .cc-summary-wrap { margin-bottom:16px; }
+  .cc-summary-table { width:100%; border-collapse:collapse; font-size:13px; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; background:#fff; }
+  .cc-summary-table thead th { text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#fff; background:#1e40af; padding:9px 12px; white-space:nowrap; }
+  .cc-summary-table thead th:first-child { width:36px; text-align:center; }
+  .cc-summary-table tbody tr { border-bottom:1px solid #f0f0f0; transition:background .1s; }
+  .cc-summary-table tbody tr:last-child { border-bottom:none; }
+  .cc-summary-table tbody tr:hover { background:#f5f8ff; }
+  .cc-summary-table tbody td { padding:9px 12px; vertical-align:middle; color:#374151; }
+  .cc-summary-table tbody td:first-child { text-align:center; }
+  .cc-summary-table .cc-chg-link { color:#0057b8; font-weight:600; text-decoration:none; font-size:12px; }
+  .cc-summary-table .cc-chg-link:hover { text-decoration:underline; }
+  .cc-summary-table .cc-change-name { font-weight:600; color:#1a1a1a; font-size:13px; }
+  .cc-summary-table .cc-ci { font-size:12px; color:#555; }
+  .cc-summary-table .cc-group { font-size:12px; color:#555; }
+  .cc-summary-table .cc-time { font-size:12px; color:#555; white-space:nowrap; }
+
   /* Option comparison labels */
   .option-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#fff; background:#6b7280; display:inline-block; padding:2px 8px; border-radius:4px; margin-bottom:6px; }
 
@@ -306,7 +326,70 @@
     </div>
 
 
-    <!-- Suspect list -->
+    <!-- Change Correlations table -->
+    <div class="cc-summary-wrap">
+      <div class="section-label cc-section-header" onclick="toggleCCTable()">
+        Top Change Correlations
+        <span class="count">4</span>
+        <span class="window">· ranked by time proximity to incident</span>
+        <span class="cc-chevron open" id="cc-table-chevron">▾</span>
+      </div>
+      <div id="cc-table-section">
+        <table class="cc-summary-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Change</th>
+              <th>Change #</th>
+              <th>Target CI</th>
+              <th>Assignment Group</th>
+              <th>Start Time</th>
+              <th>Rollback</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="rank" style="margin:0 auto;">1</div></td>
+              <td><div class="cc-change-name">DNS recursive resolver config push</div></td>
+              <td><a href="#" class="cc-chg-link">CHG0364897</a></td>
+              <td><span class="cc-ci">dns-recursive-1</span></td>
+              <td><span class="cc-group">Network Engineering</span></td>
+              <td><span class="cc-time">Jun 9, 2026 11:04 PM</span></td>
+              <td><span class="rollback-badge rb-ready">Rollback ready</span></td>
+            </tr>
+            <tr>
+              <td><div class="rank two" style="margin:0 auto;">2</div></td>
+              <td><div class="cc-change-name">backend-auth svc deploy v4.12.1</div></td>
+              <td><a href="#" class="cc-chg-link">CHG0364650</a></td>
+              <td><span class="cc-ci">auth-svc-prod</span></td>
+              <td><span class="cc-group">Platform Engineering</span></td>
+              <td><span class="cc-time">Jun 9, 2026 11:33 PM</span></td>
+              <td><span class="rollback-badge rb-ready">Rollback ready</span></td>
+            </tr>
+            <tr>
+              <td><div class="rank three" style="margin:0 auto;">3</div></td>
+              <td><div class="cc-change-name">zOS connector certificate rotation</div></td>
+              <td><a href="#" class="cc-chg-link">CHG0364803</a></td>
+              <td><span class="cc-ci">zos-connector-prod</span></td>
+              <td><span class="cc-group">Storage Operations</span></td>
+              <td><span class="cc-time">Jun 9, 2026 10:08 PM</span></td>
+              <td><span class="rollback-badge rb-manual">Manual only</span></td>
+            </tr>
+            <tr>
+              <td><div class="rank low" style="margin:0 auto;">4</div></td>
+              <td><div class="cc-change-name">Akamai edge rule update — WAF v2</div></td>
+              <td><a href="#" class="cc-chg-link">CHG0364901</a></td>
+              <td><span class="cc-ci">akamai-waf-prod</span></td>
+              <td><span class="cc-group">Network Security</span></td>
+              <td><span class="cc-time">Jun 9, 2026 10:31 PM</span></td>
+              <td><span class="rollback-badge rb-none">No rollback</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Suspect list (RCA) -->
     <div class="section-label">
       Top Insights
       <span class="window">· ranked by likelihood of contribution</span>
@@ -799,6 +882,13 @@ document.addEventListener('click', function(e) {
     logoPickerOpen = false;
   }
 });
+
+let ccTableOpen = true;
+function toggleCCTable() {
+  ccTableOpen = !ccTableOpen;
+  document.getElementById('cc-table-section').classList.toggle('hidden', !ccTableOpen);
+  document.getElementById('cc-table-chevron').classList.toggle('open', ccTableOpen);
+}
 
 let lowOpen = false;
 function toggleLow() {
