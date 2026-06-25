@@ -351,8 +351,9 @@
         <table class="cc-summary-table">
           <thead>
             <tr>
-              <th>#</th>
+              <th style="width:36px;">#</th>
               <th>Change</th>
+              <th style="width:120px;">Confidence</th>
               <th style="width:32px;"></th>
             </tr>
           </thead>
@@ -361,6 +362,7 @@
             <tr class="rca-row" onclick="toggleCCDetail('cc-d1','cc-c1')">
               <td><div class="rank" style="margin:0 auto;">1</div></td>
               <td><div class="cc-change-name">DNS recursive resolver config push</div></td>
+              <td><div class="conf-interval"><span class="conf-pct high">87%</span></div></td>
               <td><span class="chevron" id="cc-c1">▾</span></td>
             </tr>
             <tr class="rca-detail-row hidden" id="cc-d1">
@@ -385,6 +387,7 @@
             <tr class="rca-row" onclick="toggleCCDetail('cc-d2','cc-c2')">
               <td><div class="rank two" style="margin:0 auto;">2</div></td>
               <td><div class="cc-change-name">backend-auth svc deploy v4.12.1</div></td>
+              <td><div class="conf-interval"><span class="conf-pct high">74%</span></div></td>
               <td><span class="chevron" id="cc-c2">▾</span></td>
             </tr>
             <tr class="rca-detail-row hidden" id="cc-d2">
@@ -409,6 +412,7 @@
             <tr class="rca-row" onclick="toggleCCDetail('cc-d3','cc-c3')">
               <td><div class="rank three" style="margin:0 auto;">3</div></td>
               <td><div class="cc-change-name">zOS connector certificate rotation</div></td>
+              <td><div class="conf-interval"><span class="conf-pct medium">51%</span></div></td>
               <td><span class="chevron" id="cc-c3">▾</span></td>
             </tr>
             <tr class="rca-detail-row hidden" id="cc-d3">
@@ -433,6 +437,7 @@
             <tr class="rca-row" onclick="toggleCCDetail('cc-d4','cc-c4')">
               <td><div class="rank low" style="margin:0 auto;">4</div></td>
               <td><div class="cc-change-name">Akamai edge rule update — WAF v2</div></td>
+              <td><div class="conf-interval"><span class="conf-pct low">34%</span></div></td>
               <td><span class="chevron" id="cc-c4">▾</span></td>
             </tr>
             <tr class="rca-detail-row hidden" id="cc-d4">
