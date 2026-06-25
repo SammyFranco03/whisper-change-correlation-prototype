@@ -57,10 +57,16 @@
   }
   .suspect-main:hover { background:#fafafa; }
 
-  .rank { width:22px; height:22px; border-radius:50%; background:#0057b8; color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .rank.two { background:#6b7280; }
-  .rank.three { background:#9ca3af; }
-  .rank.low { background:#d1d5db; }
+  .rank { display:none; }
+
+  .conf-interval { display:flex; flex-direction:column; align-items:flex-end; gap:3px; }
+  .conf-pct { font-size:13px; font-weight:700; color:#1a1a1a; }
+  .conf-bar-track { width:80px; height:5px; background:#e5e7eb; border-radius:3px; overflow:hidden; }
+  .conf-bar-fill { height:100%; border-radius:3px; }
+  .conf-bar-fill.high   { background:#15803d; }
+  .conf-bar-fill.medium { background:#d97706; }
+  .conf-bar-fill.low    { background:#9ca3af; }
+  .conf-range { font-size:10px; color:#888; letter-spacing:.2px; white-space:nowrap; }
 
   .suspect-info { flex:1; min-width:0; }
   .suspect-name { font-size:14px; font-weight:600; color:#1a1a1a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -456,16 +462,15 @@
     <!-- Top Insights (RCA) -->
     <div class="cc-summary-wrap">
       <div class="section-label cc-section-header" onclick="toggleRCATable()">
-        Top Insights
+        RCA
         <span class="count">4</span>
-        <span class="window">· ranked by likelihood of contribution</span>
         <span class="cc-chevron open" id="rca-table-chevron">▾</span>
       </div>
       <div id="rca-table-section">
         <table class="cc-summary-table">
           <thead>
             <tr>
-              <th>#</th>
+              <th style="width:110px;">Confidence</th>
               <th>Insight</th>
               <th style="width:32px;"></th>
             </tr>
@@ -474,7 +479,7 @@
 
             <!-- Row 1 -->
             <tr class="rca-row" onclick="toggleRCADetail('rca-d1','rca-c1')">
-              <td><div class="rank" style="margin:0 auto;">1</div></td>
+              <td><div class="conf-interval"><div class="conf-pct">87%</div><div class="conf-bar-track"><div class="conf-bar-fill high" style="width:87%"></div></div><div class="conf-range">CI: 78–93%</div></div></td>
               <td>
                 <div class="cc-eyebrow">Change Correlation</div>
                 <div class="cc-change-name">DNS recursive resolver config push</div>
@@ -525,7 +530,7 @@
 
             <!-- Row 2 -->
             <tr class="rca-row" onclick="toggleRCADetail('rca-d2','rca-c2')">
-              <td><div class="rank two" style="margin:0 auto;">2</div></td>
+              <td><div class="conf-interval"><div class="conf-pct">74%</div><div class="conf-bar-track"><div class="conf-bar-fill high" style="width:74%"></div></div><div class="conf-range">CI: 65–82%</div></div></td>
               <td>
                 <div class="cc-eyebrow">Change Correlation</div>
                 <div class="cc-change-name">backend-auth svc deploy v4.12.1</div>
@@ -576,7 +581,7 @@
 
             <!-- Row 3 -->
             <tr class="rca-row" onclick="toggleRCADetail('rca-d3','rca-c3')">
-              <td><div class="rank three" style="margin:0 auto;">3</div></td>
+              <td><div class="conf-interval"><div class="conf-pct">51%</div><div class="conf-bar-track"><div class="conf-bar-fill medium" style="width:51%"></div></div><div class="conf-range">CI: 39–63%</div></div></td>
               <td><div class="cc-change-name">zOS connector certificate rotation</div></td>
               <td><span class="chevron" id="rca-c3">▾</span></td>
             </tr>
@@ -624,7 +629,7 @@
 
             <!-- Row 4 -->
             <tr class="rca-row" onclick="toggleRCADetail('rca-d4','rca-c4')">
-              <td><div class="rank low" style="margin:0 auto;">4</div></td>
+              <td><div class="conf-interval"><div class="conf-pct">34%</div><div class="conf-bar-track"><div class="conf-bar-fill low" style="width:34%"></div></div><div class="conf-range">CI: 24–45%</div></div></td>
               <td><div class="cc-change-name">Akamai edge rule update — WAF v2</div></td>
               <td><span class="chevron" id="rca-c4">▾</span></td>
             </tr>
