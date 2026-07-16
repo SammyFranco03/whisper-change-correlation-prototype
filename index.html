@@ -1,968 +1,928 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Whisper: Bridge Insights v3</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bridge Insights — Whisper</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #1a1a1a; background: #f5f5f5; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Nav */
-  .topnav { background:#fff; border-bottom:1px solid #ddd; display:flex; align-items:center; padding:0 20px; height:56px; gap:12px; position:sticky; top:0; z-index:100; }
-  .topnav .logo { display:flex; align-items:center; gap:6px; font-weight:700; font-size:15px; color:#cc0000; }
-  .topnav .product { font-size:15px; color:#333; border-left:1px solid #ddd; padding-left:12px; }
-  .topnav .spacer { flex:1; }
-  .topnav .feedback-btn { font-size:13px; color:#0057b8; text-decoration:none; border:1px solid #0057b8; padding:4px 10px; border-radius:4px; }
-  .topnav .welcome { font-size:13px; color:#555; }
-  .topnav a { font-size:13px; color:#0057b8; text-decoration:none; margin-left:8px; }
+:root {
+  --nav-bg: #ffffff;
+  --nav-border: #e5e7eb;
+  --sidebar-bg: #1c2b45;
+  --page-bg: #f3f4f6;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --section-hdr: #1a2e54;
+  --text: #111827;
+  --text-dim: #6b7280;
+  --text-muted: #9ca3af;
+  --tab-active: #1d4ed8;
+  --link: #1d4ed8;
+  --row-border: #f3f4f6;
+  --outage-red: #cc0000;
+}
 
-  /* Layout */
-  .layout { display:flex; height:calc(100vh - 52px); }
-  .sidebar-left { width:44px; background:#fff; border-right:1px solid #e0e0e0; display:flex; flex-direction:column; align-items:center; padding-top:12px; gap:4px; flex-shrink:0; }
-  .sidebar-left .icon-btn { width:36px; height:36px; border-radius:6px; display:flex; align-items:center; justify-content:center; cursor:pointer; border:none; background:transparent; color:#555; font-size:16px; }
-  .sidebar-left .icon-btn.active { background:#e8f0fb; color:#0057b8; }
-  .main { flex:1; overflow-y:auto; padding:24px 28px; }
-  .activity-hub { flex:1; background:#fff; border-left:1px solid #ddd; display:flex; flex-direction:column; min-width:300px; max-width:360px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--page-bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.4;
+}
 
-  /* Page header */
-  .page-title { font-size:22px; font-weight:600; margin-bottom:16px; }
-  .bridge-tabs { display:flex; border-bottom:2px solid #e0e0e0; margin-bottom:20px; }
-  .bridge-tabs .tab { padding:8px 16px; cursor:pointer; font-size:13px; color:#555; border-bottom:2px solid transparent; margin-bottom:-2px; white-space:nowrap; }
-  .bridge-tabs .tab.active { color:#0057b8; border-bottom-color:#0057b8; font-weight:600; }
+/* ── Top Nav ── */
+.top-nav {
+  height: 56px;
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  flex-shrink: 0;
+}
 
-  /* Overview bar */
-  .overview-bar { background:#fff; border:1px solid #e0e0e0; border-radius:8px; padding:12px 16px; margin-bottom:16px; display:flex; align-items:center; gap:32px; flex-wrap:wrap; }
-  .meta-group { display:flex; flex-direction:column; gap:2px; }
-  .meta-label { font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.4px; }
-  .meta-value { font-size:13px; color:#222; }
-  .meta-value a { color:#0057b8; }
-  .refresh-btn { margin-left:auto; display:flex; align-items:center; gap:6px; background:#0057b8; color:#fff; border:none; border-radius:6px; padding:6px 14px; font-size:13px; cursor:pointer; white-space:nowrap; }
+.nav-logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
 
-  /* Section label */
-  .section-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#888; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
-  .section-label .count { background:#0057b8; color:#fff; font-size:10px; padding:1px 7px; border-radius:10px; font-weight:700; text-transform:none; letter-spacing:0; }
-  .section-label .window { font-size:11px; color:#aaa; font-weight:400; text-transform:none; letter-spacing:0; }
+.nav-spacer { flex: 1; }
 
-  /* ── Change Suspect Card ── */
-  .suspect-card {
-    background:#fff; border:1px solid #e0e0e0; border-radius:8px;
-    margin-bottom:10px; overflow:hidden;
-  }
-  .suspect-card.top-suspect { border-left:3px solid #0057b8; }
+.nav-feedback {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+  background: transparent;
+  margin-right: 16px;
+  transition: border-color 0.15s;
+  font-family: inherit;
+}
+.nav-feedback:hover { border-color: #6b7280; }
 
-  .suspect-main {
-    display:flex; align-items:center; gap:12px;
-    padding:14px 16px; cursor:pointer;
-  }
-  .suspect-main:hover { background:#fafafa; }
+.nav-bell {
+  position: relative;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+  color: #6b7280;
+}
+.nav-bell .dot {
+  position: absolute;
+  top: 1px; right: 1px;
+  width: 8px; height: 8px;
+  background: #ef4444;
+  border-radius: 50%;
+  border: 2px solid white;
+}
 
-  .rank { width:22px; height:22px; border-radius:50%; background:#0057b8; color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .rank.two { background:#6b7280; }
-  .rank.three { background:#9ca3af; }
-  .rank.low { background:#d1d5db; }
+.nav-welcome { font-size: 13px; color: #6b7280; margin-right: 16px; }
+.nav-signout { font-size: 13px; color: var(--link); cursor: pointer; }
 
-  .conf-interval { display:flex; align-items:center; justify-content:flex-start; }
-  .conf-pct { font-size:15px; font-weight:700; padding:3px 10px; border-radius:12px; white-space:nowrap; }
-  .conf-pct.high   { color:#15803d; background:#dcfce7; }
-  .conf-pct.medium { color:#92400e; background:#fef3c7; }
-  .conf-pct.low    { color:#dc2626; background:#fee2e2; }
+/* ── App Body ── */
+.app-body { display: flex; flex: 1; overflow: hidden; }
 
-  .suspect-info { flex:1; min-width:0; }
-  .suspect-name { font-size:14px; font-weight:600; color:#1a1a1a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .suspect-meta { font-size:12px; color:#888; margin-top:2px; display:flex; gap:8px; flex-wrap:wrap; }
-  .suspect-meta .ci { color:#555; }
+/* ── Icon Sidebar ── */
+.icon-sidebar {
+  width: 48px;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  flex-shrink: 0;
+}
+.sidebar-icon {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  color: #9ca3af;
+  font-size: 17px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background 0.15s;
+}
+.sidebar-icon:hover { background: rgba(255,255,255,0.1); color: #e5e7eb; }
+.sidebar-icon.active { background: rgba(59,130,246,0.2); color: #93c5fd; }
 
-  .rollback-badge { font-size:11px; font-weight:600; padding:3px 8px; border-radius:10px; white-space:nowrap; flex-shrink:0; }
-  .rb-ready  { background:#dcfce7; color:#15803d; border:1px solid #86efac; }
-  .rb-manual { background:#fef3c7; color:#92400e; border:1px solid #fcd34d; }
-  .rb-none   { background:#f3f4f6; color:#6b7280; border:1px solid #d1d5db; }
-  .rb-inprog { background:#dbeafe; color:#1d4ed8; border:1px solid #93c5fd; }
+/* ── Main Content ── */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 24px 32px;
+  min-width: 0;
+}
 
-  /* Inline confirm/reject — right side of row */
-  .inline-actions { display:flex; align-items:center; gap:6px; flex-shrink:0; }
-  .ia-btn { border:1px solid #e0e0e0; border-radius:6px; background:#fff; padding:5px 10px; cursor:pointer; font-size:13px; color:#555; transition:all .15s; white-space:nowrap; }
-  .ia-btn:hover.confirm { background:#dcfce7; border-color:#16a34a; color:#16a34a; }
-  .ia-btn:hover.dismiss { background:#fee2e2; border-color:#dc2626; color:#dc2626; }
-  .ia-btn.confirmed { background:#dcfce7; border-color:#16a34a; color:#16a34a; }
-  .ia-btn.dismissed { background:#fee2e2; border-color:#dc2626; color:#dc2626; }
+/* ── Outage Banner ── */
+.outage-banner {
+  display: none;
+  align-items: center;
+  background: var(--outage-red);
+  border-radius: 6px;
+  padding: 0 20px;
+  height: 72px;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+.outage-banner.visible { display: flex; }
+.outage-info { flex: 1; min-width: 0; }
+.outage-title { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+.outage-sub { font-size: 13px; color: rgba(255,255,255,0.85); }
+.outage-view-btn {
+  padding: 8px 16px;
+  background: #fff;
+  color: #cc0000;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+.outage-close {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 6px;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  background: transparent;
+  flex-shrink: 0;
+  font-family: inherit;
+  line-height: 1;
+}
 
-  .chevron { color:#bbb; font-size:14px; flex-shrink:0; transition:transform .2s; }
-  .chevron.open { transform:rotate(180deg); }
+/* ── Page Heading ── */
+.page-heading { font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
 
-  /* Expanded detail */
-  .suspect-detail { border-top:1px solid #f0f0f0; padding:14px 16px; background:#fafafa; }
-  .detail-reasoning { font-size:13px; color:#444; line-height:1.6; margin-bottom:12px; }
-  .detail-reasoning a { color:#0057b8; }
+/* ── Tab Bar ── */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  transition: color 0.15s;
+  flex-shrink: 0;
+  user-select: none;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--tab-active); border-bottom-color: var(--tab-active); font-weight: 500; }
 
-  .rollback-callout { background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:12px; color:#78350f; display:flex; align-items:flex-start; gap:8px; }
-  .rollback-callout .rc-icon { font-size:16px; flex-shrink:0; }
-  .rollback-callout a { color:#0057b8; font-weight:600; }
+/* ── Content Card ── */
+.content-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
 
-  .detail-actions { display:flex; gap:8px; }
-  .detail-link { font-size:12px; color:#0057b8; }
+/* ── Incident Info Row ── */
+.incident-info-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  min-height: 64px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.incident-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 100px;
+  margin-right: 52px;
+}
+.field-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+.field-value { font-size: 14px; font-weight: 500; color: var(--text); }
+.field-value.link-val { color: var(--link); cursor: pointer; }
+.field-value.link-val:hover { text-decoration: underline; }
+.incident-spacer { flex: 1; }
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--section-hdr);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.refresh-btn:hover { opacity: 0.88; }
+.refresh-btn:disabled { opacity: 0.6; cursor: default; }
+.refresh-icon { display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* In-progress warning */
-  .inprog-warning { background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; margin-bottom:10px; display:flex; gap:10px; align-items:flex-start; }
-  .inprog-warning .iw-icon { font-size:16px; flex-shrink:0; }
-  .iw-body { flex:1; font-size:12px; }
-  .iw-title { font-weight:600; color:#1d4ed8; margin-bottom:2px; }
-  .iw-sub { color:#374151; }
+/* ── Section Spacer (with centered horizontal rule) ── */
+.section-spacer {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+.section-spacer .rule { flex: 1; height: 1px; background: #e5e7eb; }
 
-  /* Activity Hub */
-  .ah-header { padding:14px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #e0e0e0; flex-shrink:0; }
-  .ah-title { font-size:15px; font-weight:600; }
-  .ah-close { background:none; border:none; font-size:18px; color:#888; cursor:pointer; }
-  .ah-tabs { display:flex; border-bottom:1px solid #e0e0e0; flex-shrink:0; }
-  .ah-tab { flex:1; padding:9px 6px; text-align:center; font-size:12px; color:#555; cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
-  .ah-tab.active { color:#0057b8; border-bottom-color:#0057b8; font-weight:600; }
-  .ah-badge { background:#dc2626; color:#fff; border-radius:10px; font-size:10px; padding:1px 5px; margin-left:3px; }
-  .ah-content { overflow-y:auto; flex:1; padding:12px; }
+/* ── Table Header Band (dark navy) ── */
+.table-hdr-band {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 40px;
+  background: var(--section-hdr);
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+.band-title { font-size: 13px; font-weight: 600; color: #fff; }
+.band-spacer { flex: 1; }
+.band-conf {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.65);
+  margin-right: 8px;
+}
+.band-sort { color: rgba(255,255,255,0.65); font-size: 15px; cursor: pointer; }
 
-  .feed-item { padding:8px 4px; border-bottom:1px solid #f0f0f0; }
-  .feed-item .fi-id { font-weight:600; font-size:12px; color:#0057b8; }
-  .feed-item .fi-time { font-size:11px; color:#999; float:right; }
-  .feed-item .fi-type { font-size:12px; color:#555; }
-  .feed-item .fi-desc { font-size:11px; color:#888; }
+/* ── Data Rows ── */
+.data-row { border-bottom: 1px solid var(--row-border); }
+.data-row:last-child { border-bottom: none; }
 
-  /* ── Nested tables ── */
-  .detail-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:12px; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; }
-  .detail-table th { text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#fff; background:#0057b8; padding:8px 12px; }
-  .table-source-row td { background:#f0f6ff; border-bottom:1px solid #dbeafe; padding:5px 12px; }
-  .table-source-link { font-size:12px; color:#0057b8; text-decoration:none; }
-  .table-source-link:hover { text-decoration:underline; }
-  .detail-table td { padding:9px 12px; border-bottom:1px solid #f0f0f0; vertical-align:top; color:#374151; font-size:12px; }
-  .detail-table tr:last-child td { border-bottom:none; }
-  .detail-table td.key { font-weight:600; color:#374151; white-space:nowrap; width:140px; background:#f9fafb; border-right:1px solid #e5e7eb; }
-  .detail-table td.val { color:#1a1a1a; }
-  .detail-table a { color:#0057b8; }
-  .time-compare { display:flex; flex-direction:column; gap:2px; }
-  .time-planned { font-size:12px; color:#1a1a1a; }
-  .time-actual { font-size:11px; color:#6b7280; }
-  .time-actual .actual-label { font-weight:600; color:#374151; margin-right:4px; }
-  .time-diff { display:inline-block; font-size:10px; font-weight:600; padding:1px 5px; border-radius:4px; margin-left:6px; }
-  .time-diff.late { background:#fef3c7; color:#92400e; }
-  .time-diff.early { background:#dcfce7; color:#15803d; }
-  .time-diff.ontime { background:#f3f4f6; color:#6b7280; }
+.row-summary {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  min-height: 48px;
+  cursor: pointer;
+  transition: background 0.1s;
+  user-select: none;
+}
+.row-summary:hover { background: #f9fafb; }
 
-  /* Nested action table */
-  .action-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:12px; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; }
-  .action-table > thead > tr > th { text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#fff; background:#374151; padding:8px 12px; }
-  .action-table > tbody > tr > td { padding:10px 12px; border-bottom:1px solid #f0f0f0; vertical-align:top; }
-  .action-table > tbody > tr:last-child > td { border-bottom:none; }
-  .action-table .step-num { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; white-space:nowrap; width:110px; background:#f9fafb; border-right:1px solid #e5e7eb; }
-  .action-table .step-num.primary { color:#15803d; background:#f0fdf4; }
-  .action-table .step-num.warning { color:#92400e; background:#fff7ed; }
-  .action-table .step-content { vertical-align:top; }
-  .step-desc { font-size:12px; color:#374151; margin-bottom:6px; }
-  .step-links { font-size:12px; } .step-links a { color:#0057b8; font-weight:600; margin-right:12px; }
+.row-chevron {
+  font-size: 13px;
+  color: var(--text-muted);
+  width: 14px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+  display: inline-block;
+  margin-right: 6px;
+}
+.row-chevron.open { transform: rotate(90deg); }
 
+.row-title {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text);
+  padding-right: 20px;
+}
+.row-title-group {
+  flex: 1;
+  padding-right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.row-sub-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--link);
+}
+.row-title-text { font-size: 14px; color: var(--text); }
 
-  /* Nested remediation table inside action table */
-  .nested-table { width:100%; border-collapse:collapse; margin-top:6px; border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; }
-  .nested-table th { font-size:11px; font-weight:600; color:#6b7280; background:#f3f4f6; padding:6px 10px; text-align:left; border-bottom:1px solid #e5e7eb; }
-  .nested-table td { font-size:12px; padding:7px 10px; border-bottom:1px solid #f9fafb; vertical-align:top; color:#374151; }
-  .nested-table tr:last-child td { border-bottom:none; }
-  .nested-table a { color:#0057b8; }
-  .reasoning-preview { color:#374151; }
-  .reasoning-full { color:#374151; }
-  .reasoning-toggle { display:inline; font-size:11px; color:#0057b8; margin-left:3px; white-space:nowrap; cursor:pointer; background:none; border:none; padding:0; font-family:inherit; }
+/* Confidence Pills */
+.conf-pill {
+  width: 56px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+.conf-green  { background: #16a34a; color: #fff; }
+.conf-lgreen { background: #4ade80; color: #14532d; }
+.conf-orange { background: #f97316; color: #fff; }
+.conf-red    { background: #fca5a5; color: #b91c1c; }
 
-  /* Resolution rank badge — mirrors RCA rank style */
-  .res-rank { width:22px; height:22px; border-radius:50%; background:#0057b8; color:#fff; font-size:11px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .res-rank.two { background:#6b7280; }
-  .nested-table td.res-rank-cell { text-align:center; width:36px; vertical-align:middle; padding:7px 6px; }
+.row-arrow { font-size: 14px; color: #d1d5db; width: 14px; text-align: right; flex-shrink: 0; }
 
-  /* Next-step panel */
-  .next-step-panel { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:14px; margin-top:14px; }
-  .ns-title { font-size:13px; font-weight:700; color:#15803d; margin-bottom:10px; }
-  .ns-options { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
-  .ns-btn { border:1px solid #d1d5db; background:#fff; border-radius:6px; padding:7px 14px; font-size:13px; cursor:pointer; color:#374151; }
-  .ns-btn:hover { border-color:#0057b8; color:#0057b8; background:#eff6ff; }
-  .ns-btn.primary { background:#16a34a; color:#fff; border-color:#16a34a; }
-  .ns-btn.primary:hover { background:#15803d; }
-  .ns-sub { font-size:11px; color:#6b7280; }
+/* ── Detail / RCA Panels ── */
+.detail-panel {
+  display: none;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  padding: 14px 20px 18px;
+}
+.detail-panel.open { display: block; }
 
-  /* Ruled out */
-  .ruled-out-label { font-size:10px; font-weight:700; text-transform:uppercase; color:#9ca3af; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:4px; padding:1px 6px; margin-right:6px; flex-shrink:0; }
+.detail-link {
+  font-size: 13.5px;
+  color: var(--link);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.detail-link:hover { text-decoration: underline; }
 
-  /* Change Correlation label */
-  .cc-pill { font-size:11px; font-weight:600; color:#1e40af; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:3px 9px; white-space:nowrap; flex-shrink:0; }
-  .cc-eyebrow { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#1e40af; margin-bottom:2px; }
+.detail-divider { height: 1px; background: #e5e7eb; margin-bottom: 12px; }
 
-  /* Change Correlations summary table */
-  .cc-section-header { cursor:pointer; user-select:none; display:flex; align-items:center; margin-bottom:10px; }
-  .cc-section-header .cc-chevron { margin-left:auto; color:#bbb; font-size:14px; transition:transform .2s; }
-  .cc-section-header .cc-chevron.open { transform:rotate(180deg); }
-  .cc-summary-wrap { margin-bottom:16px; }
-  .cc-summary-table { width:100%; border-collapse:collapse; font-size:13px; border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; background:#fff; }
-  .cc-summary-table thead th { text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#fff; background:#1e40af; padding:9px 12px; white-space:nowrap; }
-  .cc-summary-table thead th:first-child { width:36px; text-align:center; }
-  .cc-summary-table tbody tr { border-bottom:1px solid #f0f0f0; transition:background .1s; }
-  .cc-summary-table tbody tr:last-child { border-bottom:none; }
-  .cc-summary-table tbody tr:hover { background:#f5f8ff; }
-  .cc-summary-table tbody td { padding:9px 12px; vertical-align:middle; color:#374151; }
-  .cc-summary-table tbody td:first-child { text-align:center; }
-  .cc-summary-table .cc-chg-link { color:#0057b8; font-weight:600; text-decoration:none; font-size:12px; }
-  .cc-summary-table .cc-chg-link:hover { text-decoration:underline; }
-  .cc-summary-table .cc-change-name { font-weight:600; color:#1a1a1a; font-size:13px; }
-  .cc-summary-table .cc-ci { font-size:12px; color:#555; }
-  .cc-summary-table .cc-group { font-size:12px; color:#555; }
-  .cc-summary-table .cc-time { font-size:12px; color:#555; white-space:nowrap; }
-  .cc-summary-table .rca-row { cursor:pointer; }
-  .cc-summary-table .rca-row td:last-child { text-align:center; width:32px; padding:9px 8px; }
-  .rca-detail-row > td { padding:0 !important; background:#fafafa; border-bottom:1px solid #e5e7eb; }
-  .rca-detail-inner { padding:14px 16px; text-align:left; }
-  .rca-detail-inner .detail-reasoning { text-align:left; }
-  .rca-detail-inner .detail-table td.val { text-align:left; }
-  .rca-detail-inner .nested-table td { text-align:left; }
+.detail-field {
+  display: flex;
+  font-size: 13px;
+  padding: 4px 0;
+  line-height: 1.5;
+}
+.detail-label {
+  width: 160px;
+  flex-shrink: 0;
+  color: var(--text-dim);
+}
+.detail-value { flex: 1; color: var(--text); }
+.detail-value.link-val { color: var(--link); cursor: pointer; }
+.detail-value.link-val:hover { text-decoration: underline; }
 
-  /* Option comparison labels */
-  .option-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#fff; background:#6b7280; display:inline-block; padding:2px 8px; border-radius:4px; margin-bottom:6px; }
+/* ── Section Gap ── */
+.section-gap { height: 24px; border-bottom: 1px solid #f0f0f0; }
 
-  /* Action path — sequential rollback + remediation */
-  .action-path { display:flex; flex-direction:column; gap:8px; margin-top:4px; }
-  .action-path-step { border-radius:8px; padding:12px 14px; border:1px solid; }
-  .action-path-step.primary { background:#f0fdf4; border-color:#bbf7d0; }
-  .action-path-step.fallback { background:#f9fafb; border-color:#e5e7eb; }
-  .action-path-step.no-rollback { background:#fff7ed; border-color:#fed7aa; }
-  .aps-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#374151; margin-bottom:4px; }
-  .action-path-step.primary .aps-label { color:#15803d; }
-  .action-path-step.no-rollback .aps-label { color:#92400e; }
-  .aps-desc { font-size:12px; color:#555; margin-bottom:6px; }
-  .aps-links { font-size:12px; } .aps-links a { color:#0057b8; font-weight:600; }
+/* ── Show More Row ── */
+.show-more-row {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13.5px;
+  color: var(--link);
+  cursor: pointer;
+  border-top: 1px solid var(--row-border);
+  user-select: none;
+}
+.show-more-row:hover { background: #f9fafb; }
 
-  /* Correlation evidence block in expanded detail */
-  .corr-evidence { background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 14px; margin-bottom:12px; }
-  .corr-evidence-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#1e40af; margin-bottom:8px; }
-  .corr-evidence-row { display:flex; gap:12px; font-size:12px; margin-bottom:4px; }
-  .corr-evidence-row:last-child { margin-bottom:0; }
-  .corr-key { color:#3b82f6; font-weight:600; white-space:nowrap; min-width:110px; }
-  .corr-val { color:#374151; }
+.hidden-rows { display: none; }
+.hidden-rows.visible { display: block; }
 
-  /* Toast */
-  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(60px); background:#1a1a1a; color:#fff; padding:10px 20px; border-radius:8px; font-size:13px; opacity:0; transition:all .3s; z-index:999; pointer-events:none; }
-  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+/* ── Activity Hub ── */
+.activity-hub {
+  width: 220px;
+  min-width: 220px;
+  background: #fff;
+  border-left: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.hub-header {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+.hub-title { font-size: 15px; font-weight: 600; color: var(--text); flex: 1; }
+.hub-close {
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  line-height: 1;
+}
+.hub-close:hover { background: #f3f4f6; }
 
-  .hidden { display:none; }
+.hub-tabs {
+  height: 40px;
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+.hub-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s;
+  user-select: none;
+}
+.hub-tab:hover { color: var(--text); }
+.hub-tab.active { color: var(--tab-active); border-bottom-color: var(--tab-active); font-weight: 500; }
 
-  /* Logo picker */
-  .logo-pick-trigger { background:none; border:1px solid #e0e0e0; border-radius:5px; padding:3px 8px; font-size:12px; color:#555; cursor:pointer; margin-left:4px; display:flex; align-items:center; gap:4px; white-space:nowrap; }
-  .logo-pick-trigger:hover { border-color:#0057b8; color:#0057b8; }
-  .logo-pick-trigger .arrow { font-size:10px; transition:transform .2s; }
-  .logo-pick-trigger .arrow.open { transform:rotate(180deg); }
+.hub-badge {
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
 
-  .logo-picker-panel { position:absolute; top:56px; left:12px; background:#fff; border:1px solid #e0e0e0; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.12); padding:16px; z-index:200; width:560px; }
-  .logo-picker-panel h4 { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#888; margin-bottom:12px; }
-  .logo-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .logo-opt { border:2px solid #e5e7eb; border-radius:8px; padding:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; transition:all .15s; background:#fafafa; }
-  .logo-opt:hover { border-color:#93c5fd; background:#eff6ff; }
-  .logo-opt.active { border-color:#0057b8; background:#eff6ff; }
-  .logo-opt svg { display:block; }
-  .logo-opt img { height:40px; width:auto; object-fit:contain; }
-  .logo-opt-label { font-size:11px; font-weight:600; color:#374151; text-align:center; line-height:1.3; }
-  .logo-opt-sub { font-size:10px; color:#9ca3af; text-align:center; margin-top:-4px; }
-  .logo-opt.active .logo-opt-label { color:#0057b8; }
+.recent-label {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid #f3f4f6;
+  flex-shrink: 0;
+}
+
+.activity-feed { flex: 1; overflow-y: auto; }
+
+.activity-item {
+  padding: 9px 16px 8px;
+  border-bottom: 1px solid #f9fafb;
+  cursor: pointer;
+}
+.activity-item:hover { background: #f9fafb; }
+
+.activity-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1px;
+}
+.activity-id { font-size: 12px; font-weight: 500; color: var(--link); }
+.activity-time { font-size: 11px; color: var(--text-muted); }
+.activity-type { font-size: 12.5px; font-weight: 500; color: var(--text); margin-bottom: 1px; }
+.activity-desc { font-size: 11.5px; color: var(--text-dim); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
 </style>
 </head>
 <body>
 
-<!-- Nav -->
-<nav class="topnav" style="position:relative;">
-  <div class="logo" id="nav-logo" style="display:flex;align-items:center;gap:10px;">
-    <img src="logo-owl-icon.png" height="40" style="object-fit:contain;" alt="Whisper logo" id="nav-logo-img"/>
-    <span id="nav-logo-text" style="font-size:22px;font-weight:700;color:#0d3b82;letter-spacing:-0.5px;">whisper</span>
+<!-- Top Nav -->
+<nav class="top-nav">
+  <span class="nav-logo">Whisper</span>
+  <div class="nav-spacer"></div>
+  <button class="nav-feedback">↗ Give feedback in Slack</button>
+  <div class="nav-bell">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    <span class="dot"></span>
   </div>
-  <button class="logo-pick-trigger" onclick="toggleLogoPicker(this)" title="Switch logo concept">
-    <span>Logo options</span><span class="arrow" id="logo-pick-arrow">▾</span>
-  </button>
-  <span class="spacer"></span>
-  <a href="#" class="feedback-btn">↗ Give feedback in Slack</a>
-  <span class="welcome">&nbsp;🔔&nbsp; Welcome, Franco, Samantha R (admin)</span>
-  <a href="#">Sign out</a>
+  <span class="nav-welcome">Welcome, Franco, Samantha R (admin)</span>
+  <span class="nav-signout">Sign out</span>
 </nav>
 
-<!-- Logo picker panel -->
-<div class="logo-picker-panel hidden" id="logo-picker-panel">
-  <h4>Logo Concepts</h4>
-  <div class="logo-grid">
+<!-- App Body -->
+<div class="app-body">
 
-    <!-- 01 Owl with Lantern -->
-    <div class="logo-opt active" id="logo-opt-1" onclick="selectLogo(1)" title="Owl with Lantern">
-      <img src="logo-owl-icon.png" alt="Owl with Lantern"/>
+  <!-- Icon Sidebar -->
+  <div class="icon-sidebar">
+    <div class="sidebar-icon active" title="Dashboard">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
     </div>
-
-    <!-- 02 Lighthouse -->
-    <div class="logo-opt" id="logo-opt-2" onclick="selectLogo(2)" title="Lighthouse">
-      <img src="logo-lighthouse-icon.png" alt="Lighthouse"/>
+    <div class="sidebar-icon" title="Settings">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </div>
-
-    <!-- 03 Order from Chaos -->
-    <div class="logo-opt" id="logo-opt-3" onclick="selectLogo(3)" title="Order from Chaos">
-      <img src="logo-chaos-icon.png" alt="Order from Chaos"/>
-    </div>
-
-    <!-- 04 W Soundwave -->
-    <div class="logo-opt" id="logo-opt-4" onclick="selectLogo(4)" title="W Soundwave">
-      <img src="logo-w.png" alt="W Soundwave"/>
-    </div>
-
-  </div>
-</div>
-
-<div class="layout">
-
-  <!-- Sidebar -->
-  <div class="sidebar-left">
-    <button class="icon-btn active">⊞</button>
-    <button class="icon-btn">⚙</button>
   </div>
 
-  <!-- Main -->
-  <div class="main">
-    <h1 class="page-title">Bridge insights</h1>
+  <!-- Main Content -->
+  <main class="main-content">
 
-    <div class="bridge-tabs">
-      <div class="tab active">CCO-06 (INC1016016)</div>
-      <div class="tab">CCO-05 (INC1015903)</div>
-      <div class="tab">IMT-08 (INC1015614)</div>
-      <div class="tab">CCO-11 (INC1014278)</div>
-    </div>
-
-    <!-- Overview -->
-    <div class="overview-bar">
-      <div class="meta-group"><span class="meta-label">Bridge</span><span class="meta-value">CCO-06</span></div>
-      <div class="meta-group"><span class="meta-label">Incident</span><span class="meta-value">INC1016016</span></div>
-      <div class="meta-group"><span class="meta-label">Bridge link</span><span class="meta-value"><a href="#">Webex CCO-06</a></span></div>
-      <div class="meta-group"><span class="meta-label">Usage notes</span><span class="meta-value">Keyboard</span></div>
-      <button class="refresh-btn">↻ Refresh</button>
-    </div>
-
-
-    <!-- Change Correlations table -->
-    <div class="cc-summary-wrap">
-      <div class="section-label cc-section-header" onclick="toggleCCTable()">
-        Top Change Correlations
-        <span class="count">4</span>
-        <span class="window">· ranked by time proximity to incident</span>
-        <span class="cc-chevron open" id="cc-table-chevron">▾</span>
+    <!-- Outage Banner -->
+    <div class="outage-banner visible" id="outageBanner">
+      <div class="outage-info">
+        <div class="outage-title">Active outage — Member Portal checkout unavailable</div>
+        <div class="outage-sub">~45,000 users affected · Started Jun 9, 2026 11:04 PM · 2h 19m ongoing</div>
       </div>
-      <div id="cc-table-section">
-        <table class="cc-summary-table">
-          <thead>
-            <tr>
-              <th style="width:36px;">#</th>
-              <th>Change</th>
-              <th style="width:120px;">Confidence</th>
-              <th style="width:32px;"></th>
-            </tr>
-          </thead>
-          <tbody>
-
-            <tr class="rca-row" onclick="toggleCCDetail('cc-d1','cc-c1')">
-              <td><div class="rank" style="margin:0 auto;">1</div></td>
-              <td><div class="cc-change-name">DNS recursive resolver config push</div></td>
-              <td><div class="conf-interval"><span class="conf-pct high">87%</span></div></td>
-              <td><span class="chevron" id="cc-c1">▾</span></td>
-            </tr>
-            <tr class="rca-detail-row hidden" id="cc-d1">
-              <td colspan="3">
-                <div class="rca-detail-inner">
-                  <table class="detail-table">
-                    <thead><tr><th colspan="2">Change</th></tr></thead>
-                    <tbody>
-                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364897 in ServiceNow ↗</a></td></tr>
-                      <tr><td class="key">Target CI(s)</td><td class="val">dns-recursive-1 — direct dependency of affected CI</td></tr>
-                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:04 PM<span class="time-diff late">+4 min</span></span></div></td></tr>
-                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 10, 2026 1:00 AM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 10, 2026 12:47 AM<span class="time-diff early">−13 min</span></span></div></td></tr>
-                      <tr><td class="key">Assignment group</td><td class="val">Network Engineering</td></tr>
-                      <tr><td class="key">Description</td><td class="val">Push updated recursive resolver config to dns-recursive-1 to enforce internal forwarding rules</td></tr>
-                      <tr><td class="key">Implementation plan</td><td class="val">Apply config via Ansible playbook; validate resolution via nslookup post-deploy</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="rca-row" onclick="toggleCCDetail('cc-d2','cc-c2')">
-              <td><div class="rank two" style="margin:0 auto;">2</div></td>
-              <td><div class="cc-change-name">backend-auth svc deploy v4.12.1</div></td>
-              <td><div class="conf-interval"><span class="conf-pct high">74%</span></div></td>
-              <td><span class="chevron" id="cc-c2">▾</span></td>
-            </tr>
-            <tr class="rca-detail-row hidden" id="cc-d2">
-              <td colspan="3">
-                <div class="rca-detail-inner">
-                  <table class="detail-table">
-                    <thead><tr><th colspan="2">Change</th></tr></thead>
-                    <tbody>
-                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364650 in ServiceNow ↗</a></td></tr>
-                      <tr><td class="key">Target CI(s)</td><td class="val">auth-svc-prod — direct dependency of affected CI</td></tr>
-                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:33 PM<span class="time-diff late">+3 min</span></span></div></td></tr>
-                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 10, 2026 12:30 AM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 10, 2026 12:21 AM<span class="time-diff early">−9 min</span></span></div></td></tr>
-                      <tr><td class="key">Assignment group</td><td class="val">Platform Engineering</td></tr>
-                      <tr><td class="key">Description</td><td class="val">Emergency deploy of backend-auth v4.12.1 to address session timeout regression introduced in v4.11.9</td></tr>
-                      <tr><td class="key">Implementation plan</td><td class="val">Deploy via Jenkins pipeline to auth-svc-prod; smoke test login flow; monitor 403 rate for 15 min post-deploy</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="rca-row" onclick="toggleCCDetail('cc-d3','cc-c3')">
-              <td><div class="rank three" style="margin:0 auto;">3</div></td>
-              <td><div class="cc-change-name">zOS connector certificate rotation</div></td>
-              <td><div class="conf-interval"><span class="conf-pct medium">51%</span></div></td>
-              <td><span class="chevron" id="cc-c3">▾</span></td>
-            </tr>
-            <tr class="rca-detail-row hidden" id="cc-d3">
-              <td colspan="3">
-                <div class="rca-detail-inner">
-                  <table class="detail-table">
-                    <thead><tr><th colspan="2">Change</th></tr></thead>
-                    <tbody>
-                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364803 in ServiceNow ↗</a></td></tr>
-                      <tr><td class="key">Target CI(s)</td><td class="val">zos-connector-prod — indirect dependency via messaging topology</td></tr>
-                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 10:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:08 PM<span class="time-diff late">+8 min</span></span></div></td></tr>
-                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:52 PM<span class="time-diff late">+22 min</span></span></div></td></tr>
-                      <tr><td class="key">Assignment group</td><td class="val">Storage Operations</td></tr>
-                      <tr><td class="key">Description</td><td class="val">Rotate expiring TLS certificates on zOS connector to maintain secure messaging channel</td></tr>
-                      <tr><td class="key">Implementation plan</td><td class="val">Replace cert via StorageOps tooling; validate connector handshake</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="rca-row" onclick="toggleCCDetail('cc-d4','cc-c4')">
-              <td><div class="rank low" style="margin:0 auto;">4</div></td>
-              <td><div class="cc-change-name">Akamai edge rule update — WAF v2</div></td>
-              <td><div class="conf-interval"><span class="conf-pct low">34%</span></div></td>
-              <td><span class="chevron" id="cc-c4">▾</span></td>
-            </tr>
-            <tr class="rca-detail-row hidden" id="cc-d4">
-              <td colspan="3">
-                <div class="rca-detail-inner">
-                  <table class="detail-table">
-                    <thead><tr><th colspan="2">Change</th></tr></thead>
-                    <tbody>
-                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364901 in ServiceNow ↗</a></td></tr>
-                      <tr><td class="key">Target CI(s)</td><td class="val">akamai-waf-prod — indirect dependency via edge network topology</td></tr>
-                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 10:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:31 PM<span class="time-diff ontime">+1 min</span></span></div></td></tr>
-                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:58 PM<span class="time-diff early">−2 min</span></span></div></td></tr>
-                      <tr><td class="key">Assignment group</td><td class="val">Network Security</td></tr>
-                      <tr><td class="key">Description</td><td class="val">Update Akamai WAF edge rules to WAF v2 policy — tighten IP reputation thresholds for DDoS detection</td></tr>
-                      <tr><td class="key">Implementation plan</td><td class="val">Deploy rule update via Akamai portal; validate traffic pass-through for VPN IP ranges</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-
-          </tbody>
-        </table>
-      </div>
+      <button class="outage-view-btn">View incident</button>
+      <button class="outage-close" onclick="document.getElementById('outageBanner').classList.remove('visible')">×</button>
     </div>
 
-    <!-- Top Insights (RCA) -->
-    <div class="cc-summary-wrap">
-      <div class="section-label cc-section-header" onclick="toggleRCATable()">
-        RCA
-        <span class="count">4</span>
-        <span class="cc-chevron open" id="rca-table-chevron">▾</span>
-      </div>
-      <div id="rca-table-section">
-        <table class="cc-summary-table">
-          <thead>
-            <tr>
-              <th style="width:36px;">#</th>
-              <th>RCA</th>
-              <th style="width:120px;">Confidence</th>
-              <th style="width:32px;"></th>
-            </tr>
-          </thead>
-          <tbody>
+    <h1 class="page-heading">Bridge insights</h1>
 
-            <!-- Row 1 -->
-            <tr class="rca-row" onclick="toggleRCADetail('rca-d1','rca-c1')">
-              <td><div class="rank" style="margin:0 auto;">1</div></td>
-              <td>
-                <div class="cc-eyebrow">Change Correlation</div>
-                <div class="cc-change-name">DNS recursive resolver config push</div>
-              </td>
-              <td><div class="conf-interval"><span class="conf-pct high">87%</span></div></td>
-              <td><span class="chevron" id="rca-c1">▾</span></td>
-            </tr>
-            <tr class="rca-detail-row hidden" id="rca-d1">
-              <td colspan="3">
-                <div class="rca-detail-inner">
-                  <div class="detail-reasoning">The DNS recursive resolver config push aligns with the incident start time and affects the same CI topology. A misconfiguration of the resolver introduced incorrect forwarding rules, consistent with the observed DNS resolution failures (62% error rate at incident time). Similar pattern to INC2939989. <a href="#">View full reasoning ↗</a></div>
-                  <table class="detail-table">
-                    <thead><tr><th colspan="2">Change</th></tr></thead>
-                    <tbody>
-                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364897 in ServiceNow ↗</a></td></tr>
-                      <tr><td class="key">Target CI(s)</td><td class="val">dns-recursive-1 — direct dependency of affected CI</td></tr>
-                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:04 PM<span class="time-diff late">+4 min</span></span></div></td></tr>
-                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 10, 2026 1:00 AM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 10, 2026 12:47 AM<span class="time-diff early">−13 min</span></span></div></td></tr>
-                      <tr><td class="key">Assignment group</td><td class="val">Network Engineering</td></tr>
-                      <tr><td class="key">Description</td><td class="val">Push updated recursive resolver config to dns-recursive-1 to enforce internal forwarding rules</td></tr>
-                      <tr><td class="key">Implementation plan</td><td class="val">Apply config via Ansible playbook; validate resolution via nslookup post-deploy</td></tr>
-                    </tbody>
-                  </table>
-                  <table class="action-table">
-                    <thead><tr><th colspan="2">Remediation</th></tr></thead>
-                    <tbody><tr><td colspan="2" style="padding:10px 12px 0;">
-                      <table class="nested-table">
-                        <thead><tr><th>#</th><th>Action</th><th>Similar incident</th><th>Reasoning</th></tr></thead>
-                        <tbody>
-                          <tr>
-                            <td class="res-rank-cell"><span class="res-rank">1</span></td>
-                            <td>Disable recursive configurations on external-facing DNS devices and recycle DNS services.</td>
-                            <td><a href="#">Review INC2939989</a></td>
-                            <td><span class="reasoning-preview">Recursive configs on external DNS caused identical resolution failures in INC2939989.</span><span class="reasoning-full hidden"> Disabling recursive forwarding and recycling the DNS service restored resolution within 8 minutes. Pattern match: same CI type, same error rate profile.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
-                          </tr>
-                          <tr>
-                            <td class="res-rank-cell"><span class="res-rank two">2</span></td>
-                            <td>Perform targeted recycles of DNS services and messaging gateways after configuration changes.</td>
-                            <td><a href="#">Review INC3495745</a></td>
-                            <td><span class="reasoning-preview">Stale DNS cache entries persisted post-config-change in INC3495745, causing continued failures.</span><span class="reasoning-full hidden"> Recycling DNS services and messaging gateways cleared the stale cache and restored normal operation within 12 minutes. Lower confidence due to partial topology overlap.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td></tr></tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 2 -->
-            <tr class="rca-row" onclick="toggleRCADetail('rca-d2','rca-c2')">
-              <td><div class="rank two" style="margin:0 auto;">2</div></td>
-              <td>
-                <div class="cc-eyebrow">Change Correlation</div>
-                <div class="cc-change-name">backend-auth svc deploy v4.12.1</div>
-              </td>
-              <td><div class="conf-interval"><span class="conf-pct high">74%</span></div></td>
-              <td><span class="chevron" id="rca-c2">▾</span></td>
-            </tr>
-            <tr class="rca-detail-row hidden" id="rca-d2">
-              <td colspan="3">
-                <div class="rca-detail-inner">
-                  <div class="detail-reasoning">Emergency deploy of v4.12.1 introduced a certificate misconfiguration causing connection refusals on the auth-svc-prod CI. This correlates with the 403 error spike (69% at incident time) and is consistent with INC3849405. <a href="#">View full reasoning ↗</a></div>
-                  <table class="detail-table">
-                    <thead><tr><th colspan="2">Change</th></tr></thead>
-                    <tbody>
-                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364650 in ServiceNow ↗</a></td></tr>
-                      <tr><td class="key">Target CI(s)</td><td class="val">auth-svc-prod — direct dependency of affected CI</td></tr>
-                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:33 PM<span class="time-diff late">+3 min</span></span></div></td></tr>
-                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 10, 2026 12:30 AM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 10, 2026 12:21 AM<span class="time-diff early">−9 min</span></span></div></td></tr>
-                      <tr><td class="key">Assignment group</td><td class="val">Platform Engineering</td></tr>
-                      <tr><td class="key">Description</td><td class="val">Emergency deploy of backend-auth v4.12.1 to address session timeout regression introduced in v4.11.9</td></tr>
-                      <tr><td class="key">Implementation plan</td><td class="val">Deploy via Jenkins pipeline to auth-svc-prod; smoke test login flow; monitor 403 rate for 15 min post-deploy</td></tr>
-                    </tbody>
-                  </table>
-                  <table class="action-table">
-                    <thead><tr><th colspan="2">Remediation</th></tr></thead>
-                    <tbody><tr><td colspan="2" style="padding:10px 12px 0;">
-                      <table class="nested-table">
-                        <thead><tr><th>#</th><th>Action</th><th>Similar incident</th><th>Reasoning</th></tr></thead>
-                        <tbody>
-                          <tr>
-                            <td class="res-rank-cell"><span class="res-rank">1</span></td>
-                            <td>Implement Round Robin load balancing for zOSConnect and increase application timeout configurations.</td>
-                            <td><a href="#">Review INC5415745</a></td>
-                            <td><span class="reasoning-preview">Round Robin load balancing in INC5415745 distributed auth requests when a single endpoint was degraded.</span><span class="reasoning-full hidden"> Timeout increases prevented cascading failures during recovery. Combined approach reduced MTTR by ~40% compared to restart-only remediation in similar incidents.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
-                          </tr>
-                          <tr>
-                            <td class="res-rank-cell"><span class="res-rank two">2</span></td>
-                            <td>Perform targeted restarts of messaging gateways, zOS connectors, and associated servers to clear exhausted resources.</td>
-                            <td><a href="#">Review INC5415745</a></td>
-                            <td><span class="reasoning-preview">Targeted restarts in INC5415745 cleared connection pool exhaustion caused by the misconfigured deploy.</span><span class="reasoning-full hidden"> Recovery time was ~12 minutes post-restart. Lower ranking due to service disruption risk during restart sequence in high-traffic windows.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td></tr></tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 3 -->
-            <tr class="rca-row" onclick="toggleRCADetail('rca-d3','rca-c3')">
-              <td><div class="rank three" style="margin:0 auto;">3</div></td>
-              <td><div class="cc-change-name">zOS connector certificate rotation</div></td>
-              <td><div class="conf-interval"><span class="conf-pct medium">51%</span></div></td>
-              <td><span class="chevron" id="rca-c3">▾</span></td>
-            </tr>
-            <tr class="rca-detail-row hidden" id="rca-d3">
-              <td colspan="3">
-                <div class="rca-detail-inner">
-                  <div class="detail-reasoning">Certificate rotation on zos-connector-prod may have caused a brief trust chain break, contributing to connection timeouts (44% at incident time). Lower confidence — temporal overlap may be coincidental. <a href="#">View full reasoning ↗</a></div>
-                  <table class="detail-table">
-                    <thead><tr><th colspan="2">Change</th></tr></thead>
-                    <tbody>
-                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364803 in ServiceNow ↗</a></td></tr>
-                      <tr><td class="key">Target CI(s)</td><td class="val">zos-connector-prod — indirect dependency via messaging topology</td></tr>
-                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 10:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:08 PM<span class="time-diff late">+8 min</span></span></div></td></tr>
-                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 11:52 PM<span class="time-diff late">+22 min</span></span></div></td></tr>
-                      <tr><td class="key">Assignment group</td><td class="val">Storage Operations</td></tr>
-                      <tr><td class="key">Description</td><td class="val">Rotate expiring TLS certificates on zOS connector to maintain secure messaging channel</td></tr>
-                      <tr><td class="key">Implementation plan</td><td class="val">Replace cert via StorageOps tooling; validate connector handshake</td></tr>
-                    </tbody>
-                  </table>
-                  <table class="action-table">
-                    <thead><tr><th colspan="2">Remediation</th></tr></thead>
-                    <tbody><tr><td colspan="2" style="padding:10px 12px 0;">
-                      <table class="nested-table">
-                        <thead><tr><th>#</th><th>Action</th><th>Similar incident</th><th>Reasoning</th></tr></thead>
-                        <tbody>
-                          <tr>
-                            <td class="res-rank-cell"><span class="res-rank">1</span></td>
-                            <td>Validate multipathing configuration on all ESXi hosts connected to the SAN to ensure I/O path redundancy.</td>
-                            <td><a href="#">Review INC8100050</a></td>
-                            <td><span class="reasoning-preview">Multipath misconfiguration in INC8100050 caused intermittent I/O failures matching current symptoms.</span><span class="reasoning-full hidden"> Validating and correcting path redundancy resolved the issue within 15 minutes. High confidence match: same SAN topology, same connector type, similar failure window duration.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
-                          </tr>
-                          <tr>
-                            <td class="res-rank-cell"><span class="res-rank two">2</span></td>
-                            <td>Monitor SAN fabric switch ports for incrementing errors and disable any ports showing 'slow drain' behavior.</td>
-                            <td><a href="#">Review INC8100050</a></td>
-                            <td><span class="reasoning-preview">Slow drain behavior on SAN ports in INC8100050 was a secondary contributor to connection timeouts.</span><span class="reasoning-full hidden"> Disabling affected ports eliminated the bottleneck within 5 minutes. Ranked second as slow drain is less likely given the certificate rotation timing in this incident.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td></tr></tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 4 -->
-            <tr class="rca-row" onclick="toggleRCADetail('rca-d4','rca-c4')">
-              <td><div class="rank low" style="margin:0 auto;">4</div></td>
-              <td><div class="cc-change-name">Akamai edge rule update — WAF v2</div></td>
-              <td><div class="conf-interval"><span class="conf-pct low">34%</span></div></td>
-              <td><span class="chevron" id="rca-c4">▾</span></td>
-            </tr>
-            <tr class="rca-detail-row hidden" id="rca-d4">
-              <td colspan="3">
-                <div class="rca-detail-inner">
-                  <div class="detail-reasoning">WAF rule update may have contributed to misidentification of VPN traffic as DDoS, causing connection drops. Lower confidence — time delta of 51 minutes weakens the correlation. <a href="#">View full reasoning ↗</a></div>
-                  <table class="detail-table">
-                    <thead><tr><th colspan="2">Change</th></tr></thead>
-                    <tbody>
-                      <tr class="table-source-row"><td colspan="2"><a href="#" class="table-source-link">View CHG0364901 in ServiceNow ↗</a></td></tr>
-                      <tr><td class="key">Target CI(s)</td><td class="val">akamai-waf-prod — indirect dependency via edge network topology</td></tr>
-                      <tr><td class="key">Start</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 10:30 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:31 PM<span class="time-diff ontime">+1 min</span></span></div></td></tr>
-                      <tr><td class="key">End</td><td class="val"><div class="time-compare"><span class="time-planned">Jun 9, 2026 11:00 PM</span><span class="time-actual"><span class="actual-label">Actual</span>Jun 9, 2026 10:58 PM<span class="time-diff early">−2 min</span></span></div></td></tr>
-                      <tr><td class="key">Assignment group</td><td class="val">Network Security</td></tr>
-                      <tr><td class="key">Description</td><td class="val">Update Akamai WAF edge rules to WAF v2 policy — tighten IP reputation thresholds for DDoS detection</td></tr>
-                      <tr><td class="key">Implementation plan</td><td class="val">Deploy rule update via Akamai portal; validate traffic pass-through for VPN IP ranges</td></tr>
-                    </tbody>
-                  </table>
-                  <table class="action-table">
-                    <thead><tr><th colspan="2">Remediation</th></tr></thead>
-                    <tbody><tr><td colspan="2" style="padding:10px 12px 0;">
-                      <table class="nested-table">
-                        <thead><tr><th>#</th><th>Action</th><th>Similar incident</th><th>Reasoning</th></tr></thead>
-                        <tbody>
-                          <tr>
-                            <td class="res-rank-cell"><span class="res-rank">1</span></td>
-                            <td>Review Akamai WAF rule changes and temporarily disable aggressive IP reputation rules affecting VPN ranges.</td>
-                            <td><a href="#">Review INC3886569</a></td>
-                            <td><span class="reasoning-preview">Overly aggressive IP reputation thresholds in INC3886569 caused false-positive DDoS flagging for VPN traffic.</span><span class="reasoning-full hidden"> Temporarily disabling the affected rules restored normal traffic flow within 10 minutes while a permanent fix was prepared. Same WAF policy version involved.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
-                          </tr>
-                          <tr>
-                            <td class="res-rank-cell"><span class="res-rank two">2</span></td>
-                            <td>Coordinate with Akamai support to revert WAF v2 rule set to previous policy baseline.</td>
-                            <td><a href="#">Review INC3886569</a></td>
-                            <td><span class="reasoning-preview">Full policy revert in INC3886569 was required when targeted rule disabling was insufficient.</span><span class="reasoning-full hidden"> Akamai support completed the revert in ~25 minutes. Ranked second due to longer resolution time and dependency on external vendor support availability.</span><button class="reasoning-toggle" onclick="toggleReasoning(this)">Show more</button></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td></tr></tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-
-          </tbody>
-        </table>
-      </div>
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchTab(0)">CCO-06 (INC1016016)</div>
+      <div class="tab" onclick="switchTab(1)">CCO-05 (INC1015903)</div>
+      <div class="tab" onclick="switchTab(2)">IMT-08 (INC1015614)</div>
+      <div class="tab" onclick="switchTab(3)">CCO-11 (INC1014278)</div>
     </div>
 
-    <!-- Low confidence collapsed -->
-    <div style="font-size:12px;color:#888;text-align:center;padding:8px 0;cursor:pointer;" onclick="toggleLow()">
-      <span id="low-label">▸ Show 3 lower-confidence changes (below 40%)</span>
-    </div>
-    <div id="low-changes" class="hidden">
-      <div class="suspect-card">
-        <div class="suspect-main">
-          <div class="rank low">5</div>
-          <div class="suspect-info">
-            <div class="suspect-name">messaging-gw infra scale-out</div>
-            <div class="suspect-meta"><span>CHG0364807</span><span>·</span><span class="ci">msg-gateway-prod</span><span>·</span><span>4h before incident</span></div>
-          </div>
-          <span class="chevron">▾</span>
+    <!-- Content Card -->
+    <div class="content-card">
+
+      <!-- Incident Info Row -->
+      <div class="incident-info-row">
+        <div class="incident-field">
+          <div class="field-label">Bridge</div>
+          <div class="field-value" id="fBridge">CCO-06</div>
+        </div>
+        <div class="incident-field">
+          <div class="field-label">Incident</div>
+          <div class="field-value" id="fIncident">INC1016016</div>
+        </div>
+        <div class="incident-field">
+          <div class="field-label">Bridge Link</div>
+          <div class="field-value link-val" id="fLink">Webex CCO-06</div>
+        </div>
+        <div class="incident-field">
+          <div class="field-label">Usage Notes</div>
+          <div class="field-value" id="fNotes">Keyboard</div>
+        </div>
+        <div class="incident-spacer"></div>
+        <button class="refresh-btn" id="refreshBtn" onclick="doRefresh()">
+          <span class="refresh-icon" id="refreshIcon">↺</span> Refresh
+        </button>
+      </div>
+
+      <!-- Section spacer before Change Correlations -->
+      <div class="section-spacer"><div class="rule"></div></div>
+
+      <!-- Change Correlations Header -->
+      <div class="table-hdr-band">
+        <span class="band-title">Change Correlations</span>
+        <div class="band-spacer"></div>
+        <span class="band-conf">Confidence</span>
+        <span class="band-sort">›</span>
+      </div>
+
+      <!-- Change Row 1 -->
+      <div class="data-row">
+        <div class="row-summary" onclick="toggle('cc1')">
+          <span class="row-chevron" id="cc1-c">›</span>
+          <span class="row-title">Payment gateway API upgrade — v3.2 to v3.4 cutover</span>
+          <span class="conf-pill conf-green">87%</span>
+          <span class="row-arrow">›</span>
+        </div>
+        <div class="detail-panel" id="cc1">
+          <a class="detail-link">View CHG0364897 in ServiceNow ↗</a>
+          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Scheduled</span></div>
+          <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">api-gw-prod-01 — direct dependency of affected CI</span></div>
+          <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 11:00 PM &nbsp; Actual Jun 9, 2026 11:04 PM <span style="color:#6b7280;font-style:italic">+4 min</span></span></div>
+          <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 10, 2026 1:00 AM &nbsp; Actual Jun 10, 2026 12:47 AM <span style="color:#6b7280;font-style:italic">−13 min</span></span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Platform Engineering</span></div>
+          <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Updated rate limit policies on member portal API gateway to enforce new tier-based throttling rules. Changes applied via Terraform and validated in staging.</span></div>
+          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
         </div>
       </div>
-    </div>
 
-    <div style="height:40px;"></div>
-  </div>
+      <!-- Change Row 2 -->
+      <div class="data-row">
+        <div class="row-summary" onclick="toggle('cc2')">
+          <span class="row-chevron" id="cc2-c">›</span>
+          <span class="row-title">Redis cluster failover — session cache primary node replacement</span>
+          <span class="conf-pill conf-lgreen">74%</span>
+          <span class="row-arrow">›</span>
+        </div>
+        <div class="detail-panel" id="cc2">
+          <a class="detail-link">View CHG0364801 in ServiceNow ↗</a>
+          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Implement</span></div>
+          <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">redis-session-prod-01 — direct dependency of affected CI</span></div>
+          <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 10:30 PM &nbsp; Actual Jun 9, 2026 10:33 PM <span style="color:#6b7280;font-style:italic">+3 min</span></span></div>
+          <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 9, 2026 11:30 PM &nbsp; Actual Jun 9, 2026 11:28 PM <span style="color:#6b7280;font-style:italic">−2 min</span></span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Data Platform</span></div>
+          <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Primary Redis node replacement during scheduled maintenance window. Session data fully replicated before failover.</span></div>
+          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
+        </div>
+      </div>
+
+      <!-- Change Row 3 -->
+      <div class="data-row">
+        <div class="row-summary" onclick="toggle('cc3')">
+          <span class="row-chevron" id="cc3-c">›</span>
+          <span class="row-title">Kubernetes node autoscaling policy update — prod-east</span>
+          <span class="conf-pill conf-orange">51%</span>
+          <span class="row-arrow">›</span>
+        </div>
+        <div class="detail-panel" id="cc3">
+          <a class="detail-link">View CHG0364755 in ServiceNow ↗</a>
+          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Review</span></div>
+          <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">k8s-prod-east-ng-01</span></div>
+          <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 9:00 PM</span></div>
+          <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 9, 2026 10:00 PM</span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Kubernetes Platform</span></div>
+          <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Updated autoscaling thresholds to improve burst handling in prod-east during peak traffic windows.</span></div>
+          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
+        </div>
+      </div>
+
+      <!-- Change Row 4 -->
+      <div class="data-row">
+        <div class="row-summary" onclick="toggle('cc4')">
+          <span class="row-chevron" id="cc4-c">›</span>
+          <span class="row-title">CloudFront distribution config update — member-facing CDN</span>
+          <span class="conf-pill conf-red">34%</span>
+          <span class="row-arrow">›</span>
+        </div>
+        <div class="detail-panel" id="cc4">
+          <a class="detail-link">View CHG0364712 in ServiceNow ↗</a>
+          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Closed/Complete</span></div>
+          <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">cf-member-portal-prod</span></div>
+          <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 8, 2026 2:00 AM</span></div>
+          <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 8, 2026 2:45 AM</span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">CDN &amp; Edge Platform</span></div>
+          <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Cache invalidation and behavior rules updated for member-facing CDN distribution. Origin TTL adjusted.</span></div>
+          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
+        </div>
+      </div>
+
+      <!-- Gap between sections -->
+      <div class="section-gap"></div>
+      <div class="section-spacer"><div class="rule"></div></div>
+
+      <!-- RCA Header -->
+      <div class="table-hdr-band">
+        <span class="band-title">RCA</span>
+        <div class="band-spacer"></div>
+        <span class="band-conf">Confidence</span>
+        <span class="band-sort">›</span>
+      </div>
+
+      <!-- RCA Row 1 -->
+      <div class="data-row">
+        <div class="row-summary" onclick="toggle('rca1')">
+          <span class="row-chevron" id="rca1-c">›</span>
+          <div class="row-title-group">
+            <div class="row-sub-label">Change Correlation</div>
+            <div class="row-title-text">Member portal API gateway — rate limit policy update</div>
+          </div>
+          <span class="conf-pill conf-green">87%</span>
+          <span class="row-arrow">›</span>
+        </div>
+        <div class="detail-panel" id="rca1">
+          <a class="detail-link">View INC1016016 RCA report in ServiceNow ↗</a>
+          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Change — scheduled maintenance window</span></div>
+          <div class="detail-field"><span class="detail-label">Associated change</span><span class="detail-value">CHG0364897 — Member portal API gateway rate limit policy update</span></div>
+          <div class="detail-field"><span class="detail-label">Causal mechanism</span><span class="detail-value">Reduced rate limit triggered request queue overflow, cascading to 500 errors on the checkout and authentication flows</span></div>
+          <div class="detail-field"><span class="detail-label">Identified</span><span class="detail-value">Jun 9, 2026 11:23 PM (+19 min after incident opened)</span></div>
+          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">14 correlated signals — NewRelic alerts, Splunk logs, ServiceNow CMDB records</span></div>
+          <div class="detail-field"><span class="detail-label">Remediation</span><span class="detail-value link-val">Rate limit policy reverted via CHG0364898 — view in ServiceNow ↗</span></div>
+        </div>
+      </div>
+
+      <!-- RCA Row 2 -->
+      <div class="data-row">
+        <div class="row-summary" onclick="toggle('rca2')">
+          <span class="row-chevron" id="rca2-c">›</span>
+          <div class="row-title-group">
+            <div class="row-sub-label">Change Correlation</div>
+            <div class="row-title-text">Auth service blue-green deploy — v4.12.1 to prod</div>
+          </div>
+          <span class="conf-pill conf-lgreen">74%</span>
+          <span class="row-arrow">›</span>
+        </div>
+        <div class="detail-panel" id="rca2">
+          <a class="detail-link">View INC1016016 RCA report in ServiceNow ↗</a>
+          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Change — blue-green deployment</span></div>
+          <div class="detail-field"><span class="detail-label">Associated change</span><span class="detail-value">CHG0364803 — Auth service blue-green deploy v4.12.1</span></div>
+          <div class="detail-field"><span class="detail-label">Causal mechanism</span><span class="detail-value">Token validation latency increased during traffic cutover, causing session establishment delays for authenticated users</span></div>
+          <div class="detail-field"><span class="detail-label">Identified</span><span class="detail-value">Jun 9, 2026 11:31 PM (+27 min after incident opened)</span></div>
+          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">8 correlated signals — Datadog traces, PagerDuty alerts, load balancer access logs</span></div>
+          <div class="detail-field"><span class="detail-label">Remediation</span><span class="detail-value link-val">Traffic reverted to v4.11.0 via CHG0364804 — view in ServiceNow ↗</span></div>
+        </div>
+      </div>
+
+      <!-- RCA Row 3 -->
+      <div class="data-row">
+        <div class="row-summary" onclick="toggle('rca3')">
+          <span class="row-chevron" id="rca3-c">›</span>
+          <span class="row-title">Prod-east load balancer health check threshold change</span>
+          <span class="conf-pill conf-orange">51%</span>
+          <span class="row-arrow">›</span>
+        </div>
+        <div class="detail-panel" id="rca3">
+          <a class="detail-link">View INC1016016 RCA report in ServiceNow ↗</a>
+          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Configuration — health check threshold</span></div>
+          <div class="detail-field"><span class="detail-label">Associated change</span><span class="detail-value">CHG0364690 — Prod-east LB health check threshold</span></div>
+          <div class="detail-field"><span class="detail-label">Causal mechanism</span><span class="detail-value">Lowered unhealthy threshold caused premature instance removal from rotation under normal transient failures</span></div>
+          <div class="detail-field"><span class="detail-label">Identified</span><span class="detail-value">Jun 9, 2026 11:44 PM (+40 min after incident opened)</span></div>
+          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">5 correlated signals — CloudWatch metrics, ELB access logs</span></div>
+        </div>
+      </div>
+
+      <!-- RCA Row 4 -->
+      <div class="data-row">
+        <div class="row-summary" onclick="toggle('rca4')">
+          <span class="row-chevron" id="rca4-c">›</span>
+          <span class="row-title">TLS certificate rotation — external-api.cvshealth.com</span>
+          <span class="conf-pill conf-red">34%</span>
+          <span class="row-arrow">›</span>
+        </div>
+        <div class="detail-panel" id="rca4">
+          <a class="detail-link">View INC1016016 RCA report in ServiceNow ↗</a>
+          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Certificate management</span></div>
+          <div class="detail-field"><span class="detail-label">Associated change</span><span class="detail-value">CHG0364601 — TLS cert rotation external-api</span></div>
+          <div class="detail-field"><span class="detail-label">Causal mechanism</span><span class="detail-value">Certificate propagation delay caused brief mTLS handshake failures on external API consumers</span></div>
+          <div class="detail-field"><span class="detail-label">Identified</span><span class="detail-value">Jun 9, 2026 11:55 PM (+51 min after incident opened)</span></div>
+          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">3 correlated signals — certificate expiry events, API gateway 503 errors</span></div>
+        </div>
+      </div>
+
+      <!-- Hidden lower-confidence rows -->
+      <div class="hidden-rows" id="hiddenRows">
+        <div class="data-row">
+          <div class="row-summary" onclick="toggle('rca5')">
+            <span class="row-chevron" id="rca5-c">›</span>
+            <span class="row-title">CDN cache purge — member portal static assets</span>
+            <span class="conf-pill conf-red">28%</span>
+            <span class="row-arrow">›</span>
+          </div>
+          <div class="detail-panel" id="rca5">
+            <a class="detail-link">View INC1016016 in ServiceNow ↗</a>
+            <div class="detail-divider"></div>
+            <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Configuration — cache invalidation</span></div>
+            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">2 correlated signals — CDN purge logs, edge node error rates</span></div>
+          </div>
+        </div>
+        <div class="data-row">
+          <div class="row-summary" onclick="toggle('rca6')">
+            <span class="row-chevron" id="rca6-c">›</span>
+            <span class="row-title">Database connection pool resize — checkout-service-prod</span>
+            <span class="conf-pill conf-red">22%</span>
+            <span class="row-arrow">›</span>
+          </div>
+          <div class="detail-panel" id="rca6">
+            <a class="detail-link">View INC1016016 in ServiceNow ↗</a>
+            <div class="detail-divider"></div>
+            <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Configuration — database pool</span></div>
+            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">2 correlated signals — DB connection timeouts, slow query logs</span></div>
+          </div>
+        </div>
+        <div class="data-row" style="border-bottom:none">
+          <div class="row-summary" onclick="toggle('rca7')">
+            <span class="row-chevron" id="rca7-c">›</span>
+            <span class="row-title">WAF rule update — rate limiting policy v2.3</span>
+            <span class="conf-pill conf-red">18%</span>
+            <span class="row-arrow">›</span>
+          </div>
+          <div class="detail-panel" id="rca7">
+            <a class="detail-link">View INC1016016 in ServiceNow ↗</a>
+            <div class="detail-divider"></div>
+            <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Configuration — WAF policy</span></div>
+            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">1 correlated signal — WAF rule update event timestamp</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Show More -->
+      <div class="show-more-row" id="showMoreBtn" onclick="toggleMore()">
+        ▸ Show 3 lower-confidence changes (below 40%)
+      </div>
+
+    </div><!-- /content-card -->
+  </main>
 
   <!-- Activity Hub -->
-  <div class="activity-hub">
-    <div class="ah-header">
-      <span class="ah-title">Activity Hub</span>
-      <button class="ah-close">✕</button>
+  <aside class="activity-hub">
+    <div class="hub-header">
+      <span class="hub-title">Activity Hub</span>
+      <span class="hub-close">×</span>
     </div>
-    <div class="ah-tabs">
-      <div class="ah-tab active" id="tab-dash" onclick="switchTab('dash')">Dashboard <span class="ah-badge">9+</span></div>
-      <div class="ah-tab" id="tab-feed" onclick="switchTab('feed')">Live Feed</div>
-      <div class="ah-tab" id="tab-det" onclick="switchTab('det')">Details</div>
+    <div class="hub-tabs">
+      <div class="hub-tab active" onclick="hubTab(this)">Dashboard <span class="hub-badge">9+</span></div>
+      <div class="hub-tab" onclick="hubTab(this)">Live Feed</div>
+      <div class="hub-tab" onclick="hubTab(this)">Details</div>
     </div>
+    <div class="recent-label">Recent Activity</div>
+    <div class="activity-feed" id="activityFeed"></div>
+  </aside>
 
-    <div class="ah-content" id="panel-dash">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:8px;">Recent activity</div>
-      <div class="feed-item"><span class="fi-id">CCO-09 (INC 1013321)<span class="fi-time">1h ago</span></span><div class="fi-type">Notification</div><div class="fi-desc">session_stopped event received</div></div>
-      <div class="feed-item"><span class="fi-id">CCO-06 (INC 1014083)<span class="fi-time">1h ago</span></span><div class="fi-type">Notification</div><div class="fi-desc">session_stopped event received</div></div>
-      <div class="feed-item"><span class="fi-id">CCO-09 (INC 1013321)<span class="fi-time">1h ago</span></span><div class="fi-type">Notification</div><div class="fi-desc">session_stopped event received</div></div>
-      <div class="feed-item"><span class="fi-id">CCO-06 (INC 1014083)<span class="fi-time">1h ago</span></span><div class="fi-type">Notification</div><div class="fi-desc">session_stopped event received</div></div>
-      <div class="feed-item"><span class="fi-id">CCO-09 (INC 1013321)<span class="fi-time">1h ago</span></span><div class="fi-type">Notification</div><div class="fi-desc">session_stopped event received</div></div>
-      <div class="feed-item"><span class="fi-id">CCO-06 (INC 1014083)<span class="fi-time">1h ago</span></span><div class="fi-type">Notification</div><div class="fi-desc">session_stopped event received</div></div>
-      <div class="feed-item"><span class="fi-id">CCO-06 (INC 1014083)<span class="fi-time">1h ago</span></span><div class="fi-type">Notification</div><div class="fi-desc">session_stopped event received</div></div>
-    </div>
-    <div class="ah-content hidden" id="panel-feed">
-      <div class="feed-item"><span class="fi-id">CCO-06 (INC 1014083)<span class="fi-time">1h ago</span></span><div class="fi-type">Notification</div><div class="fi-desc">session_stopped event received</div></div>
-    </div>
-    <div class="ah-content hidden" id="panel-det">
-      <div style="font-size:13px;color:#888;padding:8px;">Bridge details will appear here.</div>
-    </div>
-  </div>
-
-</div>
-
-<div class="toast" id="toast"></div>
+</div><!-- /app-body -->
 
 <script>
-function toggleReasoning(btn) {
-  const full = btn.previousElementSibling;
-  const isHidden = full.classList.contains('hidden');
-  full.classList.toggle('hidden', !isHidden);
-  btn.textContent = isHidden ? 'Show less' : 'Show more';
-}
+const TABS = [
+  { bridge:'CCO-06', incident:'INC1016016', link:'Webex CCO-06', notes:'Keyboard', outage:true },
+  { bridge:'CCO-05', incident:'INC1015903', link:'Webex CCO-05', notes:'Phone',    outage:false },
+  { bridge:'IMT-08', incident:'INC1015614', link:'Webex IMT-08', notes:'Keyboard', outage:false },
+  { bridge:'CCO-11', incident:'INC1014278', link:'Webex CCO-11', notes:'Screen share', outage:false },
+];
 
-function toggleDetail(detailId, chevId) {
-  const d = document.getElementById(detailId);
-  const c = document.getElementById(chevId);
-  d.classList.toggle('hidden');
-  c.classList.toggle('open');
-}
+const ACTIVITY = [
+  { id:'CCO-09 (INC 1013321)', type:'Notification', desc:'session_stopped event received' },
+  { id:'CCO-06 (INC 1014083)', type:'Notification', desc:'session_stopped event received' },
+  { id:'CCO-09 (INC 1013321)', type:'Notification', desc:'session_stopped event received' },
+  { id:'CCO-06 (INC 1014083)', type:'Notification', desc:'session_stopped event received' },
+  { id:'CCO-09 (INC 1013321)', type:'Notification', desc:'session_stopped event received' },
+  { id:'CCO-06 (INC 1014083)', type:'Notification', desc:'session_stopped event received' },
+  { id:'CCO-06 (INC 1014083)', type:'Notification', desc:'session_stopped event received' },
+];
 
-function vote(e, activeId, otherId) {
-  e.stopPropagation();
-  const active = document.getElementById(activeId);
-  const other = document.getElementById(otherId);
-  const isConfirm = activeId.startsWith('up');
-  const cardNum = activeId.replace('up','').replace('dn','');
-  const wasActive = active.classList.contains('confirmed') || active.classList.contains('dismissed');
-
-  active.classList.remove('confirmed','dismissed');
-  other.classList.remove('confirmed','dismissed');
-  other.textContent = other.id.startsWith('up') ? '✓ Confirm' : '✕ Dismiss';
-
-  if (!wasActive) {
-    active.classList.add(isConfirm ? 'confirmed' : 'dismissed');
-    active.textContent = isConfirm ? '✓ Confirmed' : '✕ Dismissed';
-    if (isConfirm) {
-      showConfirmFlow(cardNum);
-    } else {
-      dismissCard(cardNum);
-      showToast('Ruled out — model updated');
-    }
-  } else {
-    active.textContent = isConfirm ? '✓ Confirm' : '✕ Dismiss';
-    clearConfirmFlow(cardNum);
-  }
-}
-
-function dismissCard(num) {
-  const card = document.getElementById('card-' + num);
-  if (!card) return;
-  card.style.opacity = '0.45';
-  card.style.filter = 'grayscale(0.4)';
-  // collapse detail
-  const d = document.getElementById('d' + num);
-  const c = document.getElementById('c' + num);
-  if (d && !d.classList.contains('hidden')) { d.classList.add('hidden'); c.classList.remove('open'); }
-  // add ruled-out badge
-  let badge = card.querySelector('.ruled-out-label');
-  if (!badge) {
-    badge = document.createElement('div');
-    badge.className = 'ruled-out-label';
-    badge.textContent = 'Ruled out';
-    card.querySelector('.suspect-main').prepend(badge);
-  }
-}
-
-function showConfirmFlow(num) {
-  // dim other cards
-  ['1','2','3','4'].forEach(n => {
-    if (n === num) return;
-    const c = document.getElementById('card-' + n);
-    if (c) { c.style.opacity = '0.35'; c.style.pointerEvents = 'none'; }
-  });
-
-  // open the detail panel
-  const d = document.getElementById('d' + num);
-  const chev = document.getElementById('c' + num);
-  if (d && d.classList.contains('hidden')) { d.classList.remove('hidden'); chev.classList.add('open'); }
-
-  // highlight card
-  const card = document.getElementById('card-' + num);
-  card.style.borderColor = '#16a34a';
-  card.style.borderLeftWidth = '3px';
-  card.style.borderLeftColor = '#16a34a';
-
-  // inject next-step panel if not already there
-  if (document.getElementById('next-step-' + num)) return;
-  const panel = document.createElement('div');
-  panel.id = 'next-step-' + num;
-  panel.className = 'next-step-panel';
-  panel.innerHTML = `
-    <div class="ns-title">✓ Root cause confirmed — what's next?</div>
-    <div class="ns-options">
-      <button class="ns-btn primary" onclick="nsAction('rollback','${num}')">↩ Initiate rollback</button>
-      <button class="ns-btn" onclick="nsAction('notify','${num}')">📣 Notify change owner</button>
-      <button class="ns-btn" onclick="nsAction('skip','${num}')">Continue investigating</button>
+// Render activity feed
+const feed = document.getElementById('activityFeed');
+ACTIVITY.forEach(a => {
+  feed.innerHTML += `<div class="activity-item">
+    <div class="activity-top">
+      <span class="activity-id">${a.id}</span>
+      <span class="activity-time">1h ago</span>
     </div>
-    <div class="ns-sub">Confirming also updates the correlation model for future bridges.</div>
-  `;
-  d.appendChild(panel);
-}
-
-function clearConfirmFlow(num) {
-  ['1','2','3','4'].forEach(n => {
-    const c = document.getElementById('card-' + n);
-    if (c) { c.style.opacity = ''; c.style.pointerEvents = ''; }
-  });
-  const card = document.getElementById('card-' + num);
-  if (card) { card.style.borderColor = ''; card.style.borderLeftColor = ''; }
-  const panel = document.getElementById('next-step-' + num);
-  if (panel) panel.remove();
-}
-
-function nsAction(action, num) {
-  const panel = document.getElementById('next-step-' + num);
-  if (action === 'rollback') {
-    panel.innerHTML = `<div class="ns-title" style="color:#0057b8;">↩ Rollback initiated — CHG0364897</div><div class="ns-sub">Pipeline triggered. Estimated recovery: 10–15 min. Change owner notified automatically.</div>`;
-    showToast('Rollback pipeline triggered');
-  } else if (action === 'notify') {
-    panel.innerHTML = `<div class="ns-title" style="color:#16a34a;">📣 Change owner notified</div><div class="ns-sub">Notification sent to change owner via ServiceNow. Incident record updated with confirmed root cause.</div>`;
-    showToast('Change owner notified');
-  } else {
-    panel.remove();
-    ['1','2','3','4'].forEach(n => {
-      const c = document.getElementById('card-' + n);
-      if (c) { c.style.opacity = ''; c.style.pointerEvents = ''; }
-    });
-  }
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2600);
-}
-
-function switchTab(tab) {
-  ['dash','feed','det'].forEach(t => {
-    document.getElementById('tab-' + t).classList.remove('active');
-    document.getElementById('panel-' + t).classList.add('hidden');
-  });
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('panel-' + tab).classList.remove('hidden');
-}
-
-// ── Logo picker ──
-const LOGOS = {
-  1: { nav: 'logo-owl-icon.png',        alt: 'Owl with Lantern' },
-  2: { nav: 'logo-lighthouse-icon.png', alt: 'Lighthouse' },
-  3: { nav: 'logo-chaos-icon.png',      alt: 'Order from Chaos' },
-  4: { nav: 'logo-w.png',              alt: 'W Soundwave' }
-};
-
-let activeLogoId = 1;
-let logoPickerOpen = false;
-
-function toggleLogoPicker(btn) {
-  logoPickerOpen = !logoPickerOpen;
-  document.getElementById('logo-picker-panel').classList.toggle('hidden', !logoPickerOpen);
-  document.getElementById('logo-pick-arrow').classList.toggle('open', logoPickerOpen);
-}
-
-function selectLogo(id) {
-  activeLogoId = id;
-  const logo = LOGOS[id];
-  const navImg = document.getElementById('nav-logo-img');
-  navImg.src = logo.nav;
-
-  navImg.alt = logo.alt;
-  [1,2,3,4].forEach(n => {
-    document.getElementById('logo-opt-' + n).classList.toggle('active', n === id);
-  });
-  logoPickerOpen = false;
-  document.getElementById('logo-picker-panel').classList.add('hidden');
-  document.getElementById('logo-pick-arrow').classList.remove('open');
-}
-
-// Close picker when clicking outside
-document.addEventListener('click', function(e) {
-  const panel = document.getElementById('logo-picker-panel');
-  const trigger = document.querySelector('.logo-pick-trigger');
-  if (!panel.contains(e.target) && !trigger.contains(e.target)) {
-    panel.classList.add('hidden');
-    document.getElementById('logo-pick-arrow').classList.remove('open');
-    logoPickerOpen = false;
-  }
+    <div class="activity-type">${a.type}</div>
+    <div class="activity-desc">${a.desc}</div>
+  </div>`;
 });
 
-function toggleCCDetail(detailId, chevId) {
-  const d = document.getElementById(detailId);
-  const c = document.getElementById(chevId);
-  d.classList.toggle('hidden');
-  c.classList.toggle('open');
+function switchTab(i) {
+  document.querySelectorAll('.tab-bar .tab').forEach((t, j) => t.classList.toggle('active', i === j));
+  const t = TABS[i];
+  document.getElementById('fBridge').textContent = t.bridge;
+  document.getElementById('fIncident').textContent = t.incident;
+  document.getElementById('fLink').textContent = t.link;
+  document.getElementById('fNotes').textContent = t.notes;
+  document.getElementById('outageBanner').classList.toggle('visible', t.outage);
+  // Collapse all open rows
+  document.querySelectorAll('.detail-panel.open').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.row-chevron.open').forEach(c => c.classList.remove('open'));
+  // Reset show-more
+  document.getElementById('hiddenRows').classList.remove('visible');
+  document.getElementById('showMoreBtn').textContent = '▸ Show 3 lower-confidence changes (below 40%)';
 }
 
-function toggleRCADetail(detailId, chevId) {
-  const d = document.getElementById(detailId);
-  const c = document.getElementById(chevId);
-  d.classList.toggle('hidden');
-  c.classList.toggle('open');
+function toggle(id) {
+  const panel = document.getElementById(id);
+  const chev  = document.getElementById(id + '-c');
+  const open  = panel.classList.toggle('open');
+  if (chev) chev.classList.toggle('open', open);
 }
 
-let rcaTableOpen = true;
-function toggleRCATable() {
-  rcaTableOpen = !rcaTableOpen;
-  document.getElementById('rca-table-section').classList.toggle('hidden', !rcaTableOpen);
-  document.getElementById('rca-table-chevron').classList.toggle('open', rcaTableOpen);
-}
-
-let ccTableOpen = true;
-function toggleCCTable() {
-  ccTableOpen = !ccTableOpen;
-  document.getElementById('cc-table-section').classList.toggle('hidden', !ccTableOpen);
-  document.getElementById('cc-table-chevron').classList.toggle('open', ccTableOpen);
-}
-
-let lowOpen = false;
-function toggleLow() {
-  lowOpen = !lowOpen;
-  document.getElementById('low-changes').classList.toggle('hidden', !lowOpen);
-  document.getElementById('low-label').textContent = lowOpen
+let moreVisible = false;
+function toggleMore() {
+  moreVisible = !moreVisible;
+  document.getElementById('hiddenRows').classList.toggle('visible', moreVisible);
+  document.getElementById('showMoreBtn').textContent = moreVisible
     ? '▾ Hide lower-confidence changes'
     : '▸ Show 3 lower-confidence changes (below 40%)';
+}
+
+function hubTab(el) {
+  document.querySelectorAll('.hub-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function doRefresh() {
+  const btn  = document.getElementById('refreshBtn');
+  const icon = document.getElementById('refreshIcon');
+  btn.disabled = true;
+  icon.style.animation = 'spin 0.7s linear infinite';
+  setTimeout(() => { icon.style.animation = ''; btn.disabled = false; }, 1400);
 }
 </script>
 </body>
