@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whisper IMT — Change Correlation Usability Test Script</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1a1a2e;
+    background: #f8f9fc;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  /* Header */
+  .doc-header {
+    border-bottom: 3px solid #1a2e54;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+  .doc-header .badge {
+    display: inline-block;
+    background: #1a2e54;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .doc-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a2e54;
+  }
+  .doc-header .meta {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #64748b;
+    display: flex;
+    gap: 24px;
+  }
+  .doc-header .meta span b { color: #1a1a2e; }
+
+  /* Section */
+  .section {
+    margin-bottom: 36px;
+  }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+  .section h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a2e54;
+    border-left: 4px solid #1d4ed8;
+    padding-left: 10px;
+    margin-bottom: 14px;
+  }
+
+  /* Checklist */
+  .checklist {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 24px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px 20px;
+  }
+  .checklist li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .checklist li input[type=checkbox] { accent-color: #1d4ed8; width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* Verbatim script */
+  .script-block {
+    background: #eff6ff;
+    border-left: 4px solid #1d4ed8;
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: #1e3a5f;
+    margin: 10px 0;
+  }
+  .script-block .lbl {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #1d4ed8;
+    margin-bottom: 6px;
+  }
+
+  /* Task card */
+  .task-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .task-card .task-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1a2e54;
+    color: #fff;
+    padding: 12px 18px;
+  }
+  .task-card .task-num {
+    background: #1d4ed8;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 2px 8px;
+    letter-spacing: .05em;
+  }
+  .task-card .task-name { font-weight: 700; font-size: 14px; }
+  .task-card .task-sub { font-size: 12px; color: #93c5fd; margin-top: 1px; }
+  .task-card .task-body { padding: 16px 18px; }
+
+  .task-scenario {
+    background: #fefce8;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .task-scenario .lbl {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #92400e;
+    margin-bottom: 5px;
+  }
+  .task-scenario p { color: #1a1a2e; }
+
+  .task-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #991b1b;
+    margin-bottom: 14px;
+  }
+
+  .obs-list, .probe-list {
+    margin: 0 0 12px 0;
+    padding: 0;
+    list-style: none;
+  }
+  .obs-list li, .probe-list li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: #374151;
+  }
+  .obs-list li::before { content: "○"; position: absolute; left: 0; color: #94a3b8; font-size: 11px; top: 2px; }
+  .probe-list li::before { content: "›"; position: absolute; left: 0; color: #1d4ed8; font-weight: 700; }
+
+  h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin: 12px 0 6px;
+  }
+
+  /* Special callout */
+  .callout {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #166534;
+    margin: 10px 0;
+  }
+  .callout b { font-weight: 700; }
+
+  .callout-warn {
+    background: #fff7ed;
+    border-color: #fdba74;
+    color: #9a3412;
+  }
+
+  /* SUS */
+  .sus-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .sus-table th {
+    background: #1a2e54;
+    color: #fff;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .sus-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  .sus-table tr:nth-child(even) td { background: #f8fafc; }
+  .sus-table .q-num {
+    font-weight: 700;
+    color: #1d4ed8;
+    width: 32px;
+  }
+  .sus-table .scale {
+    width: 200px;
+    color: #64748b;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* Debrief questions */
+  .q-list { list-style: none; padding: 0; }
+  .q-list li {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+  }
+  .q-list li .q-n {
+    font-weight: 700;
+    color: #1d4ed8;
+    flex-shrink: 0;
+  }
+
+  /* Print */
+  @media print {
+    body { background: #fff; font-size: 12px; }
+    .page { padding: 20px; }
+    .task-card { break-inside: avoid; }
+    .section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="doc-header">
+    <div class="badge">Moderator Guide — Internal Use Only</div>
+    <h1>Change Correlation Usability Test Script</h1>
+    <div class="meta">
+      <span><b>Product:</b> Whisper IMT — Bridge Insights Dashboard</span>
+      <span><b>Feature:</b> Change Correlations + RCA</span>
+      <span><b>Version:</b> v1.0 — July 2026</span>
+      <span><b>Duration:</b> 45 min per session</span>
+    </div>
+  </div>
+
+  <!-- Pre-session checklist -->
+  <div class="section">
+    <div class="section-label">Before Each Session</div>
+    <h2>Pre-Session Setup Checklist</h2>
+    <ul class="checklist">
+      <li><input type="checkbox"> Prototype loaded at correct URL</li>
+      <li><input type="checkbox"> Screen recording software running</li>
+      <li><input type="checkbox"> Timer / stopwatch ready</li>
+      <li><input type="checkbox"> Metric tracker open and participant ID entered</li>
+      <li><input type="checkbox"> Notetaker present and briefed</li>
+      <li><input type="checkbox"> Prototype on CCO-06 tab (default state)</li>
+      <li><input type="checkbox"> All expanded rows collapsed (default state)</li>
+      <li><input type="checkbox"> "Show More" hidden (default state)</li>
+      <li><input type="checkbox"> Consent form shared / signed</li>
+      <li><input type="checkbox"> Observers muted and cameras off</li>
+    </ul>
+    <div style="margin-top:10px;" class="callout callout-warn">
+      <b>Prototype URL:</b> https://sammyfranco03.github.io/whisper-change-correlation-prototype/ — confirm it loads fully before the participant joins.
+    </div>
+  </div>
+
+  <!-- Introduction -->
+  <div class="section">
+    <div class="section-label">Phase 1 · 0–5 min</div>
+    <h2>Introduction &amp; Consent</h2>
+
+    <div class="script-block">
+      <div class="lbl">Read verbatim</div>
+      "Hi [name], thanks for taking the time to participate today. My name is [facilitator], and I'll be walking you through the session. We also have [notetaker] observing quietly in the background."
+    </div>
+
+    <div class="script-block">
+      <div class="lbl">Read verbatim</div>
+      "We're testing a new dashboard feature — not your skills or knowledge. There are no right or wrong answers. If something seems confusing or broken, that's useful feedback for us, not a reflection on you."
+    </div>
+
+    <div class="script-block">
+      <div class="lbl">Read verbatim — think-aloud protocol</div>
+      "Throughout the session, I'm going to ask you to think aloud — narrate what you're doing, what you're looking for, and what you're thinking as you go, even if it feels a little unusual. This helps us understand your mental model, not just what you click. If you go quiet, I'll gently remind you to keep talking."
+    </div>
+
+    <div class="script-block">
+      <div class="lbl">Read verbatim — neutrality note</div>
+      "I may not be able to answer questions during the tasks — we want to see how you'd naturally approach the tool without guidance. I'll answer everything at the end. Does that make sense?"
+    </div>
+
+    <div class="script-block">
+      <div class="lbl">If recording — read verbatim</div>
+      "With your permission, I'd like to record this session for note-taking purposes only. The recording will be shared only with our internal research team and deleted after analysis. Is that okay?"
+    </div>
+  </div>
+
+  <!-- Warm-up -->
+  <div class="section">
+    <div class="section-label">Phase 2 · 5–10 min</div>
+    <h2>Warm-Up Questions</h2>
+    <p style="font-size:13px; color:#64748b; margin-bottom:12px;">Ask conversationally. Goal is to surface mental model before they see the UI.</p>
+    <ul class="probe-list">
+      <li>"Can you tell me a bit about your role and what a typical on-call shift looks like for you?"</li>
+      <li>"When a P1 alert fires, what's the very first thing you do to start figuring out what happened?"</li>
+      <li>"Have you ever needed to link a change to an outage? Walk me through how you did it."</li>
+      <li>"How do you currently decide if a change is the likely root cause versus just a coincidence?"</li>
+    </ul>
+    <div class="callout">Listen for: current tooling (ServiceNow, Splunk, internal tools), correlation intuition, confidence thresholds they use today.</div>
+  </div>
+
+  <!-- Tasks -->
+  <div class="section">
+    <div class="section-label">Phase 3 · 10–35 min</div>
+    <h2>Test Tasks</h2>
+    <p style="font-size:13px; color:#64748b; margin-bottom:16px;">Read each scenario aloud. Remind participant to think aloud at the start of each task. Do not guide — only prompt with follow-up probes after the task completes or participant is stuck for 90+ seconds.</p>
+
+    <!-- Task 1 -->
+    <div class="task-card">
+      <div class="task-header">
+        <div>
+          <div class="task-num">TASK 1</div>
+          <div class="task-name">Triage</div>
+          <div class="task-sub">Orientation to the dashboard · No timer</div>
+        </div>
+      </div>
+      <div class="task-body">
+        <div class="task-scenario">
+          <div class="lbl">Read aloud to participant</div>
+          <p>"Imagine you've just received a P1 alert for the CCO-06 incident. You're the on-call responder and it's 2am. Use this dashboard to start your investigation and find the most likely cause of the incident."</p>
+        </div>
+        <h4>Observe for</h4>
+        <ul class="obs-list">
+          <li>Where does their eye go first — Active Outage banner, Change Correlations section, RCA section, or Activity Hub?</li>
+          <li>Do they notice the Change Correlations section header?</li>
+          <li>Do they read the confidence percentages unprompted?</li>
+          <li>Do they attempt to expand a row or click anywhere?</li>
+          <li>Does the Active Outage banner draw attention or cause confusion?</li>
+        </ul>
+        <h4>Post-task probes</h4>
+        <ul class="probe-list">
+          <li>"What did you look at first? What drew you there?"</li>
+          <li>"How confident are you that you found the most likely cause?"</li>
+          <li>"Was there anything confusing or unexpected on this screen?"</li>
+          <li>"What information felt most useful right away?"</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Task 2 -->
+    <div class="task-card">
+      <div class="task-header">
+        <div>
+          <div class="task-num">TASK 2</div>
+          <div class="task-name">Correlation Assessment</div>
+          <div class="task-sub">Confidence score comprehension · TIMED — target &lt; 45 seconds</div>
+        </div>
+      </div>
+      <div class="task-body">
+        <div class="task-timer">⏱ START TIMER when you finish reading the scenario</div>
+        <div class="task-scenario">
+          <div class="lbl">Read aloud to participant</div>
+          <p>"Looking at the Change Correlations section, identify the change you think is most likely responsible for this incident. As you're deciding, please think aloud and explain your reasoning."</p>
+        </div>
+        <div class="callout"><b>STOP TIMER</b> when participant names a specific change AND provides reasoning. Record elapsed time in the metric tracker.</div>
+        <h4>Observe for</h4>
+        <ul class="obs-list">
+          <li>Do they go to the 87% row first or scan all rows?</li>
+          <li>Do they mention the confidence percentage as a factor in their decision?</li>
+          <li>Do they compare multiple rows before deciding?</li>
+          <li>Do they try to expand a row before answering?</li>
+          <li>Do they reference the change ID or description text?</li>
+        </ul>
+        <h4>Post-task probes</h4>
+        <ul class="probe-list">
+          <li>"What made you choose that one?"</li>
+          <li>"How much did the confidence percentage influence your decision — a lot, a little, or not at all?"</li>
+          <li>"What does '87% confidence' mean to you in this context?"</li>
+          <li>"What additional information would make you more confident?"</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Task 3 -->
+    <div class="task-card">
+      <div class="task-header">
+        <div>
+          <div class="task-num">TASK 3</div>
+          <div class="task-name">Deep Dive — Detail Panel</div>
+          <div class="task-sub">Expanded row comprehension · Confidence Likert recorded here</div>
+        </div>
+      </div>
+      <div class="task-body">
+        <div class="task-scenario">
+          <div class="lbl">Read aloud to participant</div>
+          <p>"You've identified a potential correlated change. Now expand that row and use the detail panel to decide: does this change explain the incident? Confirm it as the cause or rule it out — and tell me your reasoning."</p>
+        </div>
+        <h4>Observe for</h4>
+        <ul class="obs-list">
+          <li>Is the expand affordance (chevron/click) discoverable without prompting?</li>
+          <li>Which detail fields do they read — Status, Target CI, Start/End times, Description, Implementation Plan?</li>
+          <li>How long do they spend on the detail panel?</li>
+          <li>Do they express confidence or uncertainty about the decision?</li>
+          <li>Do they scroll within the detail panel?</li>
+          <li>Do they make a clear confirm/rule-out decision?</li>
+        </ul>
+        <h4>Post-task probes</h4>
+        <ul class="probe-list">
+          <li>"What information in that panel was most useful to you?"</li>
+          <li>"What was least useful or unclear?"</li>
+          <li>"Was there anything you expected to see that wasn't there?"</li>
+          <li>"How would you rate the Start and End time fields — did they help you?"</li>
+        </ul>
+        <div class="callout">
+          <b>Confidence Likert (record in metric tracker):</b><br>
+          "On a scale of 1 to 7 — where 1 is 'not at all confident' and 7 is 'extremely confident' — how confident are you that you could make an RCA decision using this detail panel?"
+        </div>
+      </div>
+    </div>
+
+    <!-- Task 4 -->
+    <div class="task-card">
+      <div class="task-header">
+        <div>
+          <div class="task-num">TASK 4</div>
+          <div class="task-name">Action — ServiceNow Link</div>
+          <div class="task-sub">Discoverability of external link</div>
+        </div>
+      </div>
+      <div class="task-body">
+        <div class="task-scenario">
+          <div class="lbl">Read aloud to participant</div>
+          <p>"Using the expanded row, navigate to the ServiceNow record for this change. Once you've found it, describe what you would do next in a real incident."</p>
+        </div>
+        <h4>Observe for</h4>
+        <ul class="obs-list">
+          <li>Do they find the ServiceNow link without prompting?</li>
+          <li>How long does it take to locate the link?</li>
+          <li>Do they understand the link will take them outside the dashboard?</li>
+          <li>Do they hesitate before clicking an external link?</li>
+        </ul>
+        <h4>Post-task probes</h4>
+        <ul class="probe-list">
+          <li>"Was it clear how to get to ServiceNow from here?"</li>
+          <li>"In a real P1, would you actually use that link or go to ServiceNow directly?"</li>
+          <li>"What would you do in ServiceNow after landing there?"</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Task 5 -->
+    <div class="task-card">
+      <div class="task-header">
+        <div>
+          <div class="task-num">TASK 5</div>
+          <div class="task-name">Exploration — Show More</div>
+          <div class="task-sub">Lower-confidence item discoverability</div>
+        </div>
+      </div>
+      <div class="task-body">
+        <div class="task-scenario">
+          <div class="lbl">Read aloud to participant</div>
+          <p>"Scroll down in the Change Correlations section. There may be more items available. Explore them and tell me: when would you pay attention to a lower-confidence correlation?"</p>
+        </div>
+        <h4>Observe for</h4>
+        <ul class="obs-list">
+          <li>Is the Show More toggle visible and discoverable?</li>
+          <li>Do they understand that additional items are hidden by default?</li>
+          <li>What confidence threshold do they mention as actionable?</li>
+          <li>Do they interact with the lower-confidence rows (28%, 22%, 18%)?</li>
+          <li>Do they express surprise at the hidden items?</li>
+        </ul>
+        <h4>Post-task probes</h4>
+        <ul class="probe-list">
+          <li>"Was it clear there were more items to see?"</li>
+          <li>"What confidence percentage would you need before investigating a correlation?"</li>
+          <li>"Should all items be visible by default, or is hiding lower-confidence items helpful?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUS Survey -->
+  <div class="section">
+    <div class="section-label">Phase 4 · 35–42 min</div>
+    <h2>System Usability Scale (SUS)</h2>
+    <div class="script-block">
+      <div class="lbl">Read verbatim</div>
+      "I'm going to ask you to rate 10 short statements about the system you just used. Please respond on a scale of 1 to 5, where 1 means Strongly Disagree and 5 means Strongly Agree. There are no right or wrong answers — go with your gut."
+    </div>
+    <table class="sus-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Statement</th>
+          <th class="scale">Scale (1 = Strongly Disagree · 5 = Strongly Agree)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="q-num">1</td><td>I think that I would like to use this system frequently.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+        <tr><td class="q-num">2</td><td>I found the system unnecessarily complex.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+        <tr><td class="q-num">3</td><td>I thought the system was easy to use.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+        <tr><td class="q-num">4</td><td>I think that I would need the support of a technical person to be able to use this system.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+        <tr><td class="q-num">5</td><td>I found the various functions in this system were well integrated.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+        <tr><td class="q-num">6</td><td>I thought there was too much inconsistency in this system.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+        <tr><td class="q-num">7</td><td>I would imagine that most people would learn to use this system very quickly.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+        <tr><td class="q-num">8</td><td>I found the system very cumbersome to use.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+        <tr><td class="q-num">9</td><td>I felt very confident using the system.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+        <tr><td class="q-num">10</td><td>I needed to learn a lot of things before I could get going with this system.</td><td class="scale">1 — 2 — 3 — 4 — 5</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:10px;">
+      <b>SUS Scoring (for metric tracker):</b> Odd items: score − 1. Even items: 5 − score. Sum all adjusted scores × 2.5. Target ≥ 68 (industry average). Record in metric tracker.
+    </div>
+  </div>
+
+  <!-- Debrief -->
+  <div class="section">
+    <div class="section-label">Phase 4 cont. · 42–45 min</div>
+    <h2>Debrief &amp; Exit Interview</h2>
+    <ul class="q-list">
+      <li><span class="q-n">Q1</span>"Overall, how would you describe your experience using this dashboard to investigate an incident?"</li>
+      <li><span class="q-n">Q2</span>"What worked well for identifying correlated changes?"</li>
+      <li><span class="q-n">Q3</span>"What would you change or add to make this more useful during a real P1?"</li>
+      <li><span class="q-n">Q4</span>"Was there any information you expected to see that wasn't there?"</li>
+      <li><span class="q-n">Q5</span>"Compared to how you currently correlate changes to incidents, how does this tool compare?"</li>
+      <li><span class="q-n">Q6</span>"If this were available during your last major incident, how would it have changed your response?"</li>
+    </ul>
+
+    <div class="script-block" style="margin-top:16px;">
+      <div class="lbl">Closing — read verbatim</div>
+      "Thank you so much for your time today. Your feedback is genuinely valuable and will directly shape how we build this feature. We'll be incorporating what we heard across all sessions into our next iteration. Do you have any final questions for me?"
+    </div>
+  </div>
+
+  <!-- Moderator tips -->
+  <div class="section">
+    <div class="section-label">Reference</div>
+    <h2>Moderation Tips</h2>
+    <ul class="obs-list">
+      <li><b>Stay neutral.</b> Respond to questions with "What do you think?" or "What would you expect?" to keep exploration natural.</li>
+      <li><b>Silence is data.</b> Don't fill pauses. If a participant pauses for 30+ seconds, prompt gently: "What are you thinking right now?"</li>
+      <li><b>If stuck > 90 seconds</b> on a task, ask "What would help you here?" before offering guidance. Note that help was needed.</li>
+      <li><b>Don't lead.</b> Avoid words like "correct," "good job," or "right" — they bias subsequent behavior.</li>
+      <li><b>Observer protocol.</b> Observers should not speak, react visibly, or message participants unless coordinated through notetaker chat only.</li>
+      <li><b>Think-aloud reminder.</b> If participant goes quiet: "Can you tell me what you're thinking right now?"</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

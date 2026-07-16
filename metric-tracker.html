@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whisper IMT — Change Correlation Metric Tracker</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 13px;
+    background: #f1f5f9;
+    color: #1a1a2e;
+  }
+
+  /* Layout */
+  .app { display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* Top bar */
+  .topbar {
+    background: #1a2e54;
+    color: #fff;
+    padding: 0 28px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .topbar h1 { font-size: 15px; font-weight: 700; }
+  .topbar .meta { font-size: 12px; color: #93c5fd; display: flex; gap: 20px; }
+
+  /* Participant selector */
+  .pax-bar {
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pax-bar label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #64748b; }
+  .pax-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pax-tab {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .pax-tab:hover { border-color: #93c5fd; color: #1d4ed8; }
+  .pax-tab.active { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+  .pax-tab.done { border-color: #86efac; color: #166534; background: #f0fdf4; }
+  .pax-tab.done.active { background: #16a34a; border-color: #16a34a; color: #fff; }
+
+  /* Main content */
+  .content { flex: 1; padding: 24px 28px; display: flex; gap: 20px; flex-wrap: wrap; }
+
+  /* Cards */
+  .card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .card-header {
+    background: #1a2e54;
+    color: #fff;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-header h2 { font-size: 13px; font-weight: 700; }
+  .card-header .subtitle { font-size: 11px; color: #93c5fd; margin-top: 1px; }
+  .card-body { padding: 16px; }
+
+  /* Participant info card */
+  .info-card { width: 100%; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+  .field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    color: #1a1a2e;
+    background: #f8fafc;
+    transition: border-color .15s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-color: #1d4ed8;
+    background: #fff;
+  }
+  .field textarea { resize: vertical; min-height: 56px; }
+
+  /* Task metrics */
+  .tasks-card { width: 100%; }
+  .task-row {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .task-row-header {
+    display: grid;
+    grid-template-columns: 110px 110px 110px 90px 90px 1fr;
+    gap: 0;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 8px 12px;
+    align-items: center;
+    font-size: 11px;
+  }
+  .task-label {
+    font-weight: 700;
+    color: #1d4ed8;
+    font-size: 12px;
+  }
+  .col-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #94a3b8;
+    padding-left: 8px;
+  }
+  .task-row-inputs {
+    display: grid;
+    grid-template-columns: 110px 110px 110px 90px 90px 1fr;
+    gap: 0;
+    padding: 8px 12px;
+    align-items: start;
+  }
+  .task-row-inputs .cell { padding: 0 8px 0 0; }
+  .task-row-inputs .cell:first-child { padding-left: 0; }
+
+  .seg-control { display: flex; gap: 2px; }
+  .seg-btn {
+    flex: 1;
+    padding: 5px 2px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    background: #fff;
+    color: #64748b;
+    transition: all .1s;
+  }
+  .seg-btn[data-val="pass"].active { background: #16a34a; border-color: #16a34a; color: #fff; }
+  .seg-btn[data-val="partial"].active { background: #f97316; border-color: #f97316; color: #fff; }
+  .seg-btn[data-val="fail"].active { background: #dc2626; border-color: #dc2626; color: #fff; }
+
+  .time-input {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .time-input input {
+    width: 52px;
+    text-align: center;
+    padding: 5px 6px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 12px;
+    background: #f8fafc;
+    font-family: inherit;
+  }
+  .time-input input:focus { outline: none; border-color: #1d4ed8; background: #fff; }
+  .time-unit { font-size: 10px; color: #94a3b8; }
+
+  .err-stepper { display: flex; align-items: center; gap: 6px; }
+  .err-btn {
+    width: 24px; height: 24px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #64748b;
+    line-height: 1;
+    transition: all .1s;
+  }
+  .err-btn:hover { border-color: #1d4ed8; color: #1d4ed8; }
+  .err-count { font-size: 15px; font-weight: 700; min-width: 20px; text-align: center; }
+
+  .notes-cell textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 5px 8px;
+    font-size: 11px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 46px;
+    background: #f8fafc;
+  }
+  .notes-cell textarea:focus { outline: none; border-color: #1d4ed8; background: #fff; }
+
+  /* Confidence / special fields */
+  .likert-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .likert-label { font-size: 11px; color: #64748b; min-width: 120px; }
+  .likert-btns { display: flex; gap: 3px; }
+  .likert-btn {
+    width: 30px; height: 30px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #fff;
+    color: #64748b;
+    transition: all .1s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .likert-btn:hover { border-color: #93c5fd; color: #1d4ed8; }
+  .likert-btn.active { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+  .likert-end { font-size: 10px; color: #94a3b8; min-width: 100px; }
+
+  /* SUS card */
+  .sus-card { flex: 1; min-width: 320px; }
+  .sus-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid #f1f5f9;
+    gap: 10px;
+  }
+  .sus-question:last-of-type { border-bottom: none; }
+  .sus-q-text { font-size: 12px; flex: 1; color: #374151; }
+  .sus-q-num { font-size: 11px; font-weight: 700; color: #1d4ed8; min-width: 20px; }
+  .sus-scale { display: flex; gap: 3px; }
+  .sus-btn {
+    width: 26px; height: 26px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #fff;
+    color: #64748b;
+    transition: all .1s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sus-btn:hover { border-color: #93c5fd; color: #1d4ed8; }
+  .sus-btn.active { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+
+  .sus-score-bar {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .sus-score-val {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a2e54;
+    line-height: 1;
+  }
+  .sus-score-val.good { color: #16a34a; }
+  .sus-score-val.ok { color: #f97316; }
+  .sus-score-val.poor { color: #dc2626; }
+  .sus-grade-label { font-size: 12px; color: #64748b; margin-top: 4px; }
+  .sus-track { flex: 1; }
+  .sus-bar-wrap { height: 8px; background: #e2e8f0; border-radius: 4px; margin-bottom: 6px; overflow: hidden; }
+  .sus-bar-fill { height: 100%; border-radius: 4px; background: #1d4ed8; transition: width .3s; }
+  .sus-scale-labels { display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8; }
+
+  /* Observations card */
+  .obs-card { flex: 1; min-width: 280px; }
+  .obs-field { margin-bottom: 12px; }
+  .obs-field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+  .obs-field textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 64px;
+    background: #f8fafc;
+    line-height: 1.5;
+  }
+  .obs-field textarea:focus { outline: none; border-color: #1d4ed8; background: #fff; }
+
+  /* Summary footer */
+  .summary-bar {
+    background: #fff;
+    border-top: 2px solid #e2e8f0;
+    padding: 12px 28px;
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .stat { display: flex; flex-direction: column; }
+  .stat .val { font-size: 22px; font-weight: 700; color: #1a2e54; line-height: 1; }
+  .stat .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; color: #94a3b8; margin-top: 2px; }
+  .stat .val.good { color: #16a34a; }
+  .stat .val.warn { color: #f97316; }
+  .stat .val.bad { color: #dc2626; }
+
+  .export-btn {
+    margin-left: auto;
+    padding: 8px 18px;
+    background: #1d4ed8;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .export-btn:hover { background: #1a44c4; }
+
+  /* Severity badge */
+  .sev-btns { display: flex; gap: 4px; margin-top: 6px; }
+  .sev-btn {
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1.5px solid #e2e8f0;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #fff;
+    color: #64748b;
+    transition: all .1s;
+  }
+  .sev-btn[data-sev="1"].active { background: #eff6ff; border-color: #1d4ed8; color: #1d4ed8; }
+  .sev-btn[data-sev="2"].active { background: #fef9c3; border-color: #ca8a04; color: #92400e; }
+  .sev-btn[data-sev="3"].active { background: #fff7ed; border-color: #f97316; color: #9a3412; }
+  .sev-btn[data-sev="4"].active { background: #fef2f2; border-color: #dc2626; color: #991b1b; }
+
+  @media (max-width: 700px) {
+    .task-row-header, .task-row-inputs { grid-template-columns: 1fr 1fr; }
+    .content { padding: 12px; gap: 12px; }
+    .summary-bar { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <h1>Whisper IMT — Change Correlation · Metric Tracker</h1>
+    <div class="meta">
+      <span>v1.0 · July 2026</span>
+      <span>5 sessions per group · 2 groups</span>
+    </div>
+  </div>
+
+  <!-- Participant tabs -->
+  <div class="pax-bar">
+    <label>Participant</label>
+    <div class="pax-tabs" id="pax-tabs">
+      <div class="pax-tab active" onclick="switchPax(0)">P01</div>
+      <div class="pax-tab" onclick="switchPax(1)">P02</div>
+      <div class="pax-tab" onclick="switchPax(2)">P03</div>
+      <div class="pax-tab" onclick="switchPax(3)">P04</div>
+      <div class="pax-tab" onclick="switchPax(4)">P05</div>
+      <div class="pax-tab" onclick="switchPax(5)">P06</div>
+      <div class="pax-tab" onclick="switchPax(6)">P07</div>
+      <div class="pax-tab" onclick="switchPax(7)">P08</div>
+      <div class="pax-tab" onclick="switchPax(8)">P09</div>
+      <div class="pax-tab" onclick="switchPax(9)">P10</div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="content">
+
+    <!-- Participant info -->
+    <div class="card info-card">
+      <div class="card-header">
+        <div>
+          <h2 id="pax-title">Participant P01 — Session Info</h2>
+          <div class="subtitle">Fill in before the session starts</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="field">
+            <label>Participant ID</label>
+            <input type="text" class="pax-field" data-field="pid" placeholder="P01">
+          </div>
+          <div class="field">
+            <label>Group</label>
+            <select class="pax-field" data-field="group">
+              <option value="">Select group...</option>
+              <option value="A — Incident Responder (CCO)">A — Incident Responder (CCO)</option>
+              <option value="B — Change Manager (IMT/CAB)">B — Change Manager (IMT/CAB)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Session Date</label>
+            <input type="date" class="pax-field" data-field="date">
+          </div>
+          <div class="field">
+            <label>Facilitator</label>
+            <input type="text" class="pax-field" data-field="facilitator" placeholder="Name">
+          </div>
+          <div class="field">
+            <label>Session Duration (min)</label>
+            <input type="number" class="pax-field" data-field="duration" placeholder="45" min="0" max="90">
+          </div>
+          <div class="field">
+            <label>Years in Role</label>
+            <input type="text" class="pax-field" data-field="experience" placeholder="e.g. 3">
+          </div>
+          <div class="field" style="grid-column: span 2;">
+            <label>Role / Title</label>
+            <input type="text" class="pax-field" data-field="role" placeholder="e.g. Senior SRE, CCO On-call">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Metrics -->
+    <div class="card tasks-card">
+      <div class="card-header">
+        <div>
+          <h2>Task Metrics</h2>
+          <div class="subtitle">Complete during or immediately after each task</div>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <!-- Header row -->
+        <div class="task-row-header" style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#64748b; border-radius:6px; margin-bottom:8px;">
+          <div>Task</div>
+          <div class="col-label">Completion</div>
+          <div class="col-label">Time (T2 only)</div>
+          <div class="col-label">Errors</div>
+          <div class="col-label">Prompts given</div>
+          <div class="col-label">Notes / Quotes</div>
+        </div>
+
+        <!-- T1 -->
+        <div class="task-row" id="task-row-0">
+          <div class="task-row-header">
+            <div class="task-label">T1 — Triage</div>
+            <div class="col-label">Completion</div>
+            <div class="col-label">Time</div>
+            <div class="col-label">Errors</div>
+            <div class="col-label">Prompts</div>
+            <div class="col-label">Notes / Quotes</div>
+          </div>
+          <div class="task-row-inputs">
+            <div class="cell" style="padding-top:2px; font-size:11px; color:#94a3b8;">No timer</div>
+            <div class="cell">
+              <div class="seg-control">
+                <div class="seg-btn" data-task="0" data-val="pass" onclick="setSeg(this)">Pass</div>
+                <div class="seg-btn" data-task="0" data-val="partial" onclick="setSeg(this)">Part</div>
+                <div class="seg-btn" data-task="0" data-val="fail" onclick="setSeg(this)">Fail</div>
+              </div>
+            </div>
+            <div class="cell"><div class="time-input"><input type="text" placeholder="—" disabled style="background:#f1f5f9; color:#94a3b8;"></div></div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changeErr(0,-1)">−</button>
+                <span class="err-count" id="err-0">0</span>
+                <button class="err-btn" onclick="changeErr(0,1)">+</button>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changePrompt(0,-1)">−</button>
+                <span class="err-count" id="prompt-0">0</span>
+                <button class="err-btn" onclick="changePrompt(0,1)">+</button>
+              </div>
+            </div>
+            <div class="notes-cell cell"><textarea class="task-notes" data-task="0" placeholder="Key observations, direct quotes…"></textarea></div>
+          </div>
+        </div>
+
+        <!-- T2 -->
+        <div class="task-row">
+          <div class="task-row-header">
+            <div class="task-label">T2 — Correlation</div>
+            <div class="col-label">Completion</div>
+            <div class="col-label">Time (target &lt;45s)</div>
+            <div class="col-label">Errors</div>
+            <div class="col-label">Prompts</div>
+            <div class="col-label">Notes / Quotes</div>
+          </div>
+          <div class="task-row-inputs">
+            <div class="cell" style="padding-top:2px; font-size:11px; color:#94a3b8;"></div>
+            <div class="cell">
+              <div class="seg-control">
+                <div class="seg-btn" data-task="1" data-val="pass" onclick="setSeg(this)">Pass</div>
+                <div class="seg-btn" data-task="1" data-val="partial" onclick="setSeg(this)">Part</div>
+                <div class="seg-btn" data-task="1" data-val="fail" onclick="setSeg(this)">Fail</div>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="time-input">
+                <input type="number" id="t2-time" class="task-time" data-task="1" placeholder="0" min="0" oninput="updateSummary()">
+                <span class="time-unit">sec</span>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changeErr(1,-1)">−</button>
+                <span class="err-count" id="err-1">0</span>
+                <button class="err-btn" onclick="changeErr(1,1)">+</button>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changePrompt(1,-1)">−</button>
+                <span class="err-count" id="prompt-1">0</span>
+                <button class="err-btn" onclick="changePrompt(1,1)">+</button>
+              </div>
+            </div>
+            <div class="notes-cell cell"><textarea class="task-notes" data-task="1" placeholder="Did they cite confidence %, compare rows?…"></textarea></div>
+          </div>
+        </div>
+
+        <!-- T3 -->
+        <div class="task-row">
+          <div class="task-row-header">
+            <div class="task-label">T3 — Deep Dive</div>
+            <div class="col-label">Completion</div>
+            <div class="col-label">Time</div>
+            <div class="col-label">Errors</div>
+            <div class="col-label">Prompts</div>
+            <div class="col-label">Notes / Quotes</div>
+          </div>
+          <div class="task-row-inputs">
+            <div class="cell" style="padding-top:2px; font-size:11px; color:#94a3b8;"></div>
+            <div class="cell">
+              <div class="seg-control">
+                <div class="seg-btn" data-task="2" data-val="pass" onclick="setSeg(this)">Pass</div>
+                <div class="seg-btn" data-task="2" data-val="partial" onclick="setSeg(this)">Part</div>
+                <div class="seg-btn" data-task="2" data-val="fail" onclick="setSeg(this)">Fail</div>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="time-input">
+                <input type="number" class="task-time" data-task="2" placeholder="0" min="0" oninput="updateSummary()">
+                <span class="time-unit">sec</span>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changeErr(2,-1)">−</button>
+                <span class="err-count" id="err-2">0</span>
+                <button class="err-btn" onclick="changeErr(2,1)">+</button>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changePrompt(2,-1)">−</button>
+                <span class="err-count" id="prompt-2">0</span>
+                <button class="err-btn" onclick="changePrompt(2,1)">+</button>
+              </div>
+            </div>
+            <div class="notes-cell cell"><textarea class="task-notes" data-task="2" placeholder="Which fields did they read? Expand discoverable?…"></textarea></div>
+          </div>
+          <!-- Confidence likert below T3 -->
+          <div style="padding: 0 12px 10px; border-top:1px solid #f1f5f9;">
+            <div class="likert-row">
+              <span class="likert-label">Confidence Likert (1–7)</span>
+              <div class="likert-btns" id="likert-t3">
+                <div class="likert-btn" data-val="1" onclick="setLikert(this,'t3')">1</div>
+                <div class="likert-btn" data-val="2" onclick="setLikert(this,'t3')">2</div>
+                <div class="likert-btn" data-val="3" onclick="setLikert(this,'t3')">3</div>
+                <div class="likert-btn" data-val="4" onclick="setLikert(this,'t3')">4</div>
+                <div class="likert-btn" data-val="5" onclick="setLikert(this,'t3')">5</div>
+                <div class="likert-btn" data-val="6" onclick="setLikert(this,'t3')">6</div>
+                <div class="likert-btn" data-val="7" onclick="setLikert(this,'t3')">7</div>
+              </div>
+              <span class="likert-end" style="font-size:10px; color:#94a3b8;">1=not confident · 7=extremely confident</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- T4 -->
+        <div class="task-row">
+          <div class="task-row-header">
+            <div class="task-label">T4 — ServiceNow Link</div>
+            <div class="col-label">Completion</div>
+            <div class="col-label">Time</div>
+            <div class="col-label">Errors</div>
+            <div class="col-label">Prompts</div>
+            <div class="col-label">Notes / Quotes</div>
+          </div>
+          <div class="task-row-inputs">
+            <div class="cell" style="padding-top:2px;"></div>
+            <div class="cell">
+              <div class="seg-control">
+                <div class="seg-btn" data-task="3" data-val="pass" onclick="setSeg(this)">Pass</div>
+                <div class="seg-btn" data-task="3" data-val="partial" onclick="setSeg(this)">Part</div>
+                <div class="seg-btn" data-task="3" data-val="fail" onclick="setSeg(this)">Fail</div>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="time-input">
+                <input type="number" class="task-time" data-task="3" placeholder="0" min="0" oninput="updateSummary()">
+                <span class="time-unit">sec</span>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changeErr(3,-1)">−</button>
+                <span class="err-count" id="err-3">0</span>
+                <button class="err-btn" onclick="changeErr(3,1)">+</button>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changePrompt(3,-1)">−</button>
+                <span class="err-count" id="prompt-3">0</span>
+                <button class="err-btn" onclick="changePrompt(3,1)">+</button>
+              </div>
+            </div>
+            <div class="notes-cell cell"><textarea class="task-notes" data-task="3" placeholder="Did they find the SNow link? Hesitation?…"></textarea></div>
+          </div>
+        </div>
+
+        <!-- T5 -->
+        <div class="task-row">
+          <div class="task-row-header">
+            <div class="task-label">T5 — Show More</div>
+            <div class="col-label">Completion</div>
+            <div class="col-label">Time</div>
+            <div class="col-label">Errors</div>
+            <div class="col-label">Prompts</div>
+            <div class="col-label">Notes / Quotes</div>
+          </div>
+          <div class="task-row-inputs">
+            <div class="cell" style="padding-top:2px;"></div>
+            <div class="cell">
+              <div class="seg-control">
+                <div class="seg-btn" data-task="4" data-val="pass" onclick="setSeg(this)">Pass</div>
+                <div class="seg-btn" data-task="4" data-val="partial" onclick="setSeg(this)">Part</div>
+                <div class="seg-btn" data-task="4" data-val="fail" onclick="setSeg(this)">Fail</div>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="time-input">
+                <input type="number" class="task-time" data-task="4" placeholder="0" min="0" oninput="updateSummary()">
+                <span class="time-unit">sec</span>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changeErr(4,-1)">−</button>
+                <span class="err-count" id="err-4">0</span>
+                <button class="err-btn" onclick="changeErr(4,1)">+</button>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="err-stepper">
+                <button class="err-btn" onclick="changePrompt(4,-1)">−</button>
+                <span class="err-count" id="prompt-4">0</span>
+                <button class="err-btn" onclick="changePrompt(4,1)">+</button>
+              </div>
+            </div>
+            <div class="notes-cell cell"><textarea class="task-notes" data-task="4" placeholder="Was Show More discovered? Threshold mentioned?…"></textarea></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SUS + Observations row -->
+    <div style="display:flex; gap:20px; width:100%; flex-wrap:wrap;">
+
+      <!-- SUS Calculator -->
+      <div class="card sus-card">
+        <div class="card-header">
+          <div>
+            <h2>System Usability Scale (SUS)</h2>
+            <div class="subtitle">Score auto-calculated · Target ≥ 68</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="sus-questions"></div>
+          <div class="sus-score-bar">
+            <div>
+              <div class="sus-score-val" id="sus-score-display">—</div>
+              <div class="sus-grade-label" id="sus-grade">No responses yet</div>
+            </div>
+            <div class="sus-track">
+              <div class="sus-bar-wrap">
+                <div class="sus-bar-fill" id="sus-bar" style="width:0%"></div>
+              </div>
+              <div class="sus-scale-labels">
+                <span>0</span><span>25</span><span>50</span><span>68 avg</span><span>85 excellent</span><span>100</span>
+              </div>
+            </div>
+          </div>
+          <!-- Severity rating -->
+          <div style="margin-top:16px;">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#64748b; margin-bottom:6px;">Overall Session Severity</div>
+            <div style="font-size:11px; color:#94a3b8; margin-bottom:4px;">1=cosmetic · 2=minor · 3=major · 4=blocker</div>
+            <div class="sev-btns">
+              <div class="sev-btn" data-sev="1" onclick="setSev(this)">1 — Cosmetic</div>
+              <div class="sev-btn" data-sev="2" onclick="setSev(this)">2 — Minor</div>
+              <div class="sev-btn" data-sev="3" onclick="setSev(this)">3 — Major</div>
+              <div class="sev-btn" data-sev="4" onclick="setSev(this)">4 — Blocker</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Observations -->
+      <div class="card obs-card">
+        <div class="card-header">
+          <div>
+            <h2>Observations &amp; Debrief</h2>
+            <div class="subtitle">Key quotes, themes, and exit interview notes</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="obs-field">
+            <label>Best Quote / Most Revealing Moment</label>
+            <textarea class="pax-field" data-field="best_quote" placeholder='"I would never look at anything below 50% on a P1…"'></textarea>
+          </div>
+          <div class="obs-field">
+            <label>What Worked Well</label>
+            <textarea class="pax-field" data-field="worked_well" placeholder="Confidence percentages were immediately understood…"></textarea>
+          </div>
+          <div class="obs-field">
+            <label>Pain Points / Confusion</label>
+            <textarea class="pax-field" data-field="pain_points" placeholder="Expand affordance not obvious — tried clicking the percentage badge first…"></textarea>
+          </div>
+          <div class="obs-field">
+            <label>Missing Information / Feature Requests</label>
+            <textarea class="pax-field" data-field="feature_requests" placeholder="Wanted to see the change owner name directly on the collapsed row…"></textarea>
+          </div>
+          <div class="obs-field">
+            <label>Confidence Threshold Mentioned</label>
+            <textarea class="pax-field" data-field="threshold" rows="1" placeholder='e.g. "I'd only act on something above 60%"'></textarea>
+          </div>
+          <div class="obs-field">
+            <label>General Debrief Notes</label>
+            <textarea class="pax-field" data-field="debrief" placeholder="Overall impression, comparisons to current tools…"></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Summary footer -->
+  <div class="summary-bar">
+    <div class="stat">
+      <span class="val" id="sum-completion">—</span>
+      <span class="lbl">Completion Rate</span>
+    </div>
+    <div class="stat">
+      <span class="val" id="sum-t2time">—</span>
+      <span class="lbl">T2 Time (sec)</span>
+    </div>
+    <div class="stat">
+      <span class="val" id="sum-errors">—</span>
+      <span class="lbl">Total Errors</span>
+    </div>
+    <div class="stat">
+      <span class="val" id="sum-likert">—</span>
+      <span class="lbl">T3 Confidence (1–7)</span>
+    </div>
+    <div class="stat">
+      <span class="val" id="sum-sus">—</span>
+      <span class="lbl">SUS Score</span>
+    </div>
+    <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+  </div>
+
+</div>
+
+<script>
+// ─── State ─────────────────────────────────────────────────────────────────
+const NUM_PAX = 10;
+const NUM_TASKS = 5;
+const SUS_QUESTIONS = [
+  "I think that I would like to use this system frequently.",
+  "I found the system unnecessarily complex.",
+  "I thought the system was easy to use.",
+  "I think that I would need the support of a technical person to be able to use this system.",
+  "I found the various functions in this system were well integrated.",
+  "I thought there was too much inconsistency in this system.",
+  "I would imagine that most people would learn to use this system very quickly.",
+  "I found the system very cumbersome to use.",
+  "I felt very confident using the system.",
+  "I needed to learn a lot of things before I could get going with this system."
+];
+
+function freshPax() {
+  return {
+    info: { pid:'', group:'', date:'', facilitator:'', duration:'', experience:'', role:'', best_quote:'', worked_well:'', pain_points:'', feature_requests:'', threshold:'', debrief:'' },
+    tasks: Array.from({length:NUM_TASKS}, () => ({ completion:'', time:'', errors:0, prompts:0, notes:'' })),
+    sus: Array(10).fill(0),
+    likert_t3: 0,
+    severity: 0
+  };
+}
+
+let data = Array.from({length:NUM_PAX}, freshPax);
+let currentPax = 0;
+
+// ─── Render SUS questions ────────────────────────────────────────────────────
+function renderSUS() {
+  const container = document.getElementById('sus-questions');
+  container.innerHTML = '';
+  SUS_QUESTIONS.forEach((q, i) => {
+    const row = document.createElement('div');
+    row.className = 'sus-question';
+    row.innerHTML = `
+      <span class="sus-q-num">${i+1}</span>
+      <span class="sus-q-text">${q}</span>
+      <div class="sus-scale">
+        ${[1,2,3,4,5].map(v => `<div class="sus-btn" data-q="${i}" data-val="${v}" onclick="setSUS(this)">${v}</div>`).join('')}
+      </div>`;
+    container.appendChild(row);
+  });
+}
+
+// ─── SUS calculation ─────────────────────────────────────────────────────────
+function calcSUS() {
+  const scores = data[currentPax].sus;
+  if (scores.every(s => s === 0)) return null;
+  let total = 0;
+  scores.forEach((s, i) => {
+    if (s === 0) return;
+    total += (i % 2 === 0) ? (s - 1) : (5 - s);
+  });
+  return Math.round(total * 2.5);
+}
+
+function updateSUSDisplay() {
+  const score = calcSUS();
+  const scoreEl = document.getElementById('sus-score-display');
+  const gradeEl = document.getElementById('sus-grade');
+  const barEl = document.getElementById('sus-bar');
+  const sumEl = document.getElementById('sum-sus');
+
+  if (score === null) {
+    scoreEl.textContent = '—';
+    scoreEl.className = 'sus-score-val';
+    gradeEl.textContent = 'No responses yet';
+    barEl.style.width = '0%';
+    sumEl.textContent = '—';
+    sumEl.className = 'val';
+    return;
+  }
+
+  scoreEl.textContent = score;
+  barEl.style.width = Math.min(100, score) + '%';
+
+  let grade, cls;
+  if (score >= 85) { grade = 'Excellent (A)'; cls = 'good'; }
+  else if (score >= 71) { grade = 'Good (B)'; cls = 'good'; }
+  else if (score >= 68) { grade = 'Above average (C+)'; cls = 'good'; }
+  else if (score >= 51) { grade = 'Below average (D)'; cls = 'warn'; }
+  else { grade = 'Poor (F)'; cls = 'bad'; }
+
+  scoreEl.className = 'sus-score-val ' + cls;
+  gradeEl.textContent = grade;
+  sumEl.textContent = score;
+  sumEl.className = 'val ' + cls;
+}
+
+// ─── Load / save participant ──────────────────────────────────────────────────
+function loadPax(idx) {
+  const p = data[idx];
+
+  // Info fields
+  document.querySelectorAll('.pax-field').forEach(el => {
+    const f = el.dataset.field;
+    if (!f) return;
+    el.value = p.info[f] || '';
+  });
+
+  // Task rows
+  for (let t = 0; t < NUM_TASKS; t++) {
+    const td = p.tasks[t];
+    // Completion segs
+    document.querySelectorAll(`.seg-btn[data-task="${t}"]`).forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.val === td.completion);
+    });
+    // Time
+    const timeEl = document.querySelector(`.task-time[data-task="${t}"]`);
+    if (timeEl) timeEl.value = td.time || '';
+    // Errors
+    const errEl = document.getElementById(`err-${t}`);
+    if (errEl) errEl.textContent = td.errors;
+    // Prompts
+    const promptEl = document.getElementById(`prompt-${t}`);
+    if (promptEl) promptEl.textContent = td.prompts;
+    // Notes
+    const noteEl = document.querySelector(`.task-notes[data-task="${t}"]`);
+    if (noteEl) noteEl.value = td.notes || '';
+  }
+
+  // SUS
+  SUS_QUESTIONS.forEach((_, i) => {
+    document.querySelectorAll(`.sus-btn[data-q="${i}"]`).forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.val) === p.sus[i]);
+    });
+  });
+
+  // Likert T3
+  document.querySelectorAll('#likert-t3 .likert-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.val) === p.likert_t3);
+  });
+
+  // Severity
+  document.querySelectorAll('.sev-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.sev) === p.severity);
+  });
+
+  updateSUSDisplay();
+  updateSummary();
+}
+
+function savePax(idx) {
+  const p = data[idx];
+  document.querySelectorAll('.pax-field').forEach(el => {
+    const f = el.dataset.field;
+    if (f) p.info[f] = el.value;
+  });
+  for (let t = 0; t < NUM_TASKS; t++) {
+    const noteEl = document.querySelector(`.task-notes[data-task="${t}"]`);
+    if (noteEl) p.tasks[t].notes = noteEl.value;
+    const timeEl = document.querySelector(`.task-time[data-task="${t}"]`);
+    if (timeEl) p.tasks[t].time = timeEl.value;
+  }
+}
+
+// ─── Switch participant ───────────────────────────────────────────────────────
+function switchPax(idx) {
+  savePax(currentPax);
+  currentPax = idx;
+  document.querySelectorAll('.pax-tab').forEach((tab, i) => {
+    tab.classList.toggle('active', i === idx);
+  });
+  document.getElementById('pax-title').textContent = `Participant P0${idx+1} — Session Info`;
+  loadPax(idx);
+}
+
+function markPaxDone(idx) {
+  const tabs = document.querySelectorAll('.pax-tab');
+  tabs[idx].classList.add('done');
+}
+
+// ─── Seg controls ─────────────────────────────────────────────────────────────
+function setSeg(el) {
+  const task = parseInt(el.dataset.task);
+  const val = el.dataset.val;
+  data[currentPax].tasks[task].completion = val;
+  document.querySelectorAll(`.seg-btn[data-task="${task}"]`).forEach(b => {
+    b.classList.toggle('active', b.dataset.val === val);
+  });
+  updateSummary();
+}
+
+// ─── Error / prompt steppers ──────────────────────────────────────────────────
+function changeErr(task, delta) {
+  const t = data[currentPax].tasks[task];
+  t.errors = Math.max(0, t.errors + delta);
+  document.getElementById(`err-${task}`).textContent = t.errors;
+  updateSummary();
+}
+function changePrompt(task, delta) {
+  const t = data[currentPax].tasks[task];
+  t.prompts = Math.max(0, t.prompts + delta);
+  document.getElementById(`prompt-${task}`).textContent = t.prompts;
+}
+
+// ─── Likert ────────────────────────────────────────────────────────────────────
+function setLikert(el, key) {
+  const val = parseInt(el.dataset.val);
+  data[currentPax].likert_t3 = val;
+  document.querySelectorAll(`#likert-${key} .likert-btn`).forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.val) === val);
+  });
+  updateSummary();
+}
+
+// ─── SUS ──────────────────────────────────────────────────────────────────────
+function setSUS(el) {
+  const q = parseInt(el.dataset.q);
+  const val = parseInt(el.dataset.val);
+  data[currentPax].sus[q] = val;
+  document.querySelectorAll(`.sus-btn[data-q="${q}"]`).forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.val) === val);
+  });
+  updateSUSDisplay();
+  updateSummary();
+}
+
+// ─── Severity ─────────────────────────────────────────────────────────────────
+function setSev(el) {
+  const val = parseInt(el.dataset.sev);
+  data[currentPax].severity = val;
+  document.querySelectorAll('.sev-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.sev) === val);
+  });
+}
+
+// ─── Summary bar ─────────────────────────────────────────────────────────────
+function updateSummary() {
+  const p = data[currentPax];
+
+  // Completion rate
+  const completed = p.tasks.filter(t => t.completion === 'pass').length;
+  const attempted = p.tasks.filter(t => t.completion !== '').length;
+  const compEl = document.getElementById('sum-completion');
+  if (attempted > 0) {
+    const pct = Math.round((completed / attempted) * 100);
+    compEl.textContent = pct + '%';
+    compEl.className = 'val ' + (pct >= 80 ? 'good' : pct >= 60 ? 'warn' : 'bad');
+  } else {
+    compEl.textContent = '—';
+    compEl.className = 'val';
+  }
+
+  // T2 time
+  const t2 = p.tasks[1].time;
+  const t2El = document.getElementById('sum-t2time');
+  if (t2) {
+    t2El.textContent = t2 + 's';
+    t2El.className = 'val ' + (parseInt(t2) <= 45 ? 'good' : parseInt(t2) <= 90 ? 'warn' : 'bad');
+  } else {
+    t2El.textContent = '—';
+    t2El.className = 'val';
+  }
+
+  // Total errors
+  const totalErrors = p.tasks.reduce((s, t) => s + t.errors, 0);
+  const errEl = document.getElementById('sum-errors');
+  errEl.textContent = totalErrors;
+  errEl.className = 'val ' + (totalErrors === 0 ? 'good' : totalErrors <= 3 ? 'warn' : 'bad');
+
+  // Likert
+  const lEl = document.getElementById('sum-likert');
+  if (p.likert_t3) {
+    lEl.textContent = p.likert_t3 + '/7';
+    lEl.className = 'val ' + (p.likert_t3 >= 5 ? 'good' : p.likert_t3 >= 3 ? 'warn' : 'bad');
+  } else {
+    lEl.textContent = '—';
+    lEl.className = 'val';
+  }
+}
+
+// ─── Export CSV ───────────────────────────────────────────────────────────────
+function exportCSV() {
+  savePax(currentPax);
+  const headers = [
+    'Participant','Group','Date','Role','Facilitator','Duration',
+    'T1 Completion','T1 Errors','T1 Prompts',
+    'T2 Completion','T2 Time(s)','T2 Errors','T2 Prompts',
+    'T3 Completion','T3 Errors','T3 Prompts','T3 Confidence (1-7)',
+    'T4 Completion','T4 Errors','T4 Prompts',
+    'T5 Completion','T5 Errors','T5 Prompts',
+    'SUS Score','Session Severity',
+    'Best Quote','Pain Points','Feature Requests','Confidence Threshold','Debrief Notes'
+  ];
+
+  const rows = data.map((p, i) => {
+    const sus = (() => {
+      if (p.sus.every(s => s === 0)) return '';
+      let total = 0;
+      p.sus.forEach((s, qi) => { if (s) total += (qi % 2 === 0) ? (s - 1) : (5 - s); });
+      return Math.round(total * 2.5);
+    })();
+
+    const q = s => '"' + (s||'').replace(/"/g,'""') + '"';
+    return [
+      q(p.info.pid || `P0${i+1}`), q(p.info.group), q(p.info.date), q(p.info.role), q(p.info.facilitator), q(p.info.duration),
+      ...p.tasks.flatMap((t, ti) => {
+        const base = [q(t.completion), t.errors, t.prompts];
+        if (ti === 1) return [q(t.completion), t.time||'', t.errors, t.prompts];
+        if (ti === 2) return [q(t.completion), t.errors, t.prompts, p.likert_t3||''];
+        return base;
+      }),
+      sus, p.severity||'',
+      q(p.info.best_quote), q(p.info.pain_points), q(p.info.feature_requests), q(p.info.threshold), q(p.info.debrief)
+    ].join(',');
+  });
+
+  const csv = [headers.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = 'whisper-imt-change-correlation-metrics.csv';
+  a.click();
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+renderSUS();
+loadPax(0);
+
+// Live-save info fields
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('pax-field')) {
+    const f = e.target.dataset.field;
+    if (f) data[currentPax].info[f] = e.target.value;
+  }
+  if (e.target.classList.contains('task-notes')) {
+    const t = parseInt(e.target.dataset.task);
+    if (!isNaN(t)) data[currentPax].tasks[t].notes = e.target.value;
+  }
+  if (e.target.classList.contains('task-time')) {
+    const t = parseInt(e.target.dataset.task);
+    if (!isNaN(t)) {
+      data[currentPax].tasks[t].time = e.target.value;
+      updateSummary();
+    }
+  }
+});
+</script>
+</body>
+</html>
