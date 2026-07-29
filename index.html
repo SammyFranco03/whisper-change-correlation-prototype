@@ -687,21 +687,21 @@ body {
       <div class="data-row">
         <div class="row-summary" onclick="toggle('rca1')">
           <div class="row-title-group">
-            <div class="row-sub-label">Change Correlation</div>
+            <div class="row-sub-label">Caused by past CHG</div>
             <div class="row-title-text">Member portal API gateway — rate limit policy update</div>
           </div>
           <span class="conf-num">87%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="rca1">
-          <a class="detail-link">View INC1016016 RCA report in ServiceNow ↗</a>
+          <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
           <div class="detail-divider"></div>
-          <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Change — scheduled maintenance window</span></div>
-          <div class="detail-field"><span class="detail-label">Associated change</span><span class="detail-value">CHG0364897 — Member portal API gateway rate limit policy update</span></div>
-          <div class="detail-field"><span class="detail-label">Causal mechanism</span><span class="detail-value">Reduced rate limit triggered request queue overflow, cascading to 500 errors on the checkout and authentication flows</span></div>
-          <div class="detail-field"><span class="detail-label">Identified</span><span class="detail-value">Jun 9, 2026 11:23 PM (+19 min after incident opened)</span></div>
+          <div class="detail-field"><span class="detail-label">Past change</span><span class="detail-value">Tier-based rate limit policies applied to the member portal API gateway via Terraform. New throttling rules were validated in staging before the production cutover.</span></div>
+          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Reduced rate limit triggered request queue overflow, cascading to 500 errors on the checkout and authentication flows</span></div>
+          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Rate limit policy reverted via CHG0364898</span></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364897 — Member portal API gateway rate limit policy update ↗</a></div>
+          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 11:00 PM</span></div>
           <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">14 correlated signals — NewRelic alerts, Splunk logs, ServiceNow CMDB records</span></div>
-          <div class="detail-field"><span class="detail-label">Remediation</span><span class="detail-value link-val">Rate limit policy reverted via CHG0364898 — view in ServiceNow ↗</span></div>
         </div>
       </div>
 
@@ -709,21 +709,21 @@ body {
       <div class="data-row">
         <div class="row-summary" onclick="toggle('rca2')">
           <div class="row-title-group">
-            <div class="row-sub-label">Change Correlation</div>
+            <div class="row-sub-label">Caused by past CHG</div>
             <div class="row-title-text">Auth service blue-green deploy — v4.12.1 to prod</div>
           </div>
           <span class="conf-num">74%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="rca2">
-          <a class="detail-link">View INC1016016 RCA report in ServiceNow ↗</a>
+          <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
           <div class="detail-divider"></div>
-          <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Change — blue-green deployment</span></div>
-          <div class="detail-field"><span class="detail-label">Associated change</span><span class="detail-value">CHG0364803 — Auth service blue-green deploy v4.12.1</span></div>
-          <div class="detail-field"><span class="detail-label">Causal mechanism</span><span class="detail-value">Token validation latency increased during traffic cutover, causing session establishment delays for authenticated users</span></div>
-          <div class="detail-field"><span class="detail-label">Identified</span><span class="detail-value">Jun 9, 2026 11:31 PM (+27 min after incident opened)</span></div>
+          <div class="detail-field"><span class="detail-label">Past change</span><span class="detail-value">Blue-green deployment promoting auth service from v4.11.0 to v4.12.1 in production. Traffic was progressively shifted to the new version during the cutover window.</span></div>
+          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Token validation latency increased during traffic cutover, causing session establishment delays for authenticated users</span></div>
+          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Traffic reverted to v4.11.0 via CHG0364804</span></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364803 — Auth service blue-green deploy v4.12.1 ↗</a></div>
+          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 10:45 PM</span></div>
           <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">8 correlated signals — Datadog traces, PagerDuty alerts, load balancer access logs</span></div>
-          <div class="detail-field"><span class="detail-label">Remediation</span><span class="detail-value link-val">Traffic reverted to v4.11.0 via CHG0364804 — view in ServiceNow ↗</span></div>
         </div>
       </div>
 
@@ -735,12 +735,13 @@ body {
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="rca3">
-          <a class="detail-link">View INC1016016 RCA report in ServiceNow ↗</a>
+          <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
           <div class="detail-divider"></div>
-          <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Configuration — health check threshold</span></div>
-          <div class="detail-field"><span class="detail-label">Associated change</span><span class="detail-value">CHG0364690 — Prod-east LB health check threshold</span></div>
-          <div class="detail-field"><span class="detail-label">Causal mechanism</span><span class="detail-value">Lowered unhealthy threshold caused premature instance removal from rotation under normal transient failures</span></div>
-          <div class="detail-field"><span class="detail-label">Identified</span><span class="detail-value">Jun 9, 2026 11:44 PM (+40 min after incident opened)</span></div>
+          <div class="detail-field"><span class="detail-label">Past change</span><span class="detail-value">Lowered the unhealthy instance threshold on prod-east load balancer health checks to improve burst traffic handling during peak windows.</span></div>
+          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Lowered unhealthy threshold caused premature instance removal from rotation under normal transient failures</span></div>
+          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Health check threshold reverted to prior value</span></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364690 — Prod-east LB health check threshold update ↗</a></div>
+          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 9:00 PM</span></div>
           <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">5 correlated signals — CloudWatch metrics, ELB access logs</span></div>
         </div>
       </div>
@@ -753,12 +754,13 @@ body {
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="rca4">
-          <a class="detail-link">View INC1016016 RCA report in ServiceNow ↗</a>
+          <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
           <div class="detail-divider"></div>
-          <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Certificate management</span></div>
-          <div class="detail-field"><span class="detail-label">Associated change</span><span class="detail-value">CHG0364601 — TLS cert rotation external-api</span></div>
-          <div class="detail-field"><span class="detail-label">Causal mechanism</span><span class="detail-value">Certificate propagation delay caused brief mTLS handshake failures on external API consumers</span></div>
-          <div class="detail-field"><span class="detail-label">Identified</span><span class="detail-value">Jun 9, 2026 11:55 PM (+51 min after incident opened)</span></div>
+          <div class="detail-field"><span class="detail-label">Past change</span><span class="detail-value">Scheduled TLS certificate rotation for external-api.cvshealth.com. New certificate issued and pushed to the API gateway during a low-traffic maintenance window.</span></div>
+          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Certificate propagation delay caused brief mTLS handshake failures on external API consumers</span></div>
+          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Certificate propagation completed; services resumed normal mTLS handshakes after full distribution</span></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364601 — TLS certificate rotation external-api.cvshealth.com ↗</a></div>
+          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 8, 2026 2:00 AM</span></div>
           <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">3 correlated signals — certificate expiry events, API gateway 503 errors</span></div>
         </div>
       </div>
@@ -772,9 +774,13 @@ body {
             <span class="row-arrow">›</span>
           </div>
           <div class="detail-panel" id="rca5">
-            <a class="detail-link">View INC1016016 in ServiceNow ↗</a>
+            <a class="detail-link" href="#" onclick="return false;">View INC1016016 in ServiceNow ↗</a>
             <div class="detail-divider"></div>
-            <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Configuration — cache invalidation</span></div>
+            <div class="detail-field"><span class="detail-label">Past change</span><span class="detail-value">Cache invalidation and purge of member portal static assets across CDN edge nodes.</span></div>
+            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Purge created a cache-miss storm during peak traffic, temporarily increasing origin load</span></div>
+            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Edge cache repopulated; origin traffic normalized</span></div>
+            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364588 — CDN cache purge member portal static assets ↗</a></div>
+            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 8:30 PM</span></div>
             <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">2 correlated signals — CDN purge logs, edge node error rates</span></div>
           </div>
         </div>
@@ -785,9 +791,13 @@ body {
             <span class="row-arrow">›</span>
           </div>
           <div class="detail-panel" id="rca6">
-            <a class="detail-link">View INC1016016 in ServiceNow ↗</a>
+            <a class="detail-link" href="#" onclick="return false;">View INC1016016 in ServiceNow ↗</a>
             <div class="detail-divider"></div>
-            <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Configuration — database pool</span></div>
+            <div class="detail-field"><span class="detail-label">Past change</span><span class="detail-value">Database connection pool size increased for checkout-service-prod to support higher concurrent load during peak season.</span></div>
+            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Larger pool exhausted available DB connections faster under error-retry load amplification</span></div>
+            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Connection pool reverted to previous size</span></div>
+            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364542 — DB connection pool resize checkout-service-prod ↗</a></div>
+            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 7:00 PM</span></div>
             <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">2 correlated signals — DB connection timeouts, slow query logs</span></div>
           </div>
         </div>
@@ -798,9 +808,13 @@ body {
             <span class="row-arrow">›</span>
           </div>
           <div class="detail-panel" id="rca7">
-            <a class="detail-link">View INC1016016 in ServiceNow ↗</a>
+            <a class="detail-link" href="#" onclick="return false;">View INC1016016 in ServiceNow ↗</a>
             <div class="detail-divider"></div>
-            <div class="detail-field"><span class="detail-label">Root cause type</span><span class="detail-value">Configuration — WAF policy</span></div>
+            <div class="detail-field"><span class="detail-label">Past change</span><span class="detail-value">WAF rate limiting policy updated to v2.3, tightening rules for bot mitigation and request pattern filtering on member-facing endpoints.</span></div>
+            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">New WAF rules briefly blocked legitimate high-frequency requests from internal services during the rollout</span></div>
+            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">WAF policy rolled back to v2.2 pending further tuning</span></div>
+            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364501 — WAF rate limiting policy v2.3 ↗</a></div>
+            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 6:15 PM</span></div>
             <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">1 correlated signal — WAF rule update event timestamp</span></div>
           </div>
         </div>
@@ -909,4 +923,5 @@ function doRefresh() {
 </script>
 </body>
 </html>
+
 
