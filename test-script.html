@@ -283,7 +283,7 @@
     <h1>Change Correlation Usability Test Script</h1>
     <div class="meta">
       <span><b>Product:</b> Whisper IMT — Bridge Insights Dashboard</span>
-      <span><b>Feature:</b> Change Correlations + RCA</span>
+      <span><b>Feature:</b> Active Changes (CHGS) + RCA</span>
       <span><b>Version:</b> v1.0 — July 2026</span>
       <span><b>Duration:</b> 45 min per session</span>
     </div>
@@ -377,8 +377,8 @@
         </div>
         <h4>Observe for</h4>
         <ul class="obs-list">
-          <li>Where does their eye go first — Active Outage banner, Change Correlations section, RCA section, or Activity Hub?</li>
-          <li>Do they notice the Change Correlations section header?</li>
+          <li>Where does their eye go first — Active Outage banner, Active Changes (CHGS) section, RCA section, or Activity Hub?</li>
+          <li>Do they notice the Active Changes (CHGS) section header?</li>
           <li>Do they read the confidence percentages unprompted?</li>
           <li>Do they attempt to expand a row or click anywhere?</li>
           <li>Does the Active Outage banner draw attention or cause confusion?</li>
@@ -406,7 +406,7 @@
         <div class="task-timer">⏱ START TIMER when you finish reading the scenario</div>
         <div class="task-scenario">
           <div class="lbl">Read aloud to participant</div>
-          <p>"Looking at the Change Correlations section, identify the change you think is most likely responsible for this incident. As you're deciding, please think aloud and explain your reasoning."</p>
+          <p>"Looking at the Active Changes (CHGS) section, identify the change you think is most likely responsible for this incident. As you're deciding, please think aloud and explain your reasoning."</p>
         </div>
         <div class="callout"><b>STOP TIMER</b> when participant names a specific change AND provides reasoning. Record elapsed time in the metric tracker.</div>
         <h4>Observe for</h4>
@@ -415,7 +415,7 @@
           <li>Do they mention the confidence percentage as a factor in their decision?</li>
           <li>Do they compare multiple rows before deciding?</li>
           <li>Do they try to expand a row before answering?</li>
-          <li>Do they reference the change ID or description text?</li>
+          <li>Do they reference the CHG number prefix or description text?</li>
         </ul>
         <h4>Post-task probes</h4>
         <ul class="probe-list">
@@ -433,21 +433,21 @@
         <div>
           <div class="task-num">TASK 3</div>
           <div class="task-name">Deep Dive — Detail Panel</div>
-          <div class="task-sub">Expanded row comprehension · Confidence Likert recorded here</div>
+          <div class="task-sub">RCA detail panel comprehension · Confidence Likert recorded here</div>
         </div>
       </div>
       <div class="task-body">
         <div class="task-scenario">
           <div class="lbl">Read aloud to participant</div>
-          <p>"You've identified a potential correlated change. Now expand that row and use the detail panel to decide: does this change explain the incident? Confirm it as the cause or rule it out — and tell me your reasoning."</p>
+          <p>"You've identified a potential correlated change. Now look at the RCA section below and expand the matching entry. Use the detail panel to decide: does this change explain the incident? Confirm it as the cause or rule it out — and tell me your reasoning."</p>
         </div>
         <h4>Observe for</h4>
         <ul class="obs-list">
-          <li>Is the expand affordance (chevron/click) discoverable without prompting?</li>
-          <li>Which detail fields do they read — Status, Target CI, Start/End times, Description, Implementation Plan?</li>
+          <li>Is the expand affordance discoverable without prompting?</li>
+          <li>Which detail fields do they read — Past change, Why it caused the issue, Fix applied, Change link, Changed at, Evidence?</li>
+          <li>Do they locate and click the CHG number link?</li>
           <li>How long do they spend on the detail panel?</li>
           <li>Do they express confidence or uncertainty about the decision?</li>
-          <li>Do they scroll within the detail panel?</li>
           <li>Do they make a clear confirm/rule-out decision?</li>
         </ul>
         <h4>Post-task probes</h4>
@@ -455,7 +455,7 @@
           <li>"What information in that panel was most useful to you?"</li>
           <li>"What was least useful or unclear?"</li>
           <li>"Was there anything you expected to see that wasn't there?"</li>
-          <li>"How would you rate the Start and End time fields — did they help you?"</li>
+          <li>"Were the 'Past change' and 'Fix applied' fields clear and actionable?"</li>
         </ul>
         <div class="callout">
           <b>Confidence Likert (record in metric tracker):</b><br>
@@ -506,7 +506,7 @@
       <div class="task-body">
         <div class="task-scenario">
           <div class="lbl">Read aloud to participant</div>
-          <p>"Scroll down in the Change Correlations section. There may be more items available. Explore them and tell me: when would you pay attention to a lower-confidence correlation?"</p>
+          <p>"Scroll down in the Active Changes (CHGS) section. There may be more items available. Explore them and tell me: when would you pay attention to a lower-confidence correlation?"</p>
         </div>
         <h4>Observe for</h4>
         <ul class="obs-list">
@@ -596,3 +596,4 @@
 </div>
 </body>
 </html>
+
