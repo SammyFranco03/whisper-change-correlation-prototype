@@ -329,23 +329,16 @@ body {
 }
 .row-title-text { font-size: 14px; color: var(--text); }
 
-/* Confidence Pills */
-.conf-pill {
-  width: 56px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
+/* Confidence Number */
+.conf-num {
   font-size: 13px;
   font-weight: 600;
+  color: var(--text-dim);
   flex-shrink: 0;
-  margin-right: 6px;
+  margin-right: 10px;
+  min-width: 36px;
+  text-align: right;
 }
-.conf-green  { background: #16a34a; color: #fff; }
-.conf-lgreen { background: #4ade80; color: #14532d; }
-.conf-orange { background: #f97316; color: #fff; }
-.conf-red    { background: #fca5a5; color: #b91c1c; }
 
 .row-arrow { font-size: 14px; color: #d1d5db; width: 14px; text-align: right; flex-shrink: 0; }
 
@@ -592,7 +585,7 @@ body {
 
       <!-- Change Correlations Header -->
       <div class="table-hdr-band">
-        <span class="band-title">Change Correlations</span>
+        <span class="band-title">Active Changes (CHGS)</span>
         <div class="band-spacer"></div>
         <span class="band-conf">Confidence</span>
         <span class="band-sort">›</span>
@@ -601,9 +594,8 @@ body {
       <!-- Change Row 1 -->
       <div class="data-row">
         <div class="row-summary" onclick="toggle('cc1')">
-          <span class="row-chevron" id="cc1-c">›</span>
-          <span class="row-title">Payment gateway API upgrade — v3.2 to v3.4 cutover</span>
-          <span class="conf-pill conf-green">87%</span>
+          <span class="row-title">CHG0364897 Payment gateway API upgrade — v3.2 to v3.4 cutover</span>
+          <span class="conf-num">87%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc1">
@@ -622,9 +614,8 @@ body {
       <!-- Change Row 2 -->
       <div class="data-row">
         <div class="row-summary" onclick="toggle('cc2')">
-          <span class="row-chevron" id="cc2-c">›</span>
-          <span class="row-title">Redis cluster failover — session cache primary node replacement</span>
-          <span class="conf-pill conf-lgreen">74%</span>
+          <span class="row-title">CHG0364801 Redis cluster failover — session cache primary node replacement</span>
+          <span class="conf-num">74%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc2">
@@ -643,9 +634,8 @@ body {
       <!-- Change Row 3 -->
       <div class="data-row">
         <div class="row-summary" onclick="toggle('cc3')">
-          <span class="row-chevron" id="cc3-c">›</span>
-          <span class="row-title">Kubernetes node autoscaling policy update — prod-east</span>
-          <span class="conf-pill conf-orange">51%</span>
+          <span class="row-title">CHG0364755 Kubernetes node autoscaling policy update — prod-east</span>
+          <span class="conf-num">51%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc3">
@@ -664,9 +654,8 @@ body {
       <!-- Change Row 4 -->
       <div class="data-row">
         <div class="row-summary" onclick="toggle('cc4')">
-          <span class="row-chevron" id="cc4-c">›</span>
-          <span class="row-title">CloudFront distribution config update — member-facing CDN</span>
-          <span class="conf-pill conf-red">34%</span>
+          <span class="row-title">CHG0364712 CloudFront distribution config update — member-facing CDN</span>
+          <span class="conf-num">34%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc4">
@@ -697,12 +686,11 @@ body {
       <!-- RCA Row 1 -->
       <div class="data-row">
         <div class="row-summary" onclick="toggle('rca1')">
-          <span class="row-chevron" id="rca1-c">›</span>
           <div class="row-title-group">
             <div class="row-sub-label">Change Correlation</div>
             <div class="row-title-text">Member portal API gateway — rate limit policy update</div>
           </div>
-          <span class="conf-pill conf-green">87%</span>
+          <span class="conf-num">87%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="rca1">
@@ -720,12 +708,11 @@ body {
       <!-- RCA Row 2 -->
       <div class="data-row">
         <div class="row-summary" onclick="toggle('rca2')">
-          <span class="row-chevron" id="rca2-c">›</span>
           <div class="row-title-group">
             <div class="row-sub-label">Change Correlation</div>
             <div class="row-title-text">Auth service blue-green deploy — v4.12.1 to prod</div>
           </div>
-          <span class="conf-pill conf-lgreen">74%</span>
+          <span class="conf-num">74%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="rca2">
@@ -743,9 +730,8 @@ body {
       <!-- RCA Row 3 -->
       <div class="data-row">
         <div class="row-summary" onclick="toggle('rca3')">
-          <span class="row-chevron" id="rca3-c">›</span>
           <span class="row-title">Prod-east load balancer health check threshold change</span>
-          <span class="conf-pill conf-orange">51%</span>
+          <span class="conf-num">51%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="rca3">
@@ -762,9 +748,8 @@ body {
       <!-- RCA Row 4 -->
       <div class="data-row">
         <div class="row-summary" onclick="toggle('rca4')">
-          <span class="row-chevron" id="rca4-c">›</span>
           <span class="row-title">TLS certificate rotation — external-api.cvshealth.com</span>
-          <span class="conf-pill conf-red">34%</span>
+          <span class="conf-num">34%</span>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="rca4">
@@ -782,9 +767,8 @@ body {
       <div class="hidden-rows" id="hiddenRows">
         <div class="data-row">
           <div class="row-summary" onclick="toggle('rca5')">
-            <span class="row-chevron" id="rca5-c">›</span>
             <span class="row-title">CDN cache purge — member portal static assets</span>
-            <span class="conf-pill conf-red">28%</span>
+            <span class="conf-num">28%</span>
             <span class="row-arrow">›</span>
           </div>
           <div class="detail-panel" id="rca5">
@@ -796,9 +780,8 @@ body {
         </div>
         <div class="data-row">
           <div class="row-summary" onclick="toggle('rca6')">
-            <span class="row-chevron" id="rca6-c">›</span>
             <span class="row-title">Database connection pool resize — checkout-service-prod</span>
-            <span class="conf-pill conf-red">22%</span>
+            <span class="conf-num">22%</span>
             <span class="row-arrow">›</span>
           </div>
           <div class="detail-panel" id="rca6">
@@ -810,9 +793,8 @@ body {
         </div>
         <div class="data-row" style="border-bottom:none">
           <div class="row-summary" onclick="toggle('rca7')">
-            <span class="row-chevron" id="rca7-c">›</span>
             <span class="row-title">WAF rule update — rate limiting policy v2.3</span>
-            <span class="conf-pill conf-red">18%</span>
+            <span class="conf-num">18%</span>
             <span class="row-arrow">›</span>
           </div>
           <div class="detail-panel" id="rca7">
@@ -927,3 +909,4 @@ function doRefresh() {
 </script>
 </body>
 </html>
+
