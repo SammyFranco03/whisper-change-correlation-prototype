@@ -274,17 +274,27 @@ body {
 }
 .section-spacer .rule { flex: 1; height: 1px; background: #e5e7eb; }
 
-/* ── Table Header Band (dark navy) ── */
+/* ── Table Header Band ── */
 .table-hdr-band {
   display: flex;
   align-items: center;
   padding: 0 20px;
-  height: 40px;
-  background: var(--section-hdr);
-  border-top: 1px solid rgba(0,0,0,0.08);
+  height: 36px;
+  background: #f1f5f9;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
 }
-.band-title { font-size: 13px; font-weight: 600; color: #fff; }
+.band-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748b;
+}
 .band-spacer { flex: 1; }
+
+/* ── Gap between Active Changes and RCA ── */
+.chg-rca-gap { height: 20px; background: #fff; }
 
 /* ── RCA Sub-header (within Active Changes card) ── */
 .section-sub-hdr {
@@ -662,25 +672,8 @@ body {
         </div>
       </div>
 
-      <!-- Change Row 4 -->
-      <div class="data-row">
-        <div class="row-summary" onclick="toggle('cc4')">
-          <span class="row-rank">4</span>
-          <span class="row-title">CHG0364712 CloudFront distribution config update — member-facing CDN</span>
-          <span class="row-arrow">›</span>
-        </div>
-        <div class="detail-panel" id="cc4">
-          <a class="detail-link" href="#" onclick="return false;">View CHG0364712 in ServiceNow ↗</a>
-          <div class="detail-divider"></div>
-          <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
-          <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">cf-member-portal-prod</span></div>
-          <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 8, 2026 2:00 AM</span></div>
-          <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 8, 2026 2:45 AM</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">CDN &amp; Edge Platform · <span style="color:var(--link)">Rachel Kim</span></span></div>
-          <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Cache invalidation and behavior rules updated for member-facing CDN distribution. Origin TTL adjusted.</span></div>
-          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
-        </div>
-      </div>
+      <!-- Gap between Active Changes and RCA -->
+      <div class="chg-rca-gap"></div>
 
       <!-- RCA Sub-header (within the same Active Changes card) -->
       <div class="section-sub-hdr">
