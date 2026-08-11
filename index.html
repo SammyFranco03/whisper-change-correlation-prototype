@@ -350,7 +350,7 @@ body {
 
 .row-chevron {
   font-size: 13px;
-  color: var(--text-muted);
+  color: #4b5563;
   width: 14px;
   flex-shrink: 0;
   transition: transform 0.2s;
@@ -409,7 +409,8 @@ body {
   height: 44px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-left: 20px;
   font-size: 13.5px;
   color: var(--link);
   cursor: pointer;
@@ -523,6 +524,102 @@ body {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+
+/* ── Contact Link ── */
+.contact-link { color: var(--link); cursor: pointer; }
+.contact-link:hover { text-decoration: underline; }
+
+/* ── Contact Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: #fff;
+  border-radius: 12px;
+  width: 320px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+  overflow: hidden;
+  animation: modalIn 0.18s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  padding: 20px 16px 16px;
+  gap: 12px;
+}
+.modal-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--section-hdr);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.modal-person { flex: 1; min-width: 0; }
+.modal-name { font-size: 15px; font-weight: 600; color: var(--text); }
+.modal-group { font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
+.modal-close {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.modal-close:hover { background: #f3f4f6; color: var(--text); }
+.modal-divider { height: 1px; background: #e5e7eb; }
+.modal-sub-label {
+  padding: 12px 16px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 16px 18px;
+}
+.modal-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+  border: none;
+  font-family: inherit;
+  transition: filter 0.15s;
+}
+.modal-btn:hover { filter: brightness(1.12); }
+.modal-btn.teams    { background: #6264A7; }
+.modal-btn.slack    { background: #4A154B; }
+.modal-btn.outlook  { background: #0078D4; }
+.modal-btn.xmatters { background: #00897B; }
 </style>
 </head>
 <body>
@@ -623,10 +720,12 @@ body {
           <a class="detail-link" href="#" onclick="return false;">View CHG0364897 in ServiceNow ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
+          <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">14 correlated signals · direct CI dependency · change applied 4 min before incident start</span></div>
+          <div class="detail-field"><span class="detail-label">RCA finding</span><span class="detail-value">Reduced rate limit triggered request queue overflow → 500 errors on checkout &amp; auth flows · <a href="#rca1-anchor" class="detail-value link-val" onclick="openRca('rca1');return false;">View RCA ↓</a></span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">api-gw-prod-01 — direct dependency of affected CI</span></div>
           <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 11:00 PM &nbsp; Actual Jun 9, 2026 11:04 PM <span style="color:#6b7280;font-style:italic">+4 min</span></span></div>
           <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 10, 2026 1:00 AM &nbsp; Actual Jun 10, 2026 12:47 AM <span style="color:#6b7280;font-style:italic">−13 min</span></span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Platform Engineering · <span style="color:var(--link)">James Okafor</span></span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Platform Engineering · <span class="contact-link" data-name="James Okafor" data-group="Platform Engineering">James Okafor</span></span></div>
           <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Updated rate limit policies on member portal API gateway to enforce new tier-based throttling rules. Changes applied via Terraform and validated in staging.</span></div>
           <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
         </div>
@@ -643,10 +742,11 @@ body {
           <a class="detail-link" href="#" onclick="return false;">View CHG0364801 in ServiceNow ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
+          <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">8 correlated signals · session cache is a direct dependency of checkout flow · change completed 34 min before incident</span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">redis-session-prod-01 — direct dependency of affected CI</span></div>
           <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 10:30 PM &nbsp; Actual Jun 9, 2026 10:33 PM <span style="color:#6b7280;font-style:italic">+3 min</span></span></div>
           <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 9, 2026 11:30 PM &nbsp; Actual Jun 9, 2026 11:28 PM <span style="color:#6b7280;font-style:italic">−2 min</span></span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Data Platform · <span style="color:var(--link)">Maria Santos</span></span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Data Platform · <span class="contact-link" data-name="Maria Santos" data-group="Data Platform">Maria Santos</span></span></div>
           <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Primary Redis node replacement during scheduled maintenance window. Session data fully replicated before failover.</span></div>
           <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
         </div>
@@ -663,10 +763,11 @@ body {
           <a class="detail-link" href="#" onclick="return false;">View CHG0364755 in ServiceNow ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
+          <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">5 correlated signals · prod-east node pool affected · change completed 1h 4m before incident</span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">k8s-prod-east-ng-01</span></div>
           <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 9:00 PM</span></div>
           <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 9, 2026 10:00 PM</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Kubernetes Platform · <span style="color:var(--link)">David Chen</span></span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Kubernetes Platform · <span class="contact-link" data-name="David Chen" data-group="Kubernetes Platform">David Chen</span></span></div>
           <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Updated autoscaling thresholds to improve burst handling in prod-east during peak traffic windows.</span></div>
           <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
         </div>
@@ -691,7 +792,7 @@ body {
           <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Tier-based rate limit policies applied to the member portal API gateway via Terraform. New throttling rules were validated in staging before the production cutover.</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Platform Engineering · <span style="color:var(--link)">James Okafor</span></span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Platform Engineering · <span class="contact-link" data-name="James Okafor" data-group="Platform Engineering">James Okafor</span></span></div>
           <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Reduced rate limit triggered request queue overflow, cascading to 500 errors on the checkout and authentication flows</span></div>
           <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Rate limit policy reverted via CHG0364898</span></div>
           <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364897 — Member portal API gateway rate limit policy update ↗</a></div>
@@ -711,7 +812,7 @@ body {
           <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Blue-green deployment promoting auth service from v4.11.0 to v4.12.1 in production. Traffic was progressively shifted to the new version during the cutover window.</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Application Delivery · <span style="color:var(--link)">Sarah Patel</span></span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Application Delivery · <span class="contact-link" data-name="Sarah Patel" data-group="Application Delivery">Sarah Patel</span></span></div>
           <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Token validation latency increased during traffic cutover, causing session establishment delays for authenticated users</span></div>
           <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Traffic reverted to v4.11.0 via CHG0364804</span></div>
           <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364803 — Auth service blue-green deploy v4.12.1 ↗</a></div>
@@ -731,7 +832,7 @@ body {
           <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Lowered the unhealthy instance threshold on prod-east load balancer health checks to improve burst traffic handling during peak windows.</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Network Platform · <span style="color:var(--link)">Marcus Webb</span></span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Network Platform · <span class="contact-link" data-name="Marcus Webb" data-group="Network Platform">Marcus Webb</span></span></div>
           <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Lowered unhealthy threshold caused premature instance removal from rotation under normal transient failures</span></div>
           <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Health check threshold reverted to prior value</span></div>
           <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364690 — Prod-east LB health check threshold update ↗</a></div>
@@ -751,7 +852,7 @@ body {
           <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Scheduled TLS certificate rotation for external-api.cvshealth.com. New certificate issued and pushed to the API gateway during a low-traffic maintenance window.</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Operations · <span style="color:var(--link)">Linda Chen</span></span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Operations · <span class="contact-link" data-name="Linda Chen" data-group="Security Operations">Linda Chen</span></span></div>
           <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Certificate propagation delay caused brief mTLS handshake failures on external API consumers</span></div>
           <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Certificate propagation completed; services resumed normal mTLS handshakes after full distribution</span></div>
           <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364601 — TLS certificate rotation external-api.cvshealth.com ↗</a></div>
@@ -772,7 +873,7 @@ body {
             <a class="detail-link" href="#" onclick="return false;">View INC1016016 in ServiceNow ↗</a>
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Cache invalidation and purge of member portal static assets across CDN edge nodes.</span></div>
-            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">CDN &amp; Edge Platform · <span style="color:var(--link)">Rachel Kim</span></span></div>
+            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">CDN &amp; Edge Platform · <span class="contact-link" data-name="Rachel Kim" data-group="CDN &amp; Edge Platform">Rachel Kim</span></span></div>
             <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Purge created a cache-miss storm during peak traffic, temporarily increasing origin load</span></div>
             <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Edge cache repopulated; origin traffic normalized</span></div>
             <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364588 — CDN cache purge member portal static assets ↗</a></div>
@@ -790,7 +891,7 @@ body {
             <a class="detail-link" href="#" onclick="return false;">View INC1016016 in ServiceNow ↗</a>
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Database connection pool size increased for checkout-service-prod to support higher concurrent load during peak season.</span></div>
-            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Data Platform · <span style="color:var(--link)">Maria Santos</span></span></div>
+            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Data Platform · <span class="contact-link" data-name="Maria Santos" data-group="Data Platform">Maria Santos</span></span></div>
             <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Larger pool exhausted available DB connections faster under error-retry load amplification</span></div>
             <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Connection pool reverted to previous size</span></div>
             <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364542 — DB connection pool resize checkout-service-prod ↗</a></div>
@@ -808,7 +909,7 @@ body {
             <a class="detail-link" href="#" onclick="return false;">View INC1016016 in ServiceNow ↗</a>
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">WAF rate limiting policy updated to v2.3, tightening rules for bot mitigation and request pattern filtering on member-facing endpoints.</span></div>
-            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Engineering · <span style="color:var(--link)">Trevor Hill</span></span></div>
+            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Engineering · <span class="contact-link" data-name="Trevor Hill" data-group="Security Engineering">Trevor Hill</span></span></div>
             <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">New WAF rules briefly blocked legitimate high-frequency requests from internal services during the rollout</span></div>
             <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">WAF policy rolled back to v2.2 pending further tuning</span></div>
             <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364501 — WAF rate limiting policy v2.3 ↗</a></div>
@@ -842,6 +943,40 @@ body {
   </aside>
 
 </div><!-- /app-body -->
+
+<!-- Contact Modal -->
+<div class="modal-overlay" id="contactModal" onclick="handleOverlayClick(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-avatar" id="modalAvatar">JO</div>
+      <div class="modal-person">
+        <div class="modal-name" id="modalName">James Okafor</div>
+        <div class="modal-group" id="modalGroup">Platform Engineering</div>
+      </div>
+      <button class="modal-close" onclick="closeContactModal()">×</button>
+    </div>
+    <div class="modal-divider"></div>
+    <div class="modal-sub-label">Contact via</div>
+    <div class="modal-actions">
+      <a class="modal-btn teams" href="#" onclick="return false;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Teams
+      </a>
+      <a class="modal-btn slack" href="#" onclick="return false;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><rect x="5" y="2" width="3.5" height="11" rx="1.75"/><rect x="15.5" y="11" width="3.5" height="11" rx="1.75"/><rect x="11" y="15.5" width="11" height="3.5" rx="1.75"/><rect x="2" y="5" width="11" height="3.5" rx="1.75"/></svg>
+        Slack
+      </a>
+      <a class="modal-btn outlook" href="#" onclick="return false;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+        Outlook
+      </a>
+      <a class="modal-btn xmatters" href="#" onclick="return false;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+        xMatters
+      </a>
+    </div>
+  </div>
+</div>
 
 <script>
 const TABS = [
@@ -920,6 +1055,43 @@ function doRefresh() {
   btn.disabled = true;
   icon.style.animation = 'spin 0.7s linear infinite';
   setTimeout(() => { icon.style.animation = ''; btn.disabled = false; }, 1400);
+}
+
+// Contact modal
+document.addEventListener('click', e => {
+  const link = e.target.closest('.contact-link');
+  if (link) {
+    e.stopPropagation();
+    openContactModal(link.dataset.name, link.dataset.group);
+  }
+});
+
+function openContactModal(name, group) {
+  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+  document.getElementById('modalAvatar').textContent = initials;
+  document.getElementById('modalName').textContent   = name;
+  document.getElementById('modalGroup').textContent  = group;
+  document.getElementById('contactModal').classList.add('open');
+}
+
+function closeContactModal() {
+  document.getElementById('contactModal').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('contactModal')) closeContactModal();
+}
+
+// Keyboard close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeContactModal();
+});
+
+// Open + scroll to an RCA row
+function openRca(id) {
+  const panel = document.getElementById(id);
+  if (!panel.classList.contains('open')) panel.classList.add('open');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 </script>
 </body>
