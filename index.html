@@ -749,8 +749,6 @@ body {
         <div class="incident-field wide">
           <div class="field-label">Incident</div>
           <a class="field-inc-link" id="fIncidentLink" href="#" onclick="return false;">INC1016016 ↗</a>
-          <div class="field-summary" id="fIncidentSummary">Member Portal checkout unavailable — ~45K users affected</div>
-          <div class="field-summary" id="fIncidentTime" style="margin-top:2px;">Jun 9, 2026 11:04 PM</div>
         </div>
         <div class="incident-field">
           <div class="field-label">Bridge Link</div>
@@ -1165,8 +1163,6 @@ function switchTab(i) {
   const incLink = document.getElementById('fIncidentLink');
   incLink.textContent = t.incident + ' ↗';
   incLink.href = t.incidentUrl;
-  document.getElementById('fIncidentSummary').textContent = t.incidentSummary;
-  document.getElementById('fIncidentTime').textContent = t.incidentTime;
   document.getElementById('fLink').textContent = t.link;
   document.getElementById('fNotes').textContent = t.notes;
   document.getElementById('outageBanner').classList.toggle('visible', t.outage);
