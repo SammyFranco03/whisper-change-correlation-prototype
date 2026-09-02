@@ -284,6 +284,14 @@ body {
   border-top: 1px solid #e2e8f0;
   border-bottom: 1px solid #e2e8f0;
 }
+.band-title-group { display: flex; flex-direction: column; gap: 1px; }
+.band-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+}
 .band-title {
   font-size: 11px;
   font-weight: 700;
@@ -317,12 +325,9 @@ body {
 /* ── Priority Rank Badge ── */
 .row-rank {
   width: 22px;
-  height: 22px;
-  border-radius: 4px;
-  background: #e5e7eb;
   color: #374151;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -409,8 +414,8 @@ body {
   height: 44px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding-left: 20px;
+  justify-content: space-between;
+  padding: 0 20px;
   font-size: 13.5px;
   color: var(--link);
   cursor: pointer;
@@ -418,6 +423,7 @@ body {
   user-select: none;
 }
 .show-more-row:hover { background: #f9fafb; }
+.show-more-chevron { font-size: 14px; color: #4b5563; }
 
 .hidden-rows { display: none; }
 .hidden-rows.visible { display: block; }
@@ -705,8 +711,11 @@ body {
       <div class="section-spacer"><div class="rule"></div></div>
 
       <!-- Active Changes Header -->
-      <div class="table-hdr-band">
-        <span class="band-title">Change Requests</span>
+      <div class="table-hdr-band" style="height:48px;">
+        <div class="band-title-group">
+          <span class="band-eyebrow">Closed</span>
+          <span class="band-title">Change Requests</span>
+        </div>
       </div>
 
       <!-- Change Row 1 -->
@@ -802,7 +811,7 @@ body {
 
       <!-- Show more changes -->
       <div class="show-more-row" id="showMoreChangesBtn" onclick="toggleMoreChanges()">
-        ▸ Show 1 additional change
+        <span>Show more</span><span class="show-more-chevron">›</span>
       </div>
 
       <!-- Gap between Active Changes and RCA -->
@@ -873,28 +882,26 @@ body {
         </div>
       </div>
 
-      <!-- RCA Row 4 -->
-      <div class="data-row">
-        <div class="row-summary" onclick="toggle('rca4')">
-          <span class="row-rank">4</span>
-          <span class="row-title">TLS certificate rotation — external-api.cvshealth.com</span>
-          <span class="row-arrow">›</span>
-        </div>
-        <div class="detail-panel" id="rca4">
-          <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
-          <div class="detail-divider"></div>
-          <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Scheduled TLS certificate rotation for external-api.cvshealth.com. New certificate issued and pushed to the API gateway during a low-traffic maintenance window.</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Operations · <span class="contact-link" data-name="Linda Chen" data-group="Security Operations">Linda Chen</span></span></div>
-          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Certificate propagation delay caused brief mTLS handshake failures on external API consumers</span></div>
-          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Certificate propagation completed; services resumed normal mTLS handshakes after full distribution</span></div>
-          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364601 — TLS certificate rotation external-api.cvshealth.com ↗</a></div>
-          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 8, 2026 2:00 AM</span></div>
-          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">3 correlated signals — certificate expiry events, API gateway 503 errors</span></div>
-        </div>
-      </div>
-
       <!-- Hidden lower-priority RCA rows -->
       <div class="hidden-rows" id="hiddenRows">
+        <div class="data-row">
+          <div class="row-summary" onclick="toggle('rca4')">
+            <span class="row-rank">4</span>
+            <span class="row-title">TLS certificate rotation — external-api.cvshealth.com</span>
+            <span class="row-arrow">›</span>
+          </div>
+          <div class="detail-panel" id="rca4">
+            <a class="detail-link" href="#" onclick="return false;">View INC1016016 RCA report in ServiceNow ↗</a>
+            <div class="detail-divider"></div>
+            <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Scheduled TLS certificate rotation for external-api.cvshealth.com. New certificate issued and pushed to the API gateway during a low-traffic maintenance window.</span></div>
+            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Operations · <span class="contact-link" data-name="Linda Chen" data-group="Security Operations">Linda Chen</span></span></div>
+            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Certificate propagation delay caused brief mTLS handshake failures on external API consumers</span></div>
+            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Certificate propagation completed; services resumed normal mTLS handshakes after full distribution</span></div>
+            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364601 — TLS certificate rotation external-api.cvshealth.com ↗</a></div>
+            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 8, 2026 2:00 AM</span></div>
+            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">3 correlated signals — certificate expiry events, API gateway 503 errors</span></div>
+          </div>
+        </div>
         <div class="data-row">
           <div class="row-summary" onclick="toggle('rca5')">
             <span class="row-rank">5</span>
@@ -953,7 +960,7 @@ body {
 
       <!-- Show More RCA -->
       <div class="show-more-row" id="showMoreBtn" onclick="toggleMore()">
-        ▸ Show 3 additional RCA findings
+        <span>Show more</span><span class="show-more-chevron">›</span>
       </div>
 
     </div><!-- /content-card -->
@@ -1057,9 +1064,9 @@ function switchTab(i) {
   document.querySelectorAll('.row-chevron.open').forEach(c => c.classList.remove('open'));
   // Reset show-more
   document.getElementById('hiddenChanges').classList.remove('visible');
-  document.getElementById('showMoreChangesBtn').textContent = '▸ Show 1 additional change';
+  document.getElementById('showMoreChangesBtn').innerHTML = '<span>Show more</span><span class="show-more-chevron">›</span>';
   document.getElementById('hiddenRows').classList.remove('visible');
-  document.getElementById('showMoreBtn').textContent = '▸ Show 3 additional RCA findings';
+  document.getElementById('showMoreBtn').innerHTML = '<span>Show more</span><span class="show-more-chevron">›</span>';
   moreChangesVisible = false;
 }
 
@@ -1074,18 +1081,18 @@ let moreChangesVisible = false;
 function toggleMoreChanges() {
   moreChangesVisible = !moreChangesVisible;
   document.getElementById('hiddenChanges').classList.toggle('visible', moreChangesVisible);
-  document.getElementById('showMoreChangesBtn').textContent = moreChangesVisible
-    ? '▾ Hide additional change'
-    : '▸ Show 1 additional change';
+  document.getElementById('showMoreChangesBtn').innerHTML = moreChangesVisible
+    ? '<span>Show less</span><span class="show-more-chevron" style="transform:rotate(90deg);display:inline-block">›</span>'
+    : '<span>Show more</span><span class="show-more-chevron">›</span>';
 }
 
 let moreVisible = false;
 function toggleMore() {
   moreVisible = !moreVisible;
   document.getElementById('hiddenRows').classList.toggle('visible', moreVisible);
-  document.getElementById('showMoreBtn').textContent = moreVisible
-    ? '▾ Hide additional RCA findings'
-    : '▸ Show 3 additional RCA findings';
+  document.getElementById('showMoreBtn').innerHTML = moreVisible
+    ? '<span>Show less</span><span class="show-more-chevron" style="transform:rotate(90deg);display:inline-block">›</span>'
+    : '<span>Show more</span><span class="show-more-chevron">›</span>';
 }
 
 function hubTab(el) {
