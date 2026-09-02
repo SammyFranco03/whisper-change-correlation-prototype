@@ -329,9 +329,9 @@ body {
   flex-shrink: 0;
   margin-right: 10px;
 }
-.row-rank.r1 { background: #1a2e54; color: #ffffff; }
-.row-rank.r2 { background: #334155; color: #ffffff; }
-.row-rank.r3 { background: #64748b; color: #ffffff; }
+.row-rank.r1 { }
+.row-rank.r2 { }
+.row-rank.r3 { }
 
 /* ── Data Rows ── */
 .data-row { border-bottom: 1px solid var(--row-border); }
@@ -654,7 +654,7 @@ body {
   <main class="main-content">
 
     <!-- Outage Banner -->
-    <div class="outage-banner visible" id="outageBanner">
+    <div class="outage-banner" id="outageBanner">
       <div class="outage-info">
         <div class="outage-title">Active outage — Member Portal checkout unavailable</div>
         <div class="outage-sub">~45,000 users affected · Started Jun 9, 2026 11:04 PM · 2h 19m ongoing</div>
@@ -706,7 +706,7 @@ body {
 
       <!-- Active Changes Header -->
       <div class="table-hdr-band">
-        <span class="band-title">Active Changes (CHGS)</span>
+        <span class="band-title">Change Requests</span>
       </div>
 
       <!-- Change Row 1 -->
@@ -966,8 +966,8 @@ body {
       <span class="hub-close">×</span>
     </div>
     <div class="hub-tabs">
-      <div class="hub-tab active" onclick="hubTab(this)">Dashboard <span class="hub-badge">9+</span></div>
-      <div class="hub-tab" onclick="hubTab(this)">Live Feed</div>
+      <div class="hub-tab active" onclick="hubTab(this)">Live Feed</div>
+      <div class="hub-tab" onclick="hubTab(this)">Scribe</div>
       <div class="hub-tab" onclick="hubTab(this)">Details</div>
     </div>
     <div class="recent-label">Recent Activity</div>
