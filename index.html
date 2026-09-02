@@ -4,28 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bridge Insights — Whisper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
   --nav-bg: #ffffff;
-  --nav-border: #e5e7eb;
+  --nav-border: #e2e6ea;
   --sidebar-bg: #1c2b45;
-  --page-bg: #f3f4f6;
+  --page-bg: #f4f5f7;
   --card-bg: #ffffff;
-  --card-border: #e2e8f0;
-  --section-hdr: #1a2e54;
-  --text: #111827;
-  --text-dim: #6b7280;
-  --text-muted: #9ca3af;
-  --tab-active: #1d4ed8;
-  --link: #1d4ed8;
-  --row-border: #f3f4f6;
+  --card-border: #dde1e7;
+  --section-hdr: #1b3557;
+  --text: #1a1a2e;
+  --text-dim: #5a6472;
+  --text-muted: #8c95a0;
+  --tab-active: #1b3557;
+  --link: #0b5cb5;
+  --row-border: #f0f2f5;
   --outage-red: #cc0000;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--page-bg);
   color: var(--text);
   height: 100vh;
@@ -64,7 +67,7 @@ body {
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 13px;
-  color: #374151;
+  color: #3d4654;
   cursor: pointer;
   background: transparent;
   margin-right: 16px;
@@ -280,7 +283,7 @@ body {
   align-items: center;
   padding: 0 20px;
   height: 36px;
-  background: #f1f5f9;
+  background: #eef1f6;
   border-top: 1px solid #e2e8f0;
   border-bottom: 1px solid #e2e8f0;
 }
@@ -297,7 +300,7 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  color: #64748b;
+  color: #5a6472;
 }
 .band-spacer { flex: 1; }
 
@@ -310,7 +313,7 @@ body {
   align-items: center;
   padding: 0 20px;
   height: 36px;
-  background: #f1f5f9;
+  background: #eef1f6;
   border-top: 1px solid #e2e8f0;
   border-bottom: 1px solid #e2e8f0;
 }
@@ -319,13 +322,13 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  color: #64748b;
+  color: #5a6472;
 }
 
 /* ── Priority Rank Badge ── */
 .row-rank {
   width: 22px;
-  color: #374151;
+  color: #3d4654;
   font-size: 13px;
   font-weight: 600;
   display: flex;
@@ -372,7 +375,7 @@ body {
 
 .row-chevron {
   font-size: 13px;
-  color: #4b5563;
+  color: #5a6472;
   width: 14px;
   flex-shrink: 0;
   transition: transform 0.2s;
@@ -386,7 +389,7 @@ body {
   color: var(--text);
 }
 
-.row-arrow { font-size: 14px; color: #4b5563; width: 14px; text-align: right; flex-shrink: 0; }
+.row-arrow { font-size: 14px; color: #5a6472; width: 14px; text-align: right; flex-shrink: 0; }
 
 /* ── Detail Panels ── */
 .detail-panel {
@@ -438,7 +441,7 @@ body {
   user-select: none;
 }
 .show-more-row:hover { background: #f9fafb; }
-.show-more-chevron { font-size: 14px; color: #4b5563; }
+.show-more-chevron { font-size: 14px; color: #5a6472; }
 
 .hidden-rows { display: none; }
 .hidden-rows.visible { display: block; }
@@ -537,14 +540,14 @@ body {
 .transcript-msg { padding: 6px 16px; font-size: 12.5px; line-height: 1.5; }
 .transcript-speaker { font-weight: 600; color: var(--text); margin-right: 4px; }
 .transcript-time { font-size: 11px; color: var(--text-muted); margin-left: 4px; }
-.transcript-text { color: #374151; }
+.transcript-text { color: #3d4654; }
 .transcript-system {
   margin: 4px 16px;
   padding: 6px 10px;
-  background: #f1f5f9;
+  background: #eef1f6;
   border-radius: 6px;
   font-size: 11.5px;
-  color: #64748b;
+  color: #5a6472;
   font-style: italic;
 }
 
