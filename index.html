@@ -506,7 +506,8 @@ body {
   flex-shrink: 0;
 }
 
-.activity-feed { flex: 1; overflow-y: auto; }
+.activity-feed { flex: 1; overflow-y: auto; display: none; }
+.activity-feed.active { display: block; }
 
 .activity-item {
   padding: 9px 16px 8px;
@@ -514,6 +515,48 @@ body {
   cursor: pointer;
 }
 .activity-item:hover { background: #f9fafb; }
+
+/* ── Transcript (Live Feed) ── */
+.transcript-feed { flex: 1; overflow-y: auto; display: none; padding: 12px 0; }
+.transcript-feed.active { display: block; }
+.transcript-msg { padding: 6px 16px; font-size: 12.5px; line-height: 1.5; }
+.transcript-speaker { font-weight: 600; color: var(--text); margin-right: 4px; }
+.transcript-time { font-size: 11px; color: var(--text-muted); margin-left: 4px; }
+.transcript-text { color: #374151; }
+.transcript-system {
+  margin: 4px 16px;
+  padding: 6px 10px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  font-size: 11.5px;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* ── Scribe Panel ── */
+.scribe-feed { flex: 1; overflow-y: auto; display: none; padding: 16px; }
+.scribe-feed.active { display: block; }
+.scribe-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.scribe-icon {
+  width: 28px; height: 28px;
+  background: #16a34a;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: white;
+  font-size: 13px;
+}
+.scribe-notice-body { flex: 1; min-width: 0; }
+.scribe-notice-title { font-size: 13px; font-weight: 600; color: #15803d; margin-bottom: 3px; }
+.scribe-notice-detail { font-size: 12px; color: #166534; line-height: 1.4; }
 
 .activity-top {
   display: flex;
@@ -974,12 +1017,27 @@ body {
       <span class="hub-close">×</span>
     </div>
     <div class="hub-tabs">
-      <div class="hub-tab active" onclick="hubTab(this)">Live Feed</div>
-      <div class="hub-tab" onclick="hubTab(this)">Scribe</div>
-      <div class="hub-tab" onclick="hubTab(this)">Details</div>
+      <div class="hub-tab active" onclick="hubTab(this,'liveFeedPanel')">Live Feed</div>
+      <div class="hub-tab" onclick="hubTab(this,'scribePanel')">Scribe</div>
+      <div class="hub-tab" onclick="hubTab(this,'detailsPanel')">Details</div>
     </div>
-    <div class="recent-label">Recent Activity</div>
-    <div class="activity-feed" id="activityFeed"></div>
+
+    <!-- Live Feed: transcript -->
+    <div class="transcript-feed active" id="liveFeedPanel"></div>
+
+    <!-- Scribe panel -->
+    <div class="scribe-feed" id="scribePanel">
+      <div class="scribe-notice">
+        <div class="scribe-icon">✓</div>
+        <div class="scribe-notice-body">
+          <div class="scribe-notice-title">Scribe is active</div>
+          <div class="scribe-notice-detail">Recording bridge call CCO-06 in breakout room #4</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details panel (previous activity feed) -->
+    <div class="activity-feed" id="detailsPanel"></div>
   </aside>
 
 </div><!-- /app-body -->
@@ -1026,6 +1084,35 @@ const TABS = [
   { bridge:'CCO-11', incident:'INC1014278', incidentSummary:'CDN edge node failures — static asset delivery impacted', incidentTime:'Jun 5, 2026 6:48 PM', incidentUrl:'#', link:'Webex CCO-11', notes:'Screen share', outage:false },
 ];
 
+// ── Live Feed transcript ──
+const TRANSCRIPT = [
+  { time:'11:04 PM', speaker:'James Okafor',  text:'We're seeing a spike in 500s on the checkout endpoint — looks like the rate limit policy change just hit prod.' },
+  { time:'11:05 PM', speaker:'Priya Nair',    text:'Confirmed. NewRelic alert fired 3 minutes ago. Assigning INC1016016 to Platform Engineering now.' },
+  { time:'11:06 PM', speaker:'Maria Santos',  text:'Redis session cache looks stable. No replication lag. I don't think the failover is the cause here.' },
+  { time:'11:07 PM', speaker:'James Okafor',  text:'Agreed. CHG0364897 applied at 11:00 — that's the most likely culprit. Pulling Terraform diff now.' },
+  { time:'11:08 PM', speaker:'Devon Marsh',   text:'Load balancer health checks are clean on my end. Prod-east nodes are all green.' },
+  { time:'11:09 PM', system: true,            text:'Whisper correlated 14 signals to CHG0364897 — rate limit policy update on api-gw-prod-01.' },
+  { time:'11:10 PM', speaker:'Priya Nair',    text:'Rate limit dropped from 500 to 50 req/s on the member portal path. That explains the queue overflow.' },
+  { time:'11:11 PM', speaker:'James Okafor',  text:'Initiating rollback via CHG0364898. ETA 8 minutes.' },
+  { time:'11:14 PM', speaker:'Sarah Patel',   text:'Auth service rollback to v4.11.0 complete. Token validation latency back to baseline.' },
+  { time:'11:19 PM', speaker:'James Okafor',  text:'Rate limit policy reverted. Checkout success rate climbing — 78% and rising.' },
+  { time:'11:22 PM', speaker:'Priya Nair',    text:'Checkout success rate at 98%. Declaring all-clear pending 5 min stability window.' },
+  { time:'11:27 PM', system: true,            text:'INC1016016 resolved. Duration: 23 minutes. Root cause: CHG0364897 rate limit misconfiguration.' },
+];
+
+const liveFeedEl = document.getElementById('liveFeedPanel');
+TRANSCRIPT.forEach(m => {
+  if (m.system) {
+    liveFeedEl.innerHTML += `<div class="transcript-system">${m.time} · ${m.text}</div>`;
+  } else {
+    liveFeedEl.innerHTML += `<div class="transcript-msg">
+      <span class="transcript-speaker">${m.speaker}</span><span class="transcript-time">${m.time}</span><br>
+      <span class="transcript-text">${m.text}</span>
+    </div>`;
+  }
+});
+
+// ── Details feed ──
 const ACTIVITY = [
   { id:'CCO-09 (INC 1013321)', type:'Notification', desc:'session_stopped event received' },
   { id:'CCO-06 (INC 1014083)', type:'Notification', desc:'session_stopped event received' },
@@ -1033,13 +1120,11 @@ const ACTIVITY = [
   { id:'CCO-06 (INC 1014083)', type:'Notification', desc:'session_stopped event received' },
   { id:'CCO-09 (INC 1013321)', type:'Notification', desc:'session_stopped event received' },
   { id:'CCO-06 (INC 1014083)', type:'Notification', desc:'session_stopped event received' },
-  { id:'CCO-06 (INC 1014083)', type:'Notification', desc:'session_stopped event received' },
 ];
 
-// Render activity feed
-const feed = document.getElementById('activityFeed');
+const detailsEl = document.getElementById('detailsPanel');
 ACTIVITY.forEach(a => {
-  feed.innerHTML += `<div class="activity-item">
+  detailsEl.innerHTML += `<div class="activity-item">
     <div class="activity-top">
       <span class="activity-id">${a.id}</span>
       <span class="activity-time">1h ago</span>
@@ -1097,9 +1182,14 @@ function toggleMore() {
     : '<span>Show more</span><span class="show-more-chevron">›</span>';
 }
 
-function hubTab(el) {
+function hubTab(el, panelId) {
   document.querySelectorAll('.hub-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
+  ['liveFeedPanel','scribePanel','detailsPanel'].forEach(id => {
+    const p = document.getElementById(id);
+    if (p) p.classList.remove('active');
+  });
+  if (panelId) document.getElementById(panelId).classList.add('active');
 }
 
 function doRefresh() {
