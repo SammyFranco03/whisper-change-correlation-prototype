@@ -749,14 +749,11 @@ body {
         <div class="incident-field wide">
           <div class="field-label">Incident</div>
           <a class="field-inc-link" id="fIncidentLink" href="#" onclick="return false;">INC1016016 ↗</a>
+          <div class="field-summary" id="fIncidentSummary">Member Portal checkout unavailable — ~45K users affected · Jun 9, 2026 11:04 PM</div>
         </div>
         <div class="incident-field">
           <div class="field-label">Bridge Link</div>
           <div class="field-value link-val" id="fLink">Webex CCO-06</div>
-        </div>
-        <div class="incident-field">
-          <div class="field-label">Usage Notes</div>
-          <div class="field-value" id="fNotes">Keyboard</div>
         </div>
         <div class="incident-spacer"></div>
         <button class="refresh-btn" id="refreshBtn" onclick="doRefresh()">
@@ -1163,8 +1160,8 @@ function switchTab(i) {
   const incLink = document.getElementById('fIncidentLink');
   incLink.textContent = t.incident + ' ↗';
   incLink.href = t.incidentUrl;
+  document.getElementById('fIncidentSummary').textContent = t.incidentSummary + ' · ' + t.incidentTime;
   document.getElementById('fLink').textContent = t.link;
-  document.getElementById('fNotes').textContent = t.notes;
   document.getElementById('outageBanner').classList.toggle('visible', t.outage);
   // Collapse all open rows
   document.querySelectorAll('.detail-panel.open').forEach(p => p.classList.remove('open'));
