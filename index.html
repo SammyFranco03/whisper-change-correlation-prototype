@@ -692,6 +692,7 @@ body {
           <div class="field-label">Incident</div>
           <a class="field-inc-link" id="fIncidentLink" href="#" onclick="return false;">INC1016016 ↗</a>
           <div class="field-summary" id="fIncidentSummary">Member Portal checkout unavailable — ~45K users affected</div>
+          <div class="field-summary" id="fIncidentTime" style="margin-top:2px;">Jun 9, 2026 11:04 PM</div>
         </div>
         <div class="incident-field">
           <div class="field-label">Bridge Link</div>
@@ -1019,10 +1020,10 @@ body {
 
 <script>
 const TABS = [
-  { bridge:'CCO-06', incident:'INC1016016', incidentSummary:'Member Portal checkout unavailable — ~45K users affected', incidentUrl:'#', link:'Webex CCO-06', notes:'Keyboard', outage:true },
-  { bridge:'CCO-05', incident:'INC1015903', incidentSummary:'Payment processing delays — API gateway timeouts', incidentUrl:'#', link:'Webex CCO-05', notes:'Phone',    outage:false },
-  { bridge:'IMT-08', incident:'INC1015614', incidentSummary:'Identity service degradation — login failures spike', incidentUrl:'#', link:'Webex IMT-08', notes:'Keyboard', outage:false },
-  { bridge:'CCO-11', incident:'INC1014278', incidentSummary:'CDN edge node failures — static asset delivery impacted', incidentUrl:'#', link:'Webex CCO-11', notes:'Screen share', outage:false },
+  { bridge:'CCO-06', incident:'INC1016016', incidentSummary:'Member Portal checkout unavailable — ~45K users affected', incidentTime:'Jun 9, 2026 11:04 PM', incidentUrl:'#', link:'Webex CCO-06', notes:'Keyboard', outage:true },
+  { bridge:'CCO-05', incident:'INC1015903', incidentSummary:'Payment processing delays — API gateway timeouts', incidentTime:'Jun 8, 2026 3:22 PM', incidentUrl:'#', link:'Webex CCO-05', notes:'Phone',    outage:false },
+  { bridge:'IMT-08', incident:'INC1015614', incidentSummary:'Identity service degradation — login failures spike', incidentTime:'Jun 7, 2026 9:15 AM', incidentUrl:'#', link:'Webex IMT-08', notes:'Keyboard', outage:false },
+  { bridge:'CCO-11', incident:'INC1014278', incidentSummary:'CDN edge node failures — static asset delivery impacted', incidentTime:'Jun 5, 2026 6:48 PM', incidentUrl:'#', link:'Webex CCO-11', notes:'Screen share', outage:false },
 ];
 
 const ACTIVITY = [
@@ -1056,6 +1057,7 @@ function switchTab(i) {
   incLink.textContent = t.incident + ' ↗';
   incLink.href = t.incidentUrl;
   document.getElementById('fIncidentSummary').textContent = t.incidentSummary;
+  document.getElementById('fIncidentTime').textContent = t.incidentTime;
   document.getElementById('fLink').textContent = t.link;
   document.getElementById('fNotes').textContent = t.notes;
   document.getElementById('outageBanner').classList.toggle('visible', t.outage);
