@@ -740,6 +740,15 @@ body {
     <!-- Content Card -->
     <div class="content-card">
 
+      <!-- Incident Details Header -->
+      <div class="table-hdr-band">
+        <span class="band-title">Incident Details</span>
+        <div class="band-spacer"></div>
+        <button class="refresh-btn" id="refreshBtn" onclick="doRefresh()" style="margin-right:0;">
+          <span class="refresh-icon" id="refreshIcon">↺</span> Refresh
+        </button>
+      </div>
+
       <!-- Incident Info Row -->
       <div class="incident-info-row">
         <div class="incident-field">
@@ -756,9 +765,6 @@ body {
           <div class="field-value link-val" id="fLink">Webex CCO-06</div>
         </div>
         <div class="incident-spacer"></div>
-        <button class="refresh-btn" id="refreshBtn" onclick="doRefresh()">
-          <span class="refresh-icon" id="refreshIcon">↺</span> Refresh
-        </button>
       </div>
 
       <!-- Section spacer before Active Changes -->
