@@ -339,13 +339,20 @@ body {
 .row-rank.r3 { }
 
 /* ── Row status eyebrow ── */
+.row-title-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 20px;
+}
 .row-eyebrow {
-  padding: 7px 20px 0;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #94a3b8;
+  margin-bottom: 1px;
 }
 
 /* ── Data Rows ── */
@@ -375,10 +382,8 @@ body {
 .row-chevron.open { transform: rotate(90deg); }
 
 .row-title {
-  flex: 1;
   font-size: 14px;
   color: var(--text);
-  padding-right: 20px;
 }
 
 .row-arrow { font-size: 14px; color: #4b5563; width: 14px; text-align: right; flex-shrink: 0; }
@@ -771,10 +776,12 @@ body {
 
       <!-- Change Row 1 -->
       <div class="data-row">
-        <div class="row-eyebrow">Closed</div>
         <div class="row-summary" onclick="toggle('cc1')">
           <span class="row-rank r1">1</span>
-          <span class="row-title">CHG0364897 Payment gateway API upgrade — v3.2 to v3.4 cutover</span>
+          <div class="row-title-group">
+            <span class="row-eyebrow">Closed</span>
+            <span class="row-title">CHG0364897 Payment gateway API upgrade — v3.2 to v3.4 cutover</span>
+          </div>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc1">
@@ -795,10 +802,12 @@ body {
 
       <!-- Change Row 2 -->
       <div class="data-row">
-        <div class="row-eyebrow">Implemented</div>
         <div class="row-summary" onclick="toggle('cc2')">
           <span class="row-rank r2">2</span>
-          <span class="row-title">CHG0364801 Redis cluster failover — session cache primary node replacement</span>
+          <div class="row-title-group">
+            <span class="row-eyebrow">Implemented</span>
+            <span class="row-title">CHG0364801 Redis cluster failover — session cache primary node replacement</span>
+          </div>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc2">
@@ -818,10 +827,12 @@ body {
 
       <!-- Change Row 3 -->
       <div class="data-row">
-        <div class="row-eyebrow">Scheduled</div>
         <div class="row-summary" onclick="toggle('cc3')">
           <span class="row-rank r3">3</span>
-          <span class="row-title">CHG0364755 Kubernetes node autoscaling policy update — prod-east</span>
+          <div class="row-title-group">
+            <span class="row-eyebrow">Scheduled</span>
+            <span class="row-title">CHG0364755 Kubernetes node autoscaling policy update — prod-east</span>
+          </div>
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc3">
@@ -842,10 +853,12 @@ body {
       <!-- Hidden additional changes -->
       <div class="hidden-rows" id="hiddenChanges">
         <div class="data-row">
-          <div class="row-eyebrow">Closed</div>
           <div class="row-summary" onclick="toggle('cc4')">
             <span class="row-rank">4</span>
-            <span class="row-title">CHG0364712 CloudFront distribution config update — member-facing CDN</span>
+            <div class="row-title-group">
+              <span class="row-eyebrow">Closed</span>
+              <span class="row-title">CHG0364712 CloudFront distribution config update — member-facing CDN</span>
+            </div>
             <span class="row-arrow">›</span>
           </div>
           <div class="detail-panel" id="cc4">
