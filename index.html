@@ -853,15 +853,15 @@ body {
           <a class="detail-link" href="#" onclick="return false;">CHG0364897 ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
+          <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Updated rate limit policies on member portal API gateway to enforce new tier-based throttling rules. Changes applied via Terraform and validated in staging.</span></div>
           <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">14 correlated signals · direct CI dependency · change applied 4 min before incident start</span></div>
           <div class="detail-field"><span class="detail-label">RCA finding</span><span class="detail-value">Reduced rate limit triggered request queue overflow → 500 errors on checkout &amp; auth flows · <a href="#rca1-anchor" class="detail-value link-val" onclick="openRca('rca1');return false;">View RCA ↓</a></span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">api-gw-prod-01 — direct dependency of affected CI</span></div>
           <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 11:00 PM &nbsp; Actual Jun 9, 2026 11:04 PM <span style="color:#6b7280;font-style:italic">+4 min</span></span></div>
           <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 10, 2026 1:00 AM &nbsp; Actual Jun 10, 2026 12:47 AM <span style="color:#6b7280;font-style:italic">−13 min</span></span></div>
           <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Platform Engineering · <span class="contact-link" data-name="James Okafor" data-group="Platform Engineering">James Okafor</span></span></div>
-          <div class="detail-field"><span class="detail-label">Approved by</span><span class="detail-value"><span class="contact-link" data-name="Priya Nair" data-group="Platform Engineering">Priya Nair</span> · Jun 9, 2026 10:45 PM</span></div>
-          <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Updated rate limit policies on member portal API gateway to enforce new tier-based throttling rules. Changes applied via Terraform and validated in staging.</span></div>
-          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
+          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value">Deploy updated rate limit policies via Terraform. Validate in staging environment before production cutover. Monitor API gateway error rates and latency for 30 minutes post-deployment.</span></div>
+          <div class="detail-field"><span class="detail-label">Back-out plan</span><span class="detail-value">Revert Terraform state to prior rate limit configuration and redeploy. Estimated rollback time: 15 minutes.</span></div>
         </div>
       </div>
 
@@ -879,14 +879,14 @@ body {
           <a class="detail-link" href="#" onclick="return false;">CHG0364801 ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
+          <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Primary Redis node replacement during scheduled maintenance window. Session data fully replicated before failover.</span></div>
           <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">8 correlated signals · session cache is a direct dependency of checkout flow · change completed 34 min before incident</span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">redis-session-prod-01 — direct dependency of affected CI</span></div>
           <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 10:30 PM &nbsp; Actual Jun 9, 2026 10:33 PM <span style="color:#6b7280;font-style:italic">+3 min</span></span></div>
           <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 9, 2026 11:30 PM &nbsp; Actual Jun 9, 2026 11:28 PM <span style="color:#6b7280;font-style:italic">−2 min</span></span></div>
           <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Data Platform · <span class="contact-link" data-name="Maria Santos" data-group="Data Platform">Maria Santos</span></span></div>
-          <div class="detail-field"><span class="detail-label">Approved by</span><span class="detail-value"><span class="contact-link" data-name="Devon Marsh" data-group="Data Platform">Devon Marsh</span> · Jun 9, 2026 9:55 PM</span></div>
-          <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Primary Redis node replacement during scheduled maintenance window. Session data fully replicated before failover.</span></div>
-          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
+          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value">Drain active connections from primary Redis node. Promote replica to primary. Validate session data replication integrity. Switch application traffic to new primary node.</span></div>
+          <div class="detail-field"><span class="detail-label">Back-out plan</span><span class="detail-value">Promote original node back to primary and redirect session traffic. Estimated rollback time: 10 minutes.</span></div>
         </div>
       </div>
 
@@ -904,14 +904,14 @@ body {
           <a class="detail-link" href="#" onclick="return false;">CHG0364755 ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
+          <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Updated autoscaling thresholds to improve burst handling in prod-east during peak traffic windows.</span></div>
           <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">5 correlated signals · prod-east node pool affected · change completed 1h 4m before incident</span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">k8s-prod-east-ng-01</span></div>
           <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 9:00 PM</span></div>
           <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 9, 2026 10:00 PM</span></div>
           <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Kubernetes Platform · <span class="contact-link" data-name="David Chen" data-group="Kubernetes Platform">David Chen</span></span></div>
-          <div class="detail-field"><span class="detail-label">Approved by</span><span class="detail-value"><span class="contact-link" data-name="Anita Rhodes" data-group="Kubernetes Platform">Anita Rhodes</span> · Jun 9, 2026 8:30 PM</span></div>
-          <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Updated autoscaling thresholds to improve burst handling in prod-east during peak traffic windows.</span></div>
-          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
+          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value">Apply new autoscaling threshold configuration to the prod-east node group via kubectl. Monitor cluster scaling behavior under load for 20 minutes before confirming change complete.</span></div>
+          <div class="detail-field"><span class="detail-label">Back-out plan</span><span class="detail-value">Reapply prior autoscaling threshold values via kubectl patch. Estimated rollback time: 5 minutes.</span></div>
         </div>
       </div>
 
@@ -930,14 +930,14 @@ body {
             <a class="detail-link" href="#" onclick="return false;">CHG0364712 ↗</a>
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
+            <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Cache invalidation and behavior rules updated for member-facing CDN distribution. Origin TTL adjusted.</span></div>
             <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">3 correlated signals · CDN edge config affects member portal delivery · change completed 21h before incident</span></div>
             <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">cf-member-portal-prod</span></div>
             <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 8, 2026 2:00 AM</span></div>
             <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 8, 2026 2:45 AM</span></div>
             <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">CDN &amp; Edge Platform · <span class="contact-link" data-name="Rachel Kim" data-group="CDN &amp; Edge Platform">Rachel Kim</span></span></div>
-            <div class="detail-field"><span class="detail-label">Approved by</span><span class="detail-value"><span class="contact-link" data-name="Carlos Mena" data-group="CDN &amp; Edge Platform">Carlos Mena</span> · Jun 8, 2026 1:30 AM</span></div>
-            <div class="detail-field"><span class="detail-label">Description</span><span class="detail-value">Cache invalidation and behavior rules updated for member-facing CDN distribution. Origin TTL adjusted.</span></div>
-            <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value link-val">View back-out plan in ServiceNow ↗</span></div>
+            <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value">Invalidate existing CDN cache for member portal distribution. Apply updated cache behavior rules and adjust origin TTL. Verify cache headers and distribution behavior via curl tests across edge nodes.</span></div>
+            <div class="detail-field"><span class="detail-label">Back-out plan</span><span class="detail-value">Restore prior CDN cache behavior configuration and re-invalidate affected paths. Estimated rollback time: 20 minutes.</span></div>
           </div>
         </div>
       </div>
