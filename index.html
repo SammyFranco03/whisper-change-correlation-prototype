@@ -1064,15 +1064,9 @@ body {
             <span class="detail-label">Remediation recommendations</span>
             <div class="detail-value">
               <ol class="ai-rca-list">
-              <li>Revert the rate limit policy to the pre-change threshold via emergency CHG and monitor error rates for 30 minutes.
-                <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0998243 ↗</a></li></ul>
-              </li>
-              <li>Set baseline rate limit threshold to 150% of peak observed traffic volume before re-applying tier-based rules.
-                <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC1003891 ↗</a></li></ul>
-              </li>
-              <li>Implement auto-scaling API gateway rate limits tied to real-time request volume to prevent static threshold breaches.
-                <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0976540 ↗</a></li></ul>
-              </li>
+              <li>Revert the rate limit policy to the pre-change threshold via emergency CHG and monitor error rates for 30 minutes. <a href="#" onclick="return false;" class="link-val">INC0998243 ↗</a></li>
+              <li>Set baseline rate limit threshold to 150% of peak observed traffic volume before re-applying tier-based rules. <a href="#" onclick="return false;" class="link-val">INC1003891 ↗</a></li>
+              <li>Implement auto-scaling API gateway rate limits tied to real-time request volume to prevent static threshold breaches. <a href="#" onclick="return false;" class="link-val">INC0976540 ↗</a></li>
             </ol>
             </div>
           </div>
@@ -1101,15 +1095,9 @@ body {
             <span class="detail-label">Remediation recommendations</span>
             <div class="detail-value">
               <ol class="ai-rca-list">
-              <li>Immediately revert all auth service traffic to v4.11.0 via emergency change and confirm session error rate returns to baseline.
-                <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC1001456 ↗</a></li></ul>
-              </li>
-              <li>Profile v4.12.1 token validation path for performance regression against v4.11.0 before re-promoting to production.
-                <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0981204 ↗</a></li></ul>
-              </li>
-              <li>Add automated latency canary thresholds to blue-green cutover pipeline to abort traffic shift on p99 regression.
-                <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0959873 ↗</a></li></ul>
-              </li>
+              <li>Immediately revert all auth service traffic to v4.11.0 via emergency change and confirm session error rate returns to baseline. <a href="#" onclick="return false;" class="link-val">INC1001456 ↗</a></li>
+              <li>Profile v4.12.1 token validation path for performance regression against v4.11.0 before re-promoting to production. <a href="#" onclick="return false;" class="link-val">INC0981204 ↗</a></li>
+              <li>Add automated latency canary thresholds to blue-green cutover pipeline to abort traffic shift on p99 regression. <a href="#" onclick="return false;" class="link-val">INC0959873 ↗</a></li>
             </ol>
             </div>
           </div>
@@ -1138,15 +1126,9 @@ body {
             <span class="detail-label">Remediation recommendations</span>
             <div class="detail-value">
               <ol class="ai-rca-list">
-              <li>Revert the health check unhealthy threshold to its previous value and confirm all instances return to rotation.
-                <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0994562 ↗</a></li></ul>
-              </li>
-              <li>Establish and enforce minimum safe thresholds for health check configuration via change policy guardrails.
-                <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0967324 ↗</a></li></ul>
-              </li>
-              <li>Add canary validation for load balancer health check configuration changes before applying to the full prod fleet.
-                <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0944198 ↗</a></li></ul>
-              </li>
+              <li>Revert the health check unhealthy threshold to its previous value and confirm all instances return to rotation. <a href="#" onclick="return false;" class="link-val">INC0994562 ↗</a></li>
+              <li>Establish and enforce minimum safe thresholds for health check configuration via change policy guardrails. <a href="#" onclick="return false;" class="link-val">INC0967324 ↗</a></li>
+              <li>Add canary validation for load balancer health check configuration changes before applying to the full prod fleet. <a href="#" onclick="return false;" class="link-val">INC0944198 ↗</a></li>
             </ol>
             </div>
           </div>
@@ -1176,15 +1158,9 @@ body {
               <span class="detail-label">Remediation recommendations</span>
               <div class="detail-value">
                 <ol class="ai-rca-list">
-                <li>Force-propagate the new certificate to all API gateway edge nodes and confirm full distribution before clearing the incident.
-                  <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0988712 ↗</a></li></ul>
-                </li>
-                <li>Add certificate propagation verification step to the rotation runbook before closing the change window.
-                  <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0961038 ↗</a></li></ul>
-                </li>
-                <li>Monitor mTLS handshake success rates on all API consumers for 1 hour post-propagation to confirm full recovery.
-                  <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0941027 ↗</a></li></ul>
-                </li>
+                <li>Force-propagate the new certificate to all API gateway edge nodes and confirm full distribution before clearing the incident. <a href="#" onclick="return false;" class="link-val">INC0988712 ↗</a></li>
+                <li>Add certificate propagation verification step to the rotation runbook before closing the change window. <a href="#" onclick="return false;" class="link-val">INC0961038 ↗</a></li>
+                <li>Monitor mTLS handshake success rates on all API consumers for 1 hour post-propagation to confirm full recovery. <a href="#" onclick="return false;" class="link-val">INC0941027 ↗</a></li>
               </ol>
               </div>
             </div>
@@ -1211,15 +1187,9 @@ body {
               <span class="detail-label">Remediation recommendations</span>
               <div class="detail-value">
                 <ol class="ai-rca-list">
-                <li>Allow edge cache to repopulate organically and avoid additional purges during active incidents.
-                  <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0972441 ↗</a></li></ul>
-                </li>
-                <li>Implement staggered CDN purge rollout across edge nodes to prevent simultaneous origin cache-miss storms.
-                  <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0948773 ↗</a></li></ul>
-                </li>
-                <li>Schedule future CDN purges outside peak traffic windows and coordinate timing with the incident response team.
-                  <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0929354 ↗</a></li></ul>
-                </li>
+                <li>Allow edge cache to repopulate organically and avoid additional purges during active incidents. <a href="#" onclick="return false;" class="link-val">INC0972441 ↗</a></li>
+                <li>Implement staggered CDN purge rollout across edge nodes to prevent simultaneous origin cache-miss storms. <a href="#" onclick="return false;" class="link-val">INC0948773 ↗</a></li>
+                <li>Schedule future CDN purges outside peak traffic windows and coordinate timing with the incident response team. <a href="#" onclick="return false;" class="link-val">INC0929354 ↗</a></li>
               </ol>
               </div>
             </div>
@@ -1246,15 +1216,9 @@ body {
               <span class="detail-label">Remediation recommendations</span>
               <div class="detail-value">
                 <ol class="ai-rca-list">
-                <li>Revert connection pool size to previous value and add circuit breaker to prevent retry amplification under high error rates.
-                  <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0963108 ↗</a></li></ul>
-                </li>
-                <li>Implement exponential backoff with jitter on DB connection retry logic to reduce amplification under sustained failure.
-                  <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0937624 ↗</a></li></ul>
-                </li>
-                <li>Add connection pool utilization alerting to detect exhaustion risk before it impacts production traffic.
-                  <ul class="ai-rca-sub-list"><li><a href="#" onclick="return false;" class="link-val">INC0919872 ↗</a></li></ul>
-                </li>
+                <li>Revert connection pool size to previous value and add circuit breaker to prevent retry amplification under high error rates. <a href="#" onclick="return false;" class="link-val">INC0963108 ↗</a></li>
+                <li>Implement exponential backoff with jitter on DB connection retry logic to reduce amplification under sustained failure. <a href="#" onclick="return false;" class="link-val">INC0937624 ↗</a></li>
+                <li>Add connection pool utilization alerting to detect exhaustion risk before it impacts production traffic. <a href="#" onclick="return false;" class="link-val">INC0919872 ↗</a></li>
               </ol>
               </div>
             </div>
