@@ -633,6 +633,48 @@ body {
 .scribe-event-badge.info { background: rgba(16,72,179,0.1); color: #1048b3; }
 .scribe-event-detail { font-size: 11.5px; color: var(--text-dim); line-height: 1.4; }
 
+/* Scribe summary blocks */
+.scribe-summary-block {
+  border-left: 2px solid #e2e4ea;
+  padding-left: 12px;
+  margin-bottom: 18px;
+}
+.scribe-summary-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.scribe-summary-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.scribe-summary-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.scribe-summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.scribe-summary-list li {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.scribe-attr {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 .activity-top {
   display: flex;
   align-items: baseline;
@@ -1286,44 +1328,45 @@ body {
         <div class="scribe-icon">●</div>
         <div class="scribe-notice-body">
           <div class="scribe-notice-title">Scribe is active</div>
-          <div class="scribe-notice-detail">Recording CCO-06 · Bridge room #4 · INC1016016</div>
+          <div class="scribe-notice-detail">Summarizing CCO-06 · 7 participants · INC1016016</div>
         </div>
       </div>
-      <div class="scribe-log-label">Session log</div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:04 PM</span>
-          <span class="scribe-event-badge activated">Activated</span>
+
+      <div class="scribe-summary-block">
+        <div class="scribe-summary-heading">
+          <span class="scribe-summary-title">Initial triage</span>
+          <span class="scribe-summary-time">11:04 – 11:07 PM</span>
         </div>
-        <div class="scribe-event-detail">Scribe session started by Priya Nair · INC1016016 · Bridge CCO-06</div>
+        <ul class="scribe-summary-list">
+          <li>Team confirmed spike in 500 errors on the checkout endpoint starting around 11:03 PM. <span class="scribe-attr">James Okafor</span></li>
+          <li>NewRelic alert fired 3 minutes prior; INC1016016 auto-created and assigned to Platform Engineering. <span class="scribe-attr">Priya Nair</span></li>
+          <li>Redis session cache checked and ruled out — no replication lag or failover activity. <span class="scribe-attr">Maria Santos</span></li>
+          <li>Load balancer health checks confirmed clean; prod-east nodes all green. <span class="scribe-attr">Devon Marsh</span></li>
+        </ul>
       </div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:04 PM</span>
-          <span class="scribe-event-badge info">Recording</span>
+
+      <div class="scribe-summary-block">
+        <div class="scribe-summary-heading">
+          <span class="scribe-summary-title">Root cause narrowed</span>
+          <span class="scribe-summary-time">11:07 – 11:12 PM</span>
         </div>
-        <div class="scribe-event-detail">Audio capture started · Breakout room #4 · Participants: 7</div>
+        <ul class="scribe-summary-list">
+          <li>CHG0364897 (rate limit policy via Terraform, applied 11:00 PM) identified as most likely cause. Terraform diff review initiated. <span class="scribe-attr">James Okafor</span></li>
+          <li>Whisper correlated 14 signals to CHG0364897 and forwarded findings to the RCA engine. <span class="scribe-attr">Whisper · 11:09 PM</span></li>
+          <li>Staging validation was confirmed insufficient — traffic volume in staging did not reproduce the threshold breach at production scale. <span class="scribe-attr">Platform Engineering</span></li>
+        </ul>
       </div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:04 PM</span>
-          <span class="scribe-event-badge info">Transcription</span>
+
+      <div class="scribe-summary-block">
+        <div class="scribe-summary-heading">
+          <span class="scribe-summary-title">Remediation &amp; resolution</span>
+          <span class="scribe-summary-time">11:12 – 11:27 PM</span>
         </div>
-        <div class="scribe-event-detail">Live transcription enabled · Whisper ASR engine v2.4</div>
-      </div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:09 PM</span>
-          <span class="scribe-event-badge info">Correlation</span>
-        </div>
-        <div class="scribe-event-detail">Whisper correlated 14 signals to CHG0364897 · Alert forwarded to RCA engine</div>
-      </div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:27 PM</span>
-          <span class="scribe-event-badge deactivated">Deactivated</span>
-        </div>
-        <div class="scribe-event-detail">Session ended · INC1016016 resolved · Duration: 23 min · Transcript saved</div>
+        <ul class="scribe-summary-list">
+          <li>Decision made to revert rate limit policy via emergency change CHG0364898. Estimated rollback time 15 minutes. <span class="scribe-attr">James Okafor</span></li>
+          <li>Terraform revert deployed and validated. API gateway error rates returned to baseline within 4 minutes of rollback. <span class="scribe-attr">Platform Engineering</span></li>
+          <li>INC1016016 marked resolved at 11:27 PM. Post-incident review scheduled for next business day. <span class="scribe-attr">Priya Nair</span></li>
+        </ul>
       </div>
     </div>
 
