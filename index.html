@@ -1049,13 +1049,6 @@ body {
           <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The tier-based rate limit policy applied via CHG0364897 reduced the effective per-client threshold below the level required to sustain normal checkout traffic. Under peak load, the API gateway began queuing then rejecting requests, producing cascading 500 errors on the checkout and auth flows. The change was validated in staging, but staging traffic volume was insufficient to reproduce the threshold breach at production scale. The 4-minute lag between change completion and incident start aligns precisely with the ramp-up period where traffic surpassed the new limit. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
-          <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Tier-based rate limit policies applied to the member portal API gateway via Terraform. New throttling rules were validated in staging before the production cutover.</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Platform Engineering · <span class="contact-link" data-name="James Okafor" data-group="Platform Engineering">James Okafor</span></span></div>
-          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Reduced rate limit triggered request queue overflow, cascading to 500 errors on the checkout and authentication flows</span></div>
-          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Rate limit policy reverted via CHG0364898</span></div>
-          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364897 ↗</a></div>
-          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 11:00 PM</span></div>
-          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">14 correlated signals — NewRelic alerts, Splunk logs, ServiceNow CMDB records</span></div>
           <div class="detail-field detail-field-wide">
             <span class="detail-label">Remediation recommendations</span>
             <table class="ai-rca-table">
@@ -1079,6 +1072,13 @@ body {
               </tbody>
             </table>
           </div>
+          <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Tier-based rate limit policies applied to the member portal API gateway via Terraform. New throttling rules were validated in staging before the production cutover.</span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Platform Engineering · <span class="contact-link" data-name="James Okafor" data-group="Platform Engineering">James Okafor</span></span></div>
+          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Reduced rate limit triggered request queue overflow, cascading to 500 errors on the checkout and authentication flows</span></div>
+          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Rate limit policy reverted via CHG0364898</span></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364897 ↗</a></div>
+          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 11:00 PM</span></div>
+          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">14 correlated signals — NewRelic alerts, Splunk logs, ServiceNow CMDB records</span></div>
         </div>
       </div>
 
@@ -1093,13 +1093,6 @@ body {
           <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The progressive traffic shift to auth service v4.12.1 introduced token validation latency not present in pre-production testing. Session establishment delays cascaded into checkout failures as the system could not confirm authenticated user sessions within the request timeout window. The 'progressive' cutover masked the issue until traffic volume crossed the threshold that surfaced the regression. Datadog traces show validation p99 latency increasing 4× within 12 minutes of cutover start. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
-          <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Blue-green deployment promoting auth service from v4.11.0 to v4.12.1 in production. Traffic was progressively shifted to the new version during the cutover window.</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Application Delivery · <span class="contact-link" data-name="Sarah Patel" data-group="Application Delivery">Sarah Patel</span></span></div>
-          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Token validation latency increased during traffic cutover, causing session establishment delays for authenticated users</span></div>
-          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Traffic reverted to v4.11.0 via CHG0364804</span></div>
-          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364803 ↗</a></div>
-          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 10:45 PM</span></div>
-          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">8 correlated signals — Datadog traces, PagerDuty alerts, load balancer access logs</span></div>
           <div class="detail-field detail-field-wide">
             <span class="detail-label">Remediation recommendations</span>
             <table class="ai-rca-table">
@@ -1123,6 +1116,13 @@ body {
               </tbody>
             </table>
           </div>
+          <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Blue-green deployment promoting auth service from v4.11.0 to v4.12.1 in production. Traffic was progressively shifted to the new version during the cutover window.</span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Application Delivery · <span class="contact-link" data-name="Sarah Patel" data-group="Application Delivery">Sarah Patel</span></span></div>
+          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Token validation latency increased during traffic cutover, causing session establishment delays for authenticated users</span></div>
+          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Traffic reverted to v4.11.0 via CHG0364804</span></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364803 ↗</a></div>
+          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 10:45 PM</span></div>
+          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">8 correlated signals — Datadog traces, PagerDuty alerts, load balancer access logs</span></div>
         </div>
       </div>
 
@@ -1137,13 +1137,6 @@ body {
           <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">Lowering the unhealthy instance threshold on the prod-east load balancer made it significantly more aggressive about removing instances from rotation. Under the wave of checkout 500 errors, retry amplification created enough transient failures to tip instances past the new threshold even when they were otherwise healthy. This reduced available capacity exactly when demand was highest, compounding the initial rate limit issue. CloudWatch metrics show a 40% capacity reduction in the prod-east pool within 8 minutes of the incident start. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
-          <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Lowered the unhealthy instance threshold on prod-east load balancer health checks to improve burst traffic handling during peak windows.</span></div>
-          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Network Platform · <span class="contact-link" data-name="Marcus Webb" data-group="Network Platform">Marcus Webb</span></span></div>
-          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Lowered unhealthy threshold caused premature instance removal from rotation under normal transient failures</span></div>
-          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Health check threshold reverted to prior value</span></div>
-          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364690 ↗</a></div>
-          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 9:00 PM</span></div>
-          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">5 correlated signals — CloudWatch metrics, ELB access logs</span></div>
           <div class="detail-field detail-field-wide">
             <span class="detail-label">Remediation recommendations</span>
             <table class="ai-rca-table">
@@ -1167,6 +1160,13 @@ body {
               </tbody>
             </table>
           </div>
+          <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Lowered the unhealthy instance threshold on prod-east load balancer health checks to improve burst traffic handling during peak windows.</span></div>
+          <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Network Platform · <span class="contact-link" data-name="Marcus Webb" data-group="Network Platform">Marcus Webb</span></span></div>
+          <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Lowered unhealthy threshold caused premature instance removal from rotation under normal transient failures</span></div>
+          <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Health check threshold reverted to prior value</span></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364690 ↗</a></div>
+          <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 9:00 PM</span></div>
+          <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">5 correlated signals — CloudWatch metrics, ELB access logs</span></div>
         </div>
       </div>
 
@@ -1182,13 +1182,6 @@ body {
             <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The TLS certificate rotation for external-api.cvshealth.com completed issuance but propagation to all API gateway edge nodes was not fully distributed when the incident began. External API consumers attempting mTLS handshakes against nodes still presenting the old certificate received handshake failures. While the change occurred 21 hours prior, partial propagation in edge environments is a known latency factor that can persist across CDN and gateway tiers. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
-            <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Scheduled TLS certificate rotation for external-api.cvshealth.com. New certificate issued and pushed to the API gateway during a low-traffic maintenance window.</span></div>
-            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Operations · <span class="contact-link" data-name="Linda Chen" data-group="Security Operations">Linda Chen</span></span></div>
-            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Certificate propagation delay caused brief mTLS handshake failures on external API consumers</span></div>
-            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Certificate propagation completed; services resumed normal mTLS handshakes after full distribution</span></div>
-            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364601 ↗</a></div>
-            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 8, 2026 2:00 AM</span></div>
-            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">3 correlated signals — certificate expiry events, API gateway 503 errors</span></div>
             <div class="detail-field detail-field-wide">
               <span class="detail-label">Remediation recommendations</span>
               <table class="ai-rca-table">
@@ -1207,6 +1200,13 @@ body {
                 </tbody>
               </table>
             </div>
+            <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Scheduled TLS certificate rotation for external-api.cvshealth.com. New certificate issued and pushed to the API gateway during a low-traffic maintenance window.</span></div>
+            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Operations · <span class="contact-link" data-name="Linda Chen" data-group="Security Operations">Linda Chen</span></span></div>
+            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Certificate propagation delay caused brief mTLS handshake failures on external API consumers</span></div>
+            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Certificate propagation completed; services resumed normal mTLS handshakes after full distribution</span></div>
+            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364601 ↗</a></div>
+            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 8, 2026 2:00 AM</span></div>
+            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">3 correlated signals — certificate expiry events, API gateway 503 errors</span></div>
           </div>
         </div>
         <div class="data-row">
@@ -1219,13 +1219,6 @@ body {
             <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The CDN cache purge for member portal static assets triggered a cache-miss storm as all edge nodes simultaneously requested fresh content from the origin. While the purge was scheduled for a low-traffic window, the concurrent origin requests coincided with the peak of the checkout incident, amplifying origin load at a critical time. Edge node error rate logs show a 3× increase in origin fetch latency within minutes of the purge completing. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
-            <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Cache invalidation and purge of member portal static assets across CDN edge nodes.</span></div>
-            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">CDN &amp; Edge Platform · <span class="contact-link" data-name="Rachel Kim" data-group="CDN &amp; Edge Platform">Rachel Kim</span></span></div>
-            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Purge created a cache-miss storm during peak traffic, temporarily increasing origin load</span></div>
-            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Edge cache repopulated; origin traffic normalized</span></div>
-            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364588 ↗</a></div>
-            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 8:30 PM</span></div>
-            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">2 correlated signals — CDN purge logs, edge node error rates</span></div>
             <div class="detail-field detail-field-wide">
               <span class="detail-label">Remediation recommendations</span>
               <table class="ai-rca-table">
@@ -1244,6 +1237,13 @@ body {
                 </tbody>
               </table>
             </div>
+            <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Cache invalidation and purge of member portal static assets across CDN edge nodes.</span></div>
+            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">CDN &amp; Edge Platform · <span class="contact-link" data-name="Rachel Kim" data-group="CDN &amp; Edge Platform">Rachel Kim</span></span></div>
+            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Purge created a cache-miss storm during peak traffic, temporarily increasing origin load</span></div>
+            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Edge cache repopulated; origin traffic normalized</span></div>
+            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364588 ↗</a></div>
+            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 8:30 PM</span></div>
+            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">2 correlated signals — CDN purge logs, edge node error rates</span></div>
           </div>
         </div>
         <div class="data-row">
@@ -1256,13 +1256,6 @@ body {
             <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The increased database connection pool size for checkout-service-prod paradoxically accelerated connection exhaustion during the incident. Under the high error rate, clients aggressively retried failed requests, each retry acquiring a new pool connection. The larger pool allowed more concurrent retries before hitting limits, but each connection held open longer due to slow query backpressure, ultimately exhausting the pool faster than the pre-change configuration would have. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
-            <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Database connection pool size increased for checkout-service-prod to support higher concurrent load during peak season.</span></div>
-            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Data Platform · <span class="contact-link" data-name="Maria Santos" data-group="Data Platform">Maria Santos</span></span></div>
-            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Larger pool exhausted available DB connections faster under error-retry load amplification</span></div>
-            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Connection pool reverted to previous size</span></div>
-            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364542 ↗</a></div>
-            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 7:00 PM</span></div>
-            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">2 correlated signals — DB connection timeouts, slow query logs</span></div>
             <div class="detail-field detail-field-wide">
               <span class="detail-label">Remediation recommendations</span>
               <table class="ai-rca-table">
@@ -1281,6 +1274,13 @@ body {
                 </tbody>
               </table>
             </div>
+            <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Database connection pool size increased for checkout-service-prod to support higher concurrent load during peak season.</span></div>
+            <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Data Platform · <span class="contact-link" data-name="Maria Santos" data-group="Data Platform">Maria Santos</span></span></div>
+            <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Larger pool exhausted available DB connections faster under error-retry load amplification</span></div>
+            <div class="detail-field"><span class="detail-label">Fix applied</span><span class="detail-value">Connection pool reverted to previous size</span></div>
+            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364542 ↗</a></div>
+            <div class="detail-field"><span class="detail-label">Changed at</span><span class="detail-value">Jun 9, 2026 7:00 PM</span></div>
+            <div class="detail-field"><span class="detail-label">Evidence</span><span class="detail-value">2 correlated signals — DB connection timeouts, slow query logs</span></div>
           </div>
         </div>
         <div class="data-row" style="border-bottom:none">
