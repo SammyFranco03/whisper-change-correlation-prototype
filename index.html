@@ -827,6 +827,15 @@ body {
 .ai-rca-conf-low { color: var(--text-dim); font-weight: 600; }
 .detail-field-wide { flex-direction: column; gap: 4px; padding-top: 6px; }
 .detail-field-wide .detail-label { width: auto; }
+.ai-rca-list {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.ai-rca-list li { padding: 2px 0; }
+.ai-rca-list-meta { font-size: 12px; color: var(--text-dim); display: block; margin-top: 3px; }
 </style>
 </head>
 <body>
@@ -1050,28 +1059,11 @@ body {
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The tier-based rate limit policy applied via CHG0364897 reduced the effective per-client threshold below the level required to sustain normal checkout traffic. Under peak load, the API gateway began queuing then rejecting requests, producing cascading 500 errors on the checkout and auth flows. The change was validated in staging, but staging traffic volume was insufficient to reproduce the threshold breach at production scale. The 4-minute lag between change completion and incident start aligns precisely with the ramp-up period where traffic surpassed the new limit. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
           <div class="detail-field detail-field-wide">
-            <span class="detail-label">Remediation recommendations</span>
-            <table class="ai-rca-table">
-              <thead><tr><th>Remediation Recommendation</th><th>Similar Past Incidents</th><th>Confidence Interval</th></tr></thead>
-              <tbody>
-                <tr>
-                  <td>Revert the rate limit policy to the pre-change threshold via emergency CHG and monitor error rates for 30 minutes.</td>
-                  <td><a href="#" onclick="return false;" class="link-val">Review INC0998243 ↗</a></td>
-                  <td><span class="ai-rca-conf-high">91% confidence (High)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                </tr>
-                <tr>
-                  <td>Set baseline rate limit threshold to 150% of peak observed traffic volume before re-applying tier-based rules.</td>
-                  <td><a href="#" onclick="return false;" class="link-val">Review INC1003891 ↗</a></td>
-                  <td><span class="ai-rca-conf-high">74% confidence (High)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                </tr>
-                <tr>
-                  <td>Implement auto-scaling API gateway rate limits tied to real-time request volume to prevent static threshold breaches.</td>
-                  <td><a href="#" onclick="return false;" class="link-val">Review INC0976540 ↗</a></td>
-                  <td><span class="ai-rca-conf-med">61% confidence (Medium)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+  <span class="detail-label">Remediation recommendations</span>
+  <ul class="ai-rca-list">
+    <li>Revert the rate limit policy to the pre-change threshold via emergency CHG and monitor error rates for 30 minutes.<span class="ai-rca-list-meta"><a href="#" onclick="return false;" class="link-val">Review INC0998243 ↗</a> &nbsp;·&nbsp; <span class="ai-rca-conf-high">91% confidence (High)</span></span></li>
+  </ul>
+</div>
           <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Tier-based rate limit policies applied to the member portal API gateway via Terraform. New throttling rules were validated in staging before the production cutover.</span></div>
           <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Platform Engineering · <span class="contact-link" data-name="James Okafor" data-group="Platform Engineering">James Okafor</span></span></div>
           <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Reduced rate limit triggered request queue overflow, cascading to 500 errors on the checkout and authentication flows</span></div>
@@ -1094,28 +1086,11 @@ body {
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The progressive traffic shift to auth service v4.12.1 introduced token validation latency not present in pre-production testing. Session establishment delays cascaded into checkout failures as the system could not confirm authenticated user sessions within the request timeout window. The 'progressive' cutover masked the issue until traffic volume crossed the threshold that surfaced the regression. Datadog traces show validation p99 latency increasing 4× within 12 minutes of cutover start. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
           <div class="detail-field detail-field-wide">
-            <span class="detail-label">Remediation recommendations</span>
-            <table class="ai-rca-table">
-              <thead><tr><th>Remediation Recommendation</th><th>Similar Past Incidents</th><th>Confidence Interval</th></tr></thead>
-              <tbody>
-                <tr>
-                  <td>Immediately revert all auth service traffic to v4.11.0 via emergency change and confirm session error rate returns to baseline.</td>
-                  <td><a href="#" onclick="return false;" class="link-val">Review INC1001456 ↗</a></td>
-                  <td><span class="ai-rca-conf-high">78% confidence (High)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                </tr>
-                <tr>
-                  <td>Profile v4.12.1 token validation path for performance regression against v4.11.0 before re-promoting to production.</td>
-                  <td><a href="#" onclick="return false;" class="link-val">Review INC0981204 ↗</a></td>
-                  <td><span class="ai-rca-conf-med">64% confidence (Medium)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                </tr>
-                <tr>
-                  <td>Add automated latency canary thresholds to blue-green cutover pipeline to abort traffic shift on p99 regression.</td>
-                  <td><a href="#" onclick="return false;" class="link-val">Review INC0959873 ↗</a></td>
-                  <td><span class="ai-rca-conf-med">58% confidence (Medium)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+  <span class="detail-label">Remediation recommendations</span>
+  <ul class="ai-rca-list">
+    <li>Immediately revert all auth service traffic to v4.11.0 via emergency change and confirm session error rate returns to baseline.<span class="ai-rca-list-meta"><a href="#" onclick="return false;" class="link-val">Review INC1001456 ↗</a> &nbsp;·&nbsp; <span class="ai-rca-conf-high">78% confidence (High)</span></span></li>
+  </ul>
+</div>
           <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Blue-green deployment promoting auth service from v4.11.0 to v4.12.1 in production. Traffic was progressively shifted to the new version during the cutover window.</span></div>
           <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Application Delivery · <span class="contact-link" data-name="Sarah Patel" data-group="Application Delivery">Sarah Patel</span></span></div>
           <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Token validation latency increased during traffic cutover, causing session establishment delays for authenticated users</span></div>
@@ -1138,28 +1113,11 @@ body {
           <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">Lowering the unhealthy instance threshold on the prod-east load balancer made it significantly more aggressive about removing instances from rotation. Under the wave of checkout 500 errors, retry amplification created enough transient failures to tip instances past the new threshold even when they were otherwise healthy. This reduced available capacity exactly when demand was highest, compounding the initial rate limit issue. CloudWatch metrics show a 40% capacity reduction in the prod-east pool within 8 minutes of the incident start. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
           <div class="detail-field detail-field-wide">
-            <span class="detail-label">Remediation recommendations</span>
-            <table class="ai-rca-table">
-              <thead><tr><th>Remediation Recommendation</th><th>Similar Past Incidents</th><th>Confidence Interval</th></tr></thead>
-              <tbody>
-                <tr>
-                  <td>Revert the health check unhealthy threshold to its previous value and confirm all instances return to rotation.</td>
-                  <td><a href="#" onclick="return false;" class="link-val">Review INC0994562 ↗</a></td>
-                  <td><span class="ai-rca-conf-med">67% confidence (Medium)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                </tr>
-                <tr>
-                  <td>Establish and enforce minimum safe thresholds for health check configuration via change policy guardrails.</td>
-                  <td><a href="#" onclick="return false;" class="link-val">Review INC0967324 ↗</a></td>
-                  <td><span class="ai-rca-conf-med">55% confidence (Medium)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                </tr>
-                <tr>
-                  <td>Add canary validation for load balancer health check configuration changes before applying to full prod fleet.</td>
-                  <td><a href="#" onclick="return false;" class="link-val">Review INC0944198 ↗</a></td>
-                  <td><span class="ai-rca-conf-low">49% confidence (Low)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+  <span class="detail-label">Remediation recommendations</span>
+  <ul class="ai-rca-list">
+    <li>Revert the health check unhealthy threshold to its previous value and confirm all instances return to rotation.<span class="ai-rca-list-meta"><a href="#" onclick="return false;" class="link-val">Review INC0994562 ↗</a> &nbsp;·&nbsp; <span class="ai-rca-conf-med">67% confidence (Medium)</span></span></li>
+  </ul>
+</div>
           <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Lowered the unhealthy instance threshold on prod-east load balancer health checks to improve burst traffic handling during peak windows.</span></div>
           <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Network Platform · <span class="contact-link" data-name="Marcus Webb" data-group="Network Platform">Marcus Webb</span></span></div>
           <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Lowered unhealthy threshold caused premature instance removal from rotation under normal transient failures</span></div>
@@ -1183,23 +1141,11 @@ body {
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The TLS certificate rotation for external-api.cvshealth.com completed issuance but propagation to all API gateway edge nodes was not fully distributed when the incident began. External API consumers attempting mTLS handshakes against nodes still presenting the old certificate received handshake failures. While the change occurred 21 hours prior, partial propagation in edge environments is a known latency factor that can persist across CDN and gateway tiers. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
             <div class="detail-field detail-field-wide">
-              <span class="detail-label">Remediation recommendations</span>
-              <table class="ai-rca-table">
-                <thead><tr><th>Remediation Recommendation</th><th>Similar Past Incidents</th><th>Confidence Interval</th></tr></thead>
-                <tbody>
-                  <tr>
-                    <td>Force-propagate the new certificate to all API gateway edge nodes and confirm full distribution before clearing the incident.</td>
-                    <td><a href="#" onclick="return false;" class="link-val">Review INC0988712 ↗</a></td>
-                    <td><span class="ai-rca-conf-med">54% confidence (Medium)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                  </tr>
-                  <tr>
-                    <td>Add certificate propagation verification step to the rotation runbook before closing the change window.</td>
-                    <td><a href="#" onclick="return false;" class="link-val">Review INC0961038 ↗</a></td>
-                    <td><span class="ai-rca-conf-med">47% confidence (Medium)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+  <span class="detail-label">Remediation recommendations</span>
+  <ul class="ai-rca-list">
+    <li>Force-propagate the new certificate to all API gateway edge nodes and confirm full distribution before clearing the incident.<span class="ai-rca-list-meta"><a href="#" onclick="return false;" class="link-val">Review INC0988712 ↗</a> &nbsp;·&nbsp; <span class="ai-rca-conf-med">54% confidence (Medium)</span></span></li>
+  </ul>
+</div>
             <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Scheduled TLS certificate rotation for external-api.cvshealth.com. New certificate issued and pushed to the API gateway during a low-traffic maintenance window.</span></div>
             <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Operations · <span class="contact-link" data-name="Linda Chen" data-group="Security Operations">Linda Chen</span></span></div>
             <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Certificate propagation delay caused brief mTLS handshake failures on external API consumers</span></div>
@@ -1220,23 +1166,11 @@ body {
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The CDN cache purge for member portal static assets triggered a cache-miss storm as all edge nodes simultaneously requested fresh content from the origin. While the purge was scheduled for a low-traffic window, the concurrent origin requests coincided with the peak of the checkout incident, amplifying origin load at a critical time. Edge node error rate logs show a 3× increase in origin fetch latency within minutes of the purge completing. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
             <div class="detail-field detail-field-wide">
-              <span class="detail-label">Remediation recommendations</span>
-              <table class="ai-rca-table">
-                <thead><tr><th>Remediation Recommendation</th><th>Similar Past Incidents</th><th>Confidence Interval</th></tr></thead>
-                <tbody>
-                  <tr>
-                    <td>Allow edge cache to repopulate organically and avoid additional purges during active incidents.</td>
-                    <td><a href="#" onclick="return false;" class="link-val">Review INC0972441 ↗</a></td>
-                    <td><span class="ai-rca-conf-low">48% confidence (Low)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                  </tr>
-                  <tr>
-                    <td>Implement staggered CDN purge rollout across edge nodes to prevent simultaneous origin cache-miss storms.</td>
-                    <td><a href="#" onclick="return false;" class="link-val">Review INC0948773 ↗</a></td>
-                    <td><span class="ai-rca-conf-low">41% confidence (Low)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+  <span class="detail-label">Remediation recommendations</span>
+  <ul class="ai-rca-list">
+    <li>Allow edge cache to repopulate organically and avoid additional purges during active incidents.<span class="ai-rca-list-meta"><a href="#" onclick="return false;" class="link-val">Review INC0972441 ↗</a> &nbsp;·&nbsp; <span class="ai-rca-conf-low">48% confidence (Low)</span></span></li>
+  </ul>
+</div>
             <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Cache invalidation and purge of member portal static assets across CDN edge nodes.</span></div>
             <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">CDN &amp; Edge Platform · <span class="contact-link" data-name="Rachel Kim" data-group="CDN &amp; Edge Platform">Rachel Kim</span></span></div>
             <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Purge created a cache-miss storm during peak traffic, temporarily increasing origin load</span></div>
@@ -1257,23 +1191,11 @@ body {
             <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The increased database connection pool size for checkout-service-prod paradoxically accelerated connection exhaustion during the incident. Under the high error rate, clients aggressively retried failed requests, each retry acquiring a new pool connection. The larger pool allowed more concurrent retries before hitting limits, but each connection held open longer due to slow query backpressure, ultimately exhausting the pool faster than the pre-change configuration would have. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
             <div class="detail-field detail-field-wide">
-              <span class="detail-label">Remediation recommendations</span>
-              <table class="ai-rca-table">
-                <thead><tr><th>Remediation Recommendation</th><th>Similar Past Incidents</th><th>Confidence Interval</th></tr></thead>
-                <tbody>
-                  <tr>
-                    <td>Revert connection pool size to previous value and add circuit breaker to prevent retry amplification under high error rates.</td>
-                    <td><a href="#" onclick="return false;" class="link-val">Review INC0963108 ↗</a></td>
-                    <td><span class="ai-rca-conf-low">42% confidence (Low)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                  </tr>
-                  <tr>
-                    <td>Implement exponential backoff with jitter on DB connection retry logic to reduce amplification under sustained failure.</td>
-                    <td><a href="#" onclick="return false;" class="link-val">Review INC0937624 ↗</a></td>
-                    <td><span class="ai-rca-conf-low">36% confidence (Low)</span><br><a href="#" onclick="return false;" class="link-val">View full reasoning</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+  <span class="detail-label">Remediation recommendations</span>
+  <ul class="ai-rca-list">
+    <li>Revert connection pool size to previous value and add circuit breaker to prevent retry amplification under high error rates.<span class="ai-rca-list-meta"><a href="#" onclick="return false;" class="link-val">Review INC0963108 ↗</a> &nbsp;·&nbsp; <span class="ai-rca-conf-low">42% confidence (Low)</span></span></li>
+  </ul>
+</div>
             <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">Database connection pool size increased for checkout-service-prod to support higher concurrent load during peak season.</span></div>
             <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Data Platform · <span class="contact-link" data-name="Maria Santos" data-group="Data Platform">Maria Santos</span></span></div>
             <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">Larger pool exhausted available DB connections faster under error-retry load amplification</span></div>
