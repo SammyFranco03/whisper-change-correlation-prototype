@@ -446,8 +446,8 @@ body {
 
 /* ── Activity Hub ── */
 .activity-hub {
-  width: 220px;
-  min-width: 220px;
+  width: 340px;
+  min-width: 340px;
   background: #fff;
   border-left: 1px solid #e0e1e4;
   display: flex;
@@ -476,26 +476,30 @@ body {
 .hub-close:hover { background: #f8f9fc; }
 
 .hub-tabs {
-  height: 40px;
+  height: 48px;
   display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
   border-bottom: 1px solid #e0e1e4;
   flex-shrink: 0;
 }
 .hub-tab {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  font-size: 12.5px;
+  padding: 5px 12px;
+  font-size: 13px;
   color: var(--text-dim);
   cursor: pointer;
-  border-bottom: 2px solid transparent;
+  border: 1.5px solid transparent;
+  border-radius: 4px;
   transition: color 0.15s;
   user-select: none;
+  white-space: nowrap;
 }
 .hub-tab:hover { color: var(--text); }
-.hub-tab.active { color: var(--tab-active); border-bottom-color: var(--tab-active); font-weight: 500; }
+.hub-tab.active { color: #1048b3; border-color: #1048b3; font-weight: 600; background: #fff; }
 
 .hub-badge {
   background: #db3321;
@@ -621,17 +625,60 @@ body {
 }
 .scribe-event-time { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
 .scribe-event-badge {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
 }
-.scribe-event-badge.activated { background: rgba(17,135,56,0.12); color: #118738; }
-.scribe-event-badge.deactivated { background: rgba(219,51,33,0.1); color: #db3321; }
-.scribe-event-badge.info { background: rgba(16,72,179,0.1); color: #1048b3; }
 .scribe-event-detail { font-size: 11.5px; color: var(--text-dim); line-height: 1.4; }
+
+/* ── Live Feed Card ── */
+.lf-card {
+  background: #e5ecf7;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #cdd6ea;
+}
+.lf-incident-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.lf-field {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.45;
+}
+.lf-field-label { font-weight: 600; }
+.lf-italic { font-style: italic; }
+.lf-divider { height: 1px; background: #c5cede; margin: 12px 0; }
+.lf-section-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.lf-date { font-size: 15px; font-weight: 700; color: var(--text); }
+.lf-timestamp {
+  font-size: 12.5px;
+  font-style: italic;
+  color: #8992a5;
+  margin: 10px 0 5px;
+}
+.lf-bullets {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.lf-bullets li { margin-bottom: 6px; }
+.lf-show-more {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--link);
+  text-decoration: none;
+  margin-top: 10px;
+}
+.lf-show-more:hover { text-decoration: underline; }
 
 .activity-top {
   display: flex;
@@ -914,7 +961,7 @@ body {
           <a class="field-inc-link" id="fIncidentLink" href="#" onclick="return false;">INC1016016 ↗</a>
         </div>
         <div class="incident-field info-field">
-          <div class="field-label">Info</div>
+          <div class="field-label">Incident Info</div>
           <div class="field-value info-time" id="fIncidentTime">Jun 9, 2026 11:04 PM</div>
           <div class="field-value info-val" id="fIncidentSummary">Member Portal checkout unavailable — ~45K users affected</div>
         </div>
@@ -1266,13 +1313,13 @@ body {
       <span class="hub-close">×</span>
     </div>
     <div class="hub-tabs">
-      <div class="hub-tab active" onclick="hubTab(this,'liveFeedPanel')">Live Feed</div>
-      <div class="hub-tab" onclick="hubTab(this,'scribePanel')">Scribe</div>
+      <div class="hub-tab" onclick="hubTab(this,'liveFeedPanel')">Dashboard</div>
+      <div class="hub-tab active" onclick="hubTab(this,'scribePanel')">Live Feed</div>
       <div class="hub-tab" onclick="hubTab(this,'detailsPanel')">Details</div>
     </div>
 
-    <!-- Live Feed wrapper (badge + scroll) -->
-    <div class="livefeed-wrap active" id="liveFeedWrapper">
+    <!-- Dashboard: raw transcript with recording bar -->
+    <div class="livefeed-wrap" id="liveFeedWrapper">
       <div class="livefeed-status">
         <div class="livefeed-dot"></div>
         Live · CCO-06 bridge recording in progress
@@ -1280,15 +1327,8 @@ body {
       <div class="transcript-feed active" id="liveFeedPanel" style="flex:1;"></div>
     </div>
 
-    <!-- Scribe panel -->
-    <div class="scribe-feed" id="scribePanel">
-      <div class="scribe-notice">
-        <div class="scribe-icon">●</div>
-        <div class="scribe-notice-body">
-          <div class="scribe-notice-title">Scribe is active</div>
-          <div class="scribe-notice-detail">Recording CCO-06 · Bridge room #4 · INC1016016</div>
-        </div>
-      </div>
+    <!-- Live Feed panel: session log -->
+    <div class="scribe-feed active" id="scribePanel">
       <div class="scribe-log-label">Session log</div>
       <div class="scribe-event">
         <div class="scribe-event-header">
