@@ -1420,44 +1420,6 @@ const TABS = [
   { bridge:'CCO-11', incident:'INC1014278', incidentSummary:'CDN edge node failures — static asset delivery impacted', incidentTime:'Jun 5, 2026 6:48 PM', incidentUrl:'#', link:'Webex CCO-11', notes:'Screen share', outage:false },
 ];
 
-// ── Live Feed transcript ──
-const TRANSCRIPT = [
-  { time:'11:04 PM', speaker:'James Okafor',  text:"We're seeing a spike in 500s on the checkout endpoint — looks like the rate limit policy change just hit prod." },
-  { time:'11:05 PM', speaker:'Priya Nair',    text:'Confirmed. NewRelic alert fired 3 minutes ago. Assigning INC1016016 to Platform Engineering now.' },
-  { time:'11:06 PM', speaker:'Maria Santos',  text:"Redis session cache looks stable. No replication lag. I don't think the failover is the cause here." },
-  { time:'11:07 PM', speaker:'James Okafor',  text:"Agreed. CHG0364897 applied at 11:00 — that's the most likely culprit. Pulling Terraform diff now." },
-  { time:'11:08 PM', speaker:'Devon Marsh',   text:'Load balancer health checks are clean on my end. Prod-east nodes are all green.' },
-  { time:'11:09 PM', system: true,            text:'Whisper correlated 14 signals to CHG0364897 — rate limit policy update on api-gw-prod-01.' },
-  { time:'11:10 PM', speaker:'Priya Nair',    text:'Rate limit dropped from 500 to 50 req/s on the member portal path. That explains the queue overflow.' },
-  { time:'11:11 PM', speaker:'James Okafor',  text:'Initiating rollback via CHG0364898. ETA 8 minutes.' },
-  { time:'11:14 PM', speaker:'Sarah Patel',   text:'Auth service rollback to v4.11.0 complete. Token validation latency back to baseline.' },
-  { time:'11:19 PM', speaker:'James Okafor',  text:'Rate limit policy reverted. Checkout success rate climbing — 78% and rising.' },
-  { time:'11:22 PM', speaker:'Priya Nair',    text:'Checkout success rate at 98%. Declaring all-clear pending 5 min stability window.' },
-  { time:'11:27 PM', system: true,            text:'INC1016016 resolved. Duration: 23 minutes. Root cause: CHG0364897 rate limit misconfiguration.' },
-];
-
-const liveFeedEl = document.getElementById('liveFeedPanel');
-
-// Mock alert events shown before transcript
-const ALERTS = [
-  { time:'11:03 PM', src:'NewRelic',   text:'HTTP 5xx error rate exceeded threshold · checkout.member-portal.prod · 12% errors' },
-  { time:'11:04 PM', src:'PagerDuty',  text:'P1 alert triggered · Checkout service degraded · INC1016016 auto-created' },
-  { time:'11:04 PM', src:'Splunk',     text:'Error spike detected · api-gw-prod-01 · 500 req/s above baseline' },
-];
-ALERTS.forEach(a => {
-  liveFeedEl.innerHTML += `<div class="transcript-system"><strong>${a.src}</strong> · ${a.time} · ${a.text}</div>`;
-});
-
-TRANSCRIPT.forEach(m => {
-  if (m.system) {
-    liveFeedEl.innerHTML += `<div class="transcript-system">${m.time} · ${m.text}</div>`;
-  } else {
-    liveFeedEl.innerHTML += `<div class="transcript-msg">
-      <span class="transcript-speaker">${m.speaker}</span><span class="transcript-time">${m.time}</span><br>
-      <span class="transcript-text">${m.text}</span>
-    </div>`;
-  }
-});
 
 // ── Details feed ──
 const ACTIVITY = [
