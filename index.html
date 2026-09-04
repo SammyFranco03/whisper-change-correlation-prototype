@@ -1000,8 +1000,7 @@ body {
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc1">
-          <a class="detail-link" href="#" onclick="return false;">CHG0364897 ↗</a>
-          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364897 ↗</a></div>
           <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Updated rate limit policies on member portal API gateway to enforce new tier-based throttling rules. Changes applied via Terraform and validated in staging.</span></div>
           <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">14 correlated signals · direct CI dependency · change applied 4 min before incident start</span></div>
           <div class="detail-field"><span class="detail-label">RCA finding</span><span class="detail-value">Reduced rate limit triggered request queue overflow → 500 errors on checkout &amp; auth flows · <a href="#rca1-anchor" class="detail-value link-val" onclick="openRca('rca1');return false;">View RCA ↓</a></span></div>
@@ -1025,8 +1024,7 @@ body {
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc2">
-          <a class="detail-link" href="#" onclick="return false;">CHG0364801 ↗</a>
-          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364801 ↗</a></div>
           <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Primary Redis node replacement during scheduled maintenance window. Session data fully replicated before failover.</span></div>
           <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">8 correlated signals · session cache is a direct dependency of checkout flow · change completed 34 min before incident</span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">redis-session-prod-01 — direct dependency of affected CI</span></div>
@@ -1049,8 +1047,7 @@ body {
           <span class="row-arrow">›</span>
         </div>
         <div class="detail-panel" id="cc3">
-          <a class="detail-link" href="#" onclick="return false;">CHG0364755 ↗</a>
-          <div class="detail-divider"></div>
+          <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364755 ↗</a></div>
           <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Updated autoscaling thresholds to improve burst handling in prod-east during peak traffic windows.</span></div>
           <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">5 correlated signals · prod-east node pool affected · change completed 1h 4m before incident</span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">k8s-prod-east-ng-01</span></div>
@@ -1074,8 +1071,7 @@ body {
             <span class="row-arrow">›</span>
           </div>
           <div class="detail-panel" id="cc4">
-            <a class="detail-link" href="#" onclick="return false;">CHG0364712 ↗</a>
-            <div class="detail-divider"></div>
+            <div class="detail-field"><span class="detail-label">Change</span><a href="#" onclick="return false;" class="detail-value link-val">CHG0364712 ↗</a></div>
             <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Cache invalidation and behavior rules updated for member-facing CDN distribution. Origin TTL adjusted.</span></div>
             <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">3 correlated signals · CDN edge config affects member portal delivery · change completed 21h before incident</span></div>
             <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">cf-member-portal-prod</span></div>
