@@ -1103,7 +1103,6 @@ body {
         </div>
         <div class="detail-panel" id="rca1">
           <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
-          <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The tier-based rate limit policy applied via CHG0364897 reduced the effective per-client threshold below the level required to sustain normal checkout traffic. Under peak load, the API gateway began queuing then rejecting requests, producing cascading 500 errors on the checkout and auth flows. The change was validated in staging, but staging traffic volume was insufficient to reproduce the threshold breach at production scale. The 4-minute lag between change completion and incident start aligns precisely with the ramp-up period where traffic surpassed the new limit. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
           <div class="detail-field">
             <span class="detail-label">Remediation recommendations</span>
@@ -1134,7 +1133,6 @@ body {
         </div>
         <div class="detail-panel" id="rca2">
           <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
-          <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The progressive traffic shift to auth service v4.12.1 introduced token validation latency not present in pre-production testing. Session establishment delays cascaded into checkout failures as the system could not confirm authenticated user sessions within the request timeout window. The 'progressive' cutover masked the issue until traffic volume crossed the threshold that surfaced the regression. Datadog traces show validation p99 latency increasing 4× within 12 minutes of cutover start. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
           <div class="detail-field">
             <span class="detail-label">Remediation recommendations</span>
@@ -1165,7 +1163,6 @@ body {
         </div>
         <div class="detail-panel" id="rca3">
           <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
-          <div class="detail-divider"></div>
           <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">Lowering the unhealthy instance threshold on the prod-east load balancer made it significantly more aggressive about removing instances from rotation. Under the wave of checkout 500 errors, retry amplification created enough transient failures to tip instances past the new threshold even when they were otherwise healthy. This reduced available capacity exactly when demand was highest, compounding the initial rate limit issue. CloudWatch metrics show a 40% capacity reduction in the prod-east pool within 8 minutes of the incident start. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
           <div class="detail-field">
             <span class="detail-label">Remediation recommendations</span>
@@ -1197,7 +1194,6 @@ body {
           </div>
           <div class="detail-panel" id="rca4">
             <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
-            <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The TLS certificate rotation for external-api.cvshealth.com completed issuance but propagation to all API gateway edge nodes was not fully distributed when the incident began. External API consumers attempting mTLS handshakes against nodes still presenting the old certificate received handshake failures. While the change occurred 21 hours prior, partial propagation in edge environments is a known latency factor that can persist across CDN and gateway tiers. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
             <div class="detail-field">
               <span class="detail-label">Remediation recommendations</span>
@@ -1226,7 +1222,6 @@ body {
           </div>
           <div class="detail-panel" id="rca5">
             <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
-            <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The CDN cache purge for member portal static assets triggered a cache-miss storm as all edge nodes simultaneously requested fresh content from the origin. While the purge was scheduled for a low-traffic window, the concurrent origin requests coincided with the peak of the checkout incident, amplifying origin load at a critical time. Edge node error rate logs show a 3× increase in origin fetch latency within minutes of the purge completing. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
             <div class="detail-field">
               <span class="detail-label">Remediation recommendations</span>
@@ -1255,7 +1250,6 @@ body {
           </div>
           <div class="detail-panel" id="rca6">
             <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
-            <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Root cause reasoning</span><span class="detail-value">The increased database connection pool size for checkout-service-prod paradoxically accelerated connection exhaustion during the incident. Under the high error rate, clients aggressively retried failed requests, each retry acquiring a new pool connection. The larger pool allowed more concurrent retries before hitting limits, but each connection held open longer due to slow query backpressure, ultimately exhausting the pool faster than the pre-change configuration would have. <a href="#" onclick="return false;" class="link-val">View full reasoning</a></span></div>
             <div class="detail-field">
               <span class="detail-label">Remediation recommendations</span>
@@ -1284,7 +1278,6 @@ body {
           </div>
           <div class="detail-panel" id="rca7">
             <a class="detail-link" href="#" onclick="return false;">INC1016016 ↗</a>
-            <div class="detail-divider"></div>
             <div class="detail-field"><span class="detail-label">Change description</span><span class="detail-value">WAF rate limiting policy updated to v2.3, tightening rules for bot mitigation and request pattern filtering on member-facing endpoints.</span></div>
             <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Security Engineering · <span class="contact-link" data-name="Trevor Hill" data-group="Security Engineering">Trevor Hill</span></span></div>
             <div class="detail-field"><span class="detail-label">Why it caused the issue</span><span class="detail-value">New WAF rules briefly blocked legitimate high-frequency requests from internal services during the rollout</span></div>
@@ -1311,13 +1304,16 @@ body {
       <span class="hub-close">×</span>
     </div>
     <div class="hub-tabs">
-      <div class="hub-tab" onclick="hubTab(this,'liveFeedPanel')">Live Feed</div>
-      <div class="hub-tab active" onclick="hubTab(this,'scribePanel')">Scribe</div>
+      <div class="hub-tab" onclick="hubTab(this,'dashboardPanel')">Dashboard</div>
+      <div class="hub-tab active" onclick="hubTab(this,'liveFeedPanel')">Live Feed</div>
       <div class="hub-tab" onclick="hubTab(this,'detailsPanel')">Details</div>
     </div>
 
-    <!-- Dashboard: raw transcript with recording bar -->
-    <div class="livefeed-wrap" id="liveFeedWrapper" style="overflow-y:auto;padding:12px;background:#edf1f8;">
+    <!-- Dashboard panel -->
+    <div class="activity-feed" id="dashboardPanel"></div>
+
+    <!-- Live Feed panel -->
+    <div class="livefeed-wrap active" id="liveFeedWrapper" style="overflow-y:auto;padding:12px;background:#edf1f8;">
       <div class="lf-card" id="liveFeedPanel">
         <div class="lf-incident-title">IMT-Simulation (INC 4291192)</div>
         <div class="lf-field"><span class="lf-field-label">Conference:</span> IMT-Simulation</div>
@@ -1339,47 +1335,7 @@ body {
       </div>
     </div>
 
-    <!-- Live Feed panel: session log -->
-    <div class="scribe-feed active" id="scribePanel">
-      <div class="scribe-log-label">Session log</div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:04 PM</span>
-          <span class="scribe-event-badge activated">Activated</span>
-        </div>
-        <div class="scribe-event-detail">Scribe session started by Priya Nair · INC1016016 · Bridge CCO-06</div>
-      </div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:04 PM</span>
-          <span class="scribe-event-badge info">Recording</span>
-        </div>
-        <div class="scribe-event-detail">Audio capture started · Breakout room #4 · Participants: 7</div>
-      </div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:04 PM</span>
-          <span class="scribe-event-badge info">Transcription</span>
-        </div>
-        <div class="scribe-event-detail">Live transcription enabled · Whisper ASR engine v2.4</div>
-      </div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:09 PM</span>
-          <span class="scribe-event-badge info">Correlation</span>
-        </div>
-        <div class="scribe-event-detail">Whisper correlated 14 signals to CHG0364897 · Alert forwarded to RCA engine</div>
-      </div>
-      <div class="scribe-event">
-        <div class="scribe-event-header">
-          <span class="scribe-event-time">11:27 PM</span>
-          <span class="scribe-event-badge deactivated">Deactivated</span>
-        </div>
-        <div class="scribe-event-detail">Session ended · INC1016016 resolved · Duration: 23 min · Transcript saved</div>
-      </div>
-    </div>
-
-    <!-- Details panel (previous activity feed) -->
+    <!-- Details panel -->
     <div class="activity-feed" id="detailsPanel"></div>
   </aside>
 
@@ -1538,7 +1494,7 @@ function toggleMore() {
 function hubTab(el, panelId) {
   document.querySelectorAll('.hub-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  ['liveFeedWrapper','scribePanel','detailsPanel'].forEach(id => {
+  ['dashboardPanel','liveFeedWrapper','detailsPanel'].forEach(id => {
     const p = document.getElementById(id);
     if (p) p.classList.remove('active');
   });
