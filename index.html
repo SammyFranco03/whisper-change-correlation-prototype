@@ -55,10 +55,12 @@ body {
 }
 
 .nav-logo {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+}
+.nav-logo img {
+  height: 32px;
+  width: auto;
 }
 
 .nav-spacer { flex: 1; }
@@ -891,7 +893,7 @@ body {
 
 <!-- Top Nav -->
 <nav class="top-nav">
-  <span class="nav-logo">Whisper</span>
+  <div class="nav-logo"><img src="logo-owl.png" alt="Whisper"></div>
   <div class="nav-spacer"></div>
   <button class="nav-feedback">↗ Give feedback in Slack</button>
   <div class="nav-bell">
