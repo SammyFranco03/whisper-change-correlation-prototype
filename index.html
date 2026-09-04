@@ -22,7 +22,7 @@
   --text-dim: #6b707d;
   --text-muted: #9ea3ad;
   --tab-active: #1048b3;
-  --link: #004d99;
+  --link: #1048b3;
   --row-border: #e0e1e4;
   --outage-red: #db3321;
   --row-hover: #e6f3ff;
@@ -45,7 +45,7 @@ body {
 
 /* ── Top Nav ── */
 .top-nav {
-  height: 56px;
+  height: 68px;
   background: var(--nav-bg);
   border-bottom: 1px solid var(--nav-border);
   display: flex;
@@ -59,7 +59,7 @@ body {
   align-items: center;
 }
 .nav-logo img {
-  height: 48px;
+  height: 60px;
   width: auto;
   mix-blend-mode: multiply;
 }
@@ -433,6 +433,8 @@ body {
 .detail-value { flex: 1; color: var(--text); }
 .detail-value.link-val { color: var(--link); cursor: pointer; }
 .detail-value.link-val:hover { text-decoration: underline; }
+.link-val { color: var(--link); text-decoration: none; cursor: pointer; }
+.link-val:hover { text-decoration: underline; }
 
 /* ── Show More Row ── */
 .show-more-row {
