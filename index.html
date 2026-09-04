@@ -1304,13 +1304,10 @@ body {
       <span class="hub-close">×</span>
     </div>
     <div class="hub-tabs">
-      <div class="hub-tab" onclick="hubTab(this,'dashboardPanel')">Dashboard</div>
       <div class="hub-tab active" onclick="hubTab(this,'liveFeedPanel')">Live Feed</div>
+      <div class="hub-tab" onclick="hubTab(this,'scribePanel')">Scribe</div>
       <div class="hub-tab" onclick="hubTab(this,'detailsPanel')">Details</div>
     </div>
-
-    <!-- Dashboard panel -->
-    <div class="activity-feed" id="dashboardPanel"></div>
 
     <!-- Live Feed panel -->
     <div class="livefeed-wrap active" id="liveFeedWrapper" style="overflow-y:auto;padding:12px;background:#edf1f8;">
@@ -1332,6 +1329,46 @@ body {
           <li>Direct testing of container parts shows no issues.</li>
         </ul>
         <a class="lf-show-more" href="#" onclick="return false;">Show more</a>
+      </div>
+    </div>
+
+    <!-- Scribe panel -->
+    <div class="scribe-feed" id="scribePanel">
+      <div class="scribe-log-label">Session log</div>
+      <div class="scribe-event">
+        <div class="scribe-event-header">
+          <span class="scribe-event-time">11:04 PM</span>
+          <span class="scribe-event-badge activated">Activated</span>
+        </div>
+        <div class="scribe-event-detail">Scribe session started by Priya Nair · INC1016016 · Bridge CCO-06</div>
+      </div>
+      <div class="scribe-event">
+        <div class="scribe-event-header">
+          <span class="scribe-event-time">11:04 PM</span>
+          <span class="scribe-event-badge info">Recording</span>
+        </div>
+        <div class="scribe-event-detail">Audio capture started · Breakout room #4 · Participants: 7</div>
+      </div>
+      <div class="scribe-event">
+        <div class="scribe-event-header">
+          <span class="scribe-event-time">11:04 PM</span>
+          <span class="scribe-event-badge info">Transcription</span>
+        </div>
+        <div class="scribe-event-detail">Live transcription enabled · Whisper ASR engine v2.4</div>
+      </div>
+      <div class="scribe-event">
+        <div class="scribe-event-header">
+          <span class="scribe-event-time">11:09 PM</span>
+          <span class="scribe-event-badge info">Correlation</span>
+        </div>
+        <div class="scribe-event-detail">Whisper correlated 14 signals to CHG0364897 · Alert forwarded to RCA engine</div>
+      </div>
+      <div class="scribe-event">
+        <div class="scribe-event-header">
+          <span class="scribe-event-time">11:27 PM</span>
+          <span class="scribe-event-badge deactivated">Deactivated</span>
+        </div>
+        <div class="scribe-event-detail">Session ended · INC1016016 resolved · Duration: 23 min · Transcript saved</div>
       </div>
     </div>
 
@@ -1494,7 +1531,7 @@ function toggleMore() {
 function hubTab(el, panelId) {
   document.querySelectorAll('.hub-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  ['dashboardPanel','liveFeedWrapper','detailsPanel'].forEach(id => {
+  ['liveFeedWrapper','scribePanel','detailsPanel'].forEach(id => {
     const p = document.getElementById(id);
     if (p) p.classList.remove('active');
   });
