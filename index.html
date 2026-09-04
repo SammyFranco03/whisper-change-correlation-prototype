@@ -1317,12 +1317,26 @@ body {
     </div>
 
     <!-- Dashboard: raw transcript with recording bar -->
-    <div class="livefeed-wrap" id="liveFeedWrapper">
-      <div class="livefeed-status">
-        <div class="livefeed-dot"></div>
-        Live · CCO-06 bridge recording in progress
+    <div class="livefeed-wrap" id="liveFeedWrapper" style="overflow-y:auto;padding:12px;background:#edf1f8;">
+      <div class="lf-card" id="liveFeedPanel">
+        <div class="lf-incident-title">IMT-Simulation (INC 4291192)</div>
+        <div class="lf-field"><span class="lf-field-label">Conference:</span> IMT-Simulation</div>
+        <div class="lf-field"><span class="lf-field-label">Time Started:</span> <span class="lf-italic">09:34 AM CDT</span> (Active for 22 hours 35 minutes)</div>
+        <div class="lf-divider"></div>
+        <div class="lf-section-title">Transcript summary</div>
+        <div class="lf-date">09/03/2026</div>
+        <div class="lf-divider"></div>
+        <div class="lf-timestamp">09:34 AM CDT</div>
+        <ul class="lf-bullets">
+          <li>The team needs to engage the DataPower team to investigate the latency between DataPower and applications, as the call cannot be closed until this is resolved.</li>
+        </ul>
+        <div class="lf-timestamp">09:30 AM CDT</div>
+        <ul class="lf-bullets">
+          <li>Latencies are observed between DataPower and applications.</li>
+          <li>Direct testing of container parts shows no issues.</li>
+        </ul>
+        <a class="lf-show-more" href="#" onclick="return false;">Show more</a>
       </div>
-      <div class="transcript-feed active" id="liveFeedPanel" style="flex:1;"></div>
     </div>
 
     <!-- Live Feed panel: session log -->
