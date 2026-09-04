@@ -993,7 +993,6 @@ body {
         <div class="detail-panel" id="cc1">
           <a class="detail-link" href="#" onclick="return false;">CHG0364897 ↗</a>
           <div class="detail-divider"></div>
-          <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
           <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Updated rate limit policies on member portal API gateway to enforce new tier-based throttling rules. Changes applied via Terraform and validated in staging.</span></div>
           <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">14 correlated signals · direct CI dependency · change applied 4 min before incident start</span></div>
           <div class="detail-field"><span class="detail-label">RCA finding</span><span class="detail-value">Reduced rate limit triggered request queue overflow → 500 errors on checkout &amp; auth flows · <a href="#rca1-anchor" class="detail-value link-val" onclick="openRca('rca1');return false;">View RCA ↓</a></span></div>
@@ -1019,7 +1018,6 @@ body {
         <div class="detail-panel" id="cc2">
           <a class="detail-link" href="#" onclick="return false;">CHG0364801 ↗</a>
           <div class="detail-divider"></div>
-          <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
           <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Primary Redis node replacement during scheduled maintenance window. Session data fully replicated before failover.</span></div>
           <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">8 correlated signals · session cache is a direct dependency of checkout flow · change completed 34 min before incident</span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">redis-session-prod-01 — direct dependency of affected CI</span></div>
@@ -1044,15 +1042,14 @@ body {
         <div class="detail-panel" id="cc3">
           <a class="detail-link" href="#" onclick="return false;">CHG0364755 ↗</a>
           <div class="detail-divider"></div>
-          <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
           <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Updated autoscaling thresholds to improve burst handling in prod-east during peak traffic windows.</span></div>
           <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">5 correlated signals · prod-east node pool affected · change completed 1h 4m before incident</span></div>
           <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">k8s-prod-east-ng-01</span></div>
           <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 9, 2026 9:00 PM</span></div>
           <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 9, 2026 10:00 PM</span></div>
           <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">Kubernetes Platform · <span class="contact-link" data-name="David Chen" data-group="Kubernetes Platform">David Chen</span></span></div>
-          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value">Apply new autoscaling threshold configuration to the prod-east node group via kubectl. Monitor cluster scaling behavior under load for 20 minutes before confirming change complete.</span></div>
-          <div class="detail-field"><span class="detail-label">Back-out plan</span><span class="detail-value">Reapply prior autoscaling threshold values via kubectl patch. Estimated rollback time: 5 minutes.</span></div>
+          <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value">Apply updated autoscaling thresholds via kubectl patch. Verify cluster autoscaler behavior under simulated burst traffic. Monitor pod scaling events for 20 minutes post-apply.</span></div>
+          <div class="detail-field"><span class="detail-label">Back-out plan</span><span class="detail-value">Reapply previous autoscaling policy configuration via kubectl. Estimated rollback time: 5 minutes.</span></div>
         </div>
       </div>
 
@@ -1070,15 +1067,14 @@ body {
           <div class="detail-panel" id="cc4">
             <a class="detail-link" href="#" onclick="return false;">CHG0364712 ↗</a>
             <div class="detail-divider"></div>
-            <div class="detail-field"><span class="detail-label">Status</span><span class="detail-value">Complete</span></div>
             <div class="detail-field"><span class="detail-label">Summary</span><span class="detail-value">Cache invalidation and behavior rules updated for member-facing CDN distribution. Origin TTL adjusted.</span></div>
             <div class="detail-field"><span class="detail-label">Ranking basis</span><span class="detail-value">3 correlated signals · CDN edge config affects member portal delivery · change completed 21h before incident</span></div>
             <div class="detail-field"><span class="detail-label">Target CI(s)</span><span class="detail-value">cf-member-portal-prod</span></div>
             <div class="detail-field"><span class="detail-label">Start</span><span class="detail-value">Jun 8, 2026 2:00 AM</span></div>
             <div class="detail-field"><span class="detail-label">End</span><span class="detail-value">Jun 8, 2026 2:45 AM</span></div>
             <div class="detail-field"><span class="detail-label">Assignment group</span><span class="detail-value">CDN &amp; Edge Platform · <span class="contact-link" data-name="Rachel Kim" data-group="CDN &amp; Edge Platform">Rachel Kim</span></span></div>
-            <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value">Invalidate existing CDN cache for member portal distribution. Apply updated cache behavior rules and adjust origin TTL. Verify cache headers and distribution behavior via curl tests across edge nodes.</span></div>
-            <div class="detail-field"><span class="detail-label">Back-out plan</span><span class="detail-value">Restore prior CDN cache behavior configuration and re-invalidate affected paths. Estimated rollback time: 20 minutes.</span></div>
+            <div class="detail-field"><span class="detail-label">Implementation plan</span><span class="detail-value">Update CloudFront distribution behaviors via AWS CLI. Invalidate edge cache after config push. Verify cache hit/miss ratios on member portal endpoints for 15 minutes post-deployment.</span></div>
+            <div class="detail-field"><span class="detail-label">Back-out plan</span><span class="detail-value">Restore previous CloudFront distribution configuration snapshot via AWS Console. Estimated rollback time: 10 minutes.</span></div>
           </div>
         </div>
       </div>
