@@ -57,11 +57,24 @@ body {
 .nav-logo {
   display: flex;
   align-items: center;
+  gap: 10px;
+  background: #fff;
 }
-.nav-logo img {
-  height: 60px;
-  width: auto;
+.nav-owl {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+  object-position: left center;
+  filter: brightness(1.6) contrast(1.1);
   mix-blend-mode: multiply;
+}
+.nav-brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a2e6e;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  letter-spacing: -0.3px;
+  line-height: 1;
 }
 
 .nav-spacer { flex: 1; }
@@ -903,7 +916,10 @@ body {
 
 <!-- Top Nav -->
 <nav class="top-nav">
-  <div class="nav-logo"><img src="logo-owl.png" alt="Whisper"></div>
+  <div class="nav-logo">
+    <img class="nav-owl" src="logo-owl.png" alt="">
+    <span class="nav-brand">Whisper</span>
+  </div>
   <div class="nav-spacer"></div>
   <button class="nav-feedback">↗ Give feedback in Slack</button>
   <div class="nav-bell">
